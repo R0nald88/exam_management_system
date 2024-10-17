@@ -4,7 +4,10 @@
 
 ### Ronald
 
-### Marcus
+### Li Ching Ho
+Email: chlibs@connect.ust.hk\
+Github id: chlibs\
+Assignment: Task 1
 
 ### Wan Hanzhe
 Email: hwanad@connect.ust.hk\
