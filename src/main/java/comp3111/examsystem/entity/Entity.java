@@ -1,6 +1,6 @@
 package comp3111.examsystem.entity;
 
-public class Entity implements java.io.Serializable, Comparable<Member> {
+public class Entity implements java.io.Serializable, Comparable<Entity> {
     protected Long id = 0L;
 
     public Long getId() {
@@ -20,7 +20,7 @@ public class Entity implements java.io.Serializable, Comparable<Member> {
         this.id = id;
     }
 
-    public int compareTo(Member o) {
+    public int compareTo(Entity o) {
         return Long.compare(this.id, o.id);
     }
 }
