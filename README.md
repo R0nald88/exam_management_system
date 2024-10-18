@@ -2,7 +2,7 @@
 
 # Members
 
-### Ronald
+### Cheung Tuen King
 Email: tkcheungan@connect.ust.hk\
 Github id: R0nald88\
 Assignment: Task 2
