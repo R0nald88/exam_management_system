@@ -3,6 +3,9 @@
 # Members
 
 ### Ronald
+Email: tkcheungan@connect.ust.hk
+Github id: R0nald88
+Assignment: Task 2
 
 ### Li Ching Ho
 Email: chlibs@connect.ust.hk\
