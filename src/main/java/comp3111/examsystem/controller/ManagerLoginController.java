@@ -25,7 +25,7 @@ public class ManagerLoginController implements Initializable {
     private PasswordField passwordTxt;
 
     public void initialize(URL location, ResourceBundle resources) {
-        createRecord("velvet", "12345678");
+        //createRecord("velvet", "12345678");
     }
 
     public void createRecord(String username, String password){
@@ -38,6 +38,26 @@ public class ManagerLoginController implements Initializable {
         }
     }
 
+    public static boolean checkInput(String username, String password){
+        try{
+            File myObj = new File("src/main/resources/database/ManagerCredentials.txt");
+            Scanner myReader = new Scanner(myObj);
+            while(true){
+                String data = myReader.nextLine();
+                StringTokenizer st = new StringTokenizer(data);
+                if(username.equals(st.nextToken()) && password.equals(st.nextToken())){
+                    break;
+                }
+                if(!myReader.hasNextLine()){
+                    return false;
+                }
+            }
+        } catch (FileNotFoundException e2){
+            e2.printStackTrace();
+        }
+        return true;
+    }
+
     @FXML
     public void login(ActionEvent e) {
         String username = usernameTxt.getText();
@@ -48,8 +68,9 @@ public class ManagerLoginController implements Initializable {
             while(true){
                 String data = myReader.nextLine();
                 StringTokenizer st = new StringTokenizer(data);
-                if(username.equals(st.nextToken()) && password.equals(st.nextToken()))
+                if(username.equals(st.nextToken()) && password.equals(st.nextToken())){
                     break;
+                }
                 if(!myReader.hasNextLine()){
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error!");
@@ -62,7 +83,6 @@ public class ManagerLoginController implements Initializable {
         } catch (FileNotFoundException e2){
             e2.printStackTrace();
         }
-
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Welcome!");
         alert.setHeaderText("Login successfully!");
@@ -82,5 +102,4 @@ public class ManagerLoginController implements Initializable {
             }
         });
     }
-
 }
