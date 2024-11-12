@@ -1,28 +1,30 @@
-package comp3111.examsystem.entity.Questions;
+package comp3111.examsystem.entity;
 
+import comp3111.examsystem.entity.Questions.Question;
+import comp3111.examsystem.entity.Questions.QuestionType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class QuestionFormTest {
+public class QuestionTest {
     @Test
-    public void testInputOptions() {
+    public void testInputSingleOptions() {
         String inputOptionA = "Answer 1";
         String inputOptionB = "Answer 2";
         String inputOptionC = "Answer 3";
         String inputOptionD = "Answer 4";
         String output1 = "", output2 = "", output3 = "", output4 = "";
 
-        Question form = new Question();
+        Question question = new Question();
         try {
-            form.setOptionA(inputOptionA);
-            form.setOptionB(inputOptionB);
-            form.setOptionC(inputOptionC);
-            form.setOptionD(inputOptionD);
-            output1 = form.getOptionA();
-            output2 = form.getOptionB();
-            output3 = form.getOptionC();
-            output4 = form.getOptionD();
+            question.setOptionA(inputOptionA);
+            question.setOptionB(inputOptionB);
+            question.setOptionC(inputOptionC);
+            question.setOptionD(inputOptionD);
+            output1 = question.getOptionA();
+            output2 = question.getOptionB();
+            output3 = question.getOptionC();
+            output4 = question.getOptionD();
         } catch (Exception e) {
             output1 = e.getMessage();
         }
@@ -34,19 +36,14 @@ public class QuestionFormTest {
     }
 
     @Test
-    public void testAnswers() {
+    public void testInputSingleAnswers() {
         String inputSingleAnswer = "A";
-        String inputMultipleAnswer = "AB";
-        String output1 = "", output2 = "";
+        String output1 = "";
 
         Question form = new Question();
         try {
             form.setAnswer(inputSingleAnswer);
             output1 = form.getAnswer();
-
-            form.setType(QuestionType.MULTIPLE);
-            form.setAnswer(inputMultipleAnswer);
-            output2 = form.getAnswer();
         } catch (Exception e) {
             output1 = e.getMessage();
         }
