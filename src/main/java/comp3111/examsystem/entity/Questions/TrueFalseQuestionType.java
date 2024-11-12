@@ -1,6 +1,14 @@
 package comp3111.examsystem.entity.Questions;
 
-public class TrueFalseQuestionType extends QuestionTypeFactory {
+public final class TrueFalseQuestionType extends QuestionTypeFactory {
+    private static TrueFalseQuestionType instance = null;
+
+    private TrueFalseQuestionType() {}
+
+    public static TrueFalseQuestionType getInstance() {
+        if (instance == null) instance = new TrueFalseQuestionType();
+        return instance;
+    }
 
     @Override
     public void validateAnswer(String answer) throws Exception {
@@ -33,7 +41,7 @@ public class TrueFalseQuestionType extends QuestionTypeFactory {
     }
 
     @Override
-    public void initialize(QuestionForm form) {
+    public void initialize(Question form) {
         try {
             form.setOptionA("True");
             form.setOptionB("False");

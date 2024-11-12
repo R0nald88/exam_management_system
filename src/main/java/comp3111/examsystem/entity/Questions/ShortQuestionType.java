@@ -1,8 +1,16 @@
 package comp3111.examsystem.entity.Questions;
 
-import static comp3111.examsystem.entity.Questions.QuestionForm.ANSWER_LENGTH_LIMIT;
+import static comp3111.examsystem.entity.Questions.Question.ANSWER_LENGTH_LIMIT;
 
-public class ShortQuestionType extends QuestionTypeFactory {
+public final class ShortQuestionType extends QuestionTypeFactory {
+    private static ShortQuestionType instance = null;
+
+    private ShortQuestionType() {}
+
+    public static ShortQuestionType getInstance() {
+        if (instance == null) instance = new ShortQuestionType();
+        return instance;
+    }
     @Override
     public void validateAnswer(String answer) throws Exception {
         if (answer.isEmpty()) {
@@ -21,7 +29,7 @@ public class ShortQuestionType extends QuestionTypeFactory {
     }
 
     @Override
-    public void initialize(QuestionForm form) {
+    public void initialize(Question form) {
         try {
             form.setOptionA("");
             form.setOptionB("");

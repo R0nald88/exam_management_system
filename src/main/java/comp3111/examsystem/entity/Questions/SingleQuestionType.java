@@ -1,6 +1,15 @@
 package comp3111.examsystem.entity.Questions;
 
-public class SingleQuestionType extends QuestionTypeFactory {
+public final class SingleQuestionType extends QuestionTypeFactory {
+    private static SingleQuestionType instance = null;
+
+    private SingleQuestionType() {}
+
+    public static SingleQuestionType getInstance() {
+        if (instance == null) instance = new SingleQuestionType();
+        return instance;
+    }
+
     @Override
     public void validateAnswer(String answer) throws Exception {
         if (answer.length() != 1 || !"ABCD".contains(answer)) {
@@ -14,7 +23,7 @@ public class SingleQuestionType extends QuestionTypeFactory {
     }
 
     @Override
-    public void initialize(QuestionForm form) {
+    public void initialize(Question form) {
 
     }
 }
