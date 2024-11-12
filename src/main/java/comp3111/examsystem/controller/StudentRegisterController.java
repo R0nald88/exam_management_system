@@ -9,25 +9,36 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
-public class StudentLoginController implements Initializable {
+public class StudentRegisterController implements Initializable {
     @FXML
     private TextField usernameTxt;
     @FXML
+    private TextField nameTxt;
+    @FXML
+    private ComboBox<String> genderSelect;
+    @FXML
+    private TextField ageTxt;
+    @FXML
+    private TextField departmentTxt;
+    @FXML
     private PasswordField passwordTxt;
+    @FXML
+    private PasswordField passwordConfirmTxt;
+
 
     public void initialize(URL location, ResourceBundle resources) {
 
     }
 
     @FXML
-    public void login(ActionEvent e) {
+    public void close(ActionEvent e) {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentMainUI.fxml"));
         Stage stage = new Stage();
         stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
