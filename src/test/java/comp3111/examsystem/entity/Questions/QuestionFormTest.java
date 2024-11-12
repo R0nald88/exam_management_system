@@ -13,7 +13,7 @@ public class QuestionFormTest {
         String inputOptionD = "Answer 4";
         String output1 = "", output2 = "", output3 = "", output4 = "";
 
-        QuestionForm form = new QuestionForm();
+        Question form = new Question();
         try {
             form.setOptionA(inputOptionA);
             form.setOptionB(inputOptionB);
@@ -39,7 +39,7 @@ public class QuestionFormTest {
         String inputMultipleAnswer = "AB";
         String output1 = "", output2 = "";
 
-        QuestionForm form = new QuestionForm();
+        Question form = new Question();
         try {
             form.setAnswer(inputSingleAnswer);
             output1 = form.getAnswer();

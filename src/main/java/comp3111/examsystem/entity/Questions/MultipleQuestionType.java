@@ -1,6 +1,15 @@
 package comp3111.examsystem.entity.Questions;
 
-public class MultipleQuestionType extends QuestionTypeFactory {
+public final class MultipleQuestionType extends QuestionTypeFactory {
+    private static MultipleQuestionType instance = null;
+
+    private MultipleQuestionType() {}
+
+    public static MultipleQuestionType getInstance() {
+        if (instance == null) instance = new MultipleQuestionType();
+        return instance;
+    }
+
     @Override
     public void validateAnswer(String answer) throws Exception {
         if (answer.length() <= 1 || answer.length() > 4) {
@@ -26,7 +35,7 @@ public class MultipleQuestionType extends QuestionTypeFactory {
     }
 
     @Override
-    public void initialize(QuestionForm form) {
+    public void initialize(Question form) {
 
     }
 }
