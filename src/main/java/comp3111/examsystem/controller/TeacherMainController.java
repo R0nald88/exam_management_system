@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -32,11 +33,19 @@ public class TeacherMainController implements Initializable {
             e1.printStackTrace();
         }
         stage.show();
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
-    public void openExamManageUI() {
+    public void openExamManageUI(ActionEvent e) {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherExamManagement.fxml"));
+        Stage stage = new Stage();
+        stage.setTitle("Exam Management");
+        try {
+            stage.setScene(new Scene(fxmlLoader.load()));
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        stage.show();
     }
 
     @FXML
@@ -56,4 +65,5 @@ public class TeacherMainController implements Initializable {
     public void exit() {
         System.exit(0);
     }
+
 }
