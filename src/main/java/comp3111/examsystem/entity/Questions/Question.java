@@ -1,11 +1,12 @@
 package comp3111.examsystem.entity.Questions;
 
 import comp3111.examsystem.entity.Entity;
+import javafx.fxml.Initializable;
 
 import java.util.Objects;
 
 public class Question extends Entity {
-    public static final int OPTION_LENGTH_LIMIT = -1;
+    public static final int OPTION_LENGTH_LIMIT = 20;
     public static final int ANSWER_LENGTH_LIMIT = -1;
     public static final int QUESTION_LENGTH_LIMIT = -1;
     public static final int SCORE_UPPER_LIMIT = -1;
