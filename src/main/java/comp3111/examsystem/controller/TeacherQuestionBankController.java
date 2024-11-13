@@ -25,6 +25,7 @@ public class TeacherQuestionBankController {
     @FXML private TextField optionDTxt;
     @FXML private TextField answerTxt;
     @FXML private TextField scoreTxt;
+    @FXML private ChoiceBox<QuestionType> typeCombox;
 
     // table
     @FXML private TableView<Question> questionTable;
