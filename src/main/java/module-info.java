@@ -4,7 +4,7 @@ module comp3111.examsystem {
     requires java.desktop;
     // requires json.simple;
     requires junit;
-
+    requires com.google.gson;
 
     opens comp3111.examsystem to javafx.fxml;
     exports comp3111.examsystem;
@@ -12,4 +12,7 @@ module comp3111.examsystem {
     exports comp3111.examsystem.controller;
     exports comp3111.examsystem.entity.Questions;
     exports comp3111.examsystem.entity.Exam;
+    opens comp3111.examsystem.entity to com.google.gson;
+    opens comp3111.examsystem.entity.Questions to com.google.gson;
+    opens comp3111.examsystem.entity.Exam to com.google.gson;
 }

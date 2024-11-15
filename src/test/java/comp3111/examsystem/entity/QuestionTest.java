@@ -1,6 +1,9 @@
 package comp3111.examsystem.entity.Questions;
 
 import org.junit.Test;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 public class QuestionTest {
     private Question question;
@@ -105,7 +108,17 @@ public class QuestionTest {
     }
 
     @Test
-    public void testInvalidSingleAnswer() {
-        
+    public void testSavingQuestion() {
+        try {
+            QuestionDatabase.getInstance().deleteAll();
+            testSingleQuestionInput();
+            QuestionDatabase.getInstance().addQuestion(question);
+            List<Question> q = QuestionDatabase.getInstance().getAll();
+            System.out.println(q.getFirst().toString());
+            assertEquals(q.getFirst(), question);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 }

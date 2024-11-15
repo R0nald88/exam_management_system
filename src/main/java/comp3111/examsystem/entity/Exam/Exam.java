@@ -1,5 +1,6 @@
 package comp3111.examsystem.entity.Exam;
 
+import com.google.gson.Gson;
 import comp3111.examsystem.entity.Entity;
 import comp3111.examsystem.entity.Questions.Question;
 import comp3111.examsystem.entity.Questions.QuestionDatabase;
@@ -9,10 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Exam extends Entity {
-    public static final int EXAM_TIME_UPPER_LIMIT = -1;
-    public static final int EXAM_TIME_LOWER_LIMIT = -1;
-    public static final int EXAM_NAME_LENGTH_LIMIT = -1;
-
     private String name;
     private int time;
     private String courseId;
@@ -39,12 +36,22 @@ public class Exam extends Entity {
         return published;
     }
 
+    public String getPublished() {
+        return published ? "yes" : "no";
+    }
+
     public List<Long> getQuestionIds() {
         return questionIds;
     }
 
-    public void setQuestionIds(List<Long> questionIds) {
-        this.questionIds = questionIds;
+    public void setQuestionIds(List<Long> questionIds) throws Exception {
+        if (questionIds == null || questionIds.isEmpty()) {
+            throw new Exception("Exam should contain at least 1 question.");
+        }
+        this.questionIds = new ArrayList<>();
+        for (Long id : questionIds) {
+            addQuestionId(id);
+        }
     }
 
     public void addQuestion(Question question) throws Exception {
@@ -60,6 +67,9 @@ public class Exam extends Entity {
         }
         if (questionIds == null) {
             questionIds = new ArrayList<>();
+        }
+        if (questionIds.contains(id)) {
+            throw new Exception("Question " + id + " duplicated.");
         }
         questionIds.add(id);
     }
@@ -89,17 +99,17 @@ public class Exam extends Entity {
 
     public void setTime(int time) throws Exception {
         String error = "Invalid exam time.";
-        if (EXAM_TIME_UPPER_LIMIT > EXAM_TIME_LOWER_LIMIT && EXAM_TIME_LOWER_LIMIT >= 0) {
-            error = "Please input a valid exam time between " + EXAM_TIME_LOWER_LIMIT +
-                    " and " + EXAM_TIME_UPPER_LIMIT + " second(s).";
-        } else if (EXAM_TIME_UPPER_LIMIT > 0) {
-            error = "Please input a valid exam time less than " + EXAM_TIME_UPPER_LIMIT + " second(s).";
-        } else if (EXAM_TIME_LOWER_LIMIT >= 0) {
-            error = "Please input a valid exam time larger than " + EXAM_TIME_LOWER_LIMIT + " second(s).";
+        if (ExamDatabase.EXAM_TIME_UPPER_LIMIT > ExamDatabase.EXAM_TIME_LOWER_LIMIT && ExamDatabase.EXAM_TIME_LOWER_LIMIT >= 0) {
+            error = "Please input a valid exam time between " + ExamDatabase.EXAM_TIME_LOWER_LIMIT +
+                    " and " + ExamDatabase.EXAM_TIME_UPPER_LIMIT + " second(s).";
+        } else if (ExamDatabase.EXAM_TIME_UPPER_LIMIT > 0) {
+            error = "Please input a valid exam time less than " + ExamDatabase.EXAM_TIME_UPPER_LIMIT + " second(s).";
+        } else if (ExamDatabase.EXAM_TIME_LOWER_LIMIT >= 0) {
+            error = "Please input a valid exam time larger than " + ExamDatabase.EXAM_TIME_LOWER_LIMIT + " second(s).";
         }
 
-        if ((EXAM_TIME_LOWER_LIMIT >= 0 && time < EXAM_TIME_LOWER_LIMIT) ||
-            (EXAM_TIME_UPPER_LIMIT > 0 && time > EXAM_TIME_UPPER_LIMIT)) {
+        if ((ExamDatabase.EXAM_TIME_LOWER_LIMIT >= 0 && time < ExamDatabase.EXAM_TIME_LOWER_LIMIT) ||
+            (ExamDatabase.EXAM_TIME_UPPER_LIMIT > 0 && time > ExamDatabase.EXAM_TIME_UPPER_LIMIT)) {
             throw new Exception(error);
         }
         this.time = time;
@@ -127,10 +137,15 @@ public class Exam extends Entity {
         if (name.isEmpty()) {
             throw new Exception("Please enter the exam name.");
         }
-        if (EXAM_NAME_LENGTH_LIMIT > 0 && name.length() > EXAM_NAME_LENGTH_LIMIT) {
-            throw new Exception("Length of exam name should not be larger than " + EXAM_NAME_LENGTH_LIMIT + ".");
+        if (ExamDatabase.EXAM_NAME_LENGTH_LIMIT > 0 && name.length() > ExamDatabase.EXAM_NAME_LENGTH_LIMIT) {
+            throw new Exception("Length of exam name should not be larger than " + ExamDatabase.EXAM_NAME_LENGTH_LIMIT + ".");
         }
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 
     @Override

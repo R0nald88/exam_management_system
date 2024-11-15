@@ -71,8 +71,8 @@
     </left>
 
     <right>
-        <VBox prefHeight="530.0" prefWidth="200.0" BorderPane.alignment="TOP_LEFT">
-            <Label text="Question">
+        <VBox prefHeight="530.0" prefWidth="200.0" fx:id="questionFormLayout">
+            <Label text="Question" fx:id="questionFormLabel">
                 <VBox.margin>
                     <Insets top="5.0" left="10.0" right="10.0"/>
                 </VBox.margin>
@@ -184,12 +184,12 @@
                 <HBox.margin>
                     <Insets top="5.0"/>
                 </HBox.margin>
-                <Button fx:id="updateBtn" mnemonicParsing="false" onAction="#update" text="Refresh">
+                <Button fx:id="updateBtn" mnemonicParsing="false" onAction="#update" text="Update">
                     <HBox.margin>
                         <Insets left="10.0"/>
                     </HBox.margin>
                 </Button>
-                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#add" text="Delete">
+                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#add" text="Add">
                     <HBox.margin>
                         <Insets left="10.0" right="10"/>
                     </HBox.margin>

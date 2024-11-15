@@ -16,14 +16,4 @@ public final class SingleQuestionType extends QuestionTypeFactory {
             throw new Exception("The answer of Single Question should be 1 letter from A to D");
         }
     }
-
-    @Override
-    public void setUpForm() {
-
-    }
-
-    @Override
-    public void initialize(Question form) {
-
-    }
 }
