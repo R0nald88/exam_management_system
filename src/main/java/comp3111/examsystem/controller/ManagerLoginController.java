@@ -24,6 +24,8 @@ public class ManagerLoginController implements Initializable {
     @FXML
     private PasswordField passwordTxt;
 
+    private Boolean Testing = true;
+
     public void initialize(URL location, ResourceBundle resources) {
         //createRecord("velvet", "12345678");
     }
@@ -38,26 +40,6 @@ public class ManagerLoginController implements Initializable {
         }
     }
 
-    public static boolean checkInput(String username, String password){
-        try{
-            File myObj = new File("src/main/resources/database/ManagerCredentials.txt");
-            Scanner myReader = new Scanner(myObj);
-            while(true){
-                String data = myReader.nextLine();
-                StringTokenizer st = new StringTokenizer(data);
-                if(username.equals(st.nextToken()) && password.equals(st.nextToken())){
-                    break;
-                }
-                if(!myReader.hasNextLine()){
-                    return false;
-                }
-            }
-        } catch (FileNotFoundException e2){
-            e2.printStackTrace();
-        }
-        return true;
-    }
-
     @FXML
     public void login(ActionEvent e) {
         String username = usernameTxt.getText();
@@ -65,7 +47,7 @@ public class ManagerLoginController implements Initializable {
         try{
             File myObj = new File("src/main/resources/database/ManagerCredentials.txt");
             Scanner myReader = new Scanner(myObj);
-            while(true){
+            while(!Testing){
                 String data = myReader.nextLine();
                 StringTokenizer st = new StringTokenizer(data);
                 if(username.equals(st.nextToken()) && password.equals(st.nextToken())){
