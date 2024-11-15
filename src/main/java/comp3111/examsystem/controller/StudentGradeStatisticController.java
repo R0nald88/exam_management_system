@@ -1,0 +1,96 @@
+package comp3111.examsystem.controller;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.chart.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class StudentGradeStatisticController implements Initializable {
+    public static class GradeExampleClass {
+        public String getCourseNum() {
+            return "comp3111";
+        }
+        public String getExamName() {
+            return "final";
+        }
+        public String getScore() {
+            return "100";
+        }
+        public String getFullScore() {
+            return "100";
+        }
+        public String getTimeSpend() {
+            return "60";
+        }
+    }
+
+    @FXML
+    private TableView<GradeExampleClass> gradeTable;
+    @FXML
+    private TableColumn<GradeExampleClass, String> courseColumn;
+    @FXML
+    private TableColumn<GradeExampleClass, String> examColumn;
+    @FXML
+    private TableColumn<GradeExampleClass, String> scoreColumn;
+    @FXML
+    private TableColumn<GradeExampleClass, String> fullScoreColumn;
+    @FXML
+    private TableColumn<GradeExampleClass, String> timeSpendColumn;
+    @FXML
+    BarChart<String, Number> barChart;
+    @FXML
+    CategoryAxis categoryAxisBar;
+    @FXML
+    NumberAxis numberAxisBar;
+
+    private final ObservableList<GradeExampleClass> gradeList = FXCollections.observableArrayList();
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        barChart.setLegendVisible(false);
+        categoryAxisBar.setLabel("Exam");
+        numberAxisBar.setLabel("Score");
+
+        gradeList.add(new GradeExampleClass());
+        gradeTable.setItems(gradeList);
+        courseColumn.setCellValueFactory(new PropertyValueFactory<>("courseNum"));
+        examColumn.setCellValueFactory(new PropertyValueFactory<>("examName"));
+        scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        fullScoreColumn.setCellValueFactory(new PropertyValueFactory<>("fullScore"));
+        timeSpendColumn.setCellValueFactory(new PropertyValueFactory<>("timeSpend"));
+
+        refresh();
+        loadChart();
+    }
+
+    @FXML
+    public void refresh() {
+    }
+
+    private void loadChart() {
+        XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
+        seriesBar.getData().clear();
+        barChart.getData().clear();
+        for (int i = 0;  i < 5; i++) {
+            seriesBar.getData().add(new XYChart.Data<>("COMP" + i, 50));
+        }
+        barChart.getData().add(seriesBar);
+
+    }
+
+    @FXML
+    public void reset() {
+    }
+
+    @FXML
+    public void query() {
+    }
+}
