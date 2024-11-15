@@ -42,5 +42,14 @@ public class TeacherLoginController implements Initializable {
 
     @FXML
     public void register() {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherRegisterUI.fxml"));
+        Stage stage = new Stage();
+        stage.setTitle("Teacher Register");
+        try {
+            stage.setScene(new Scene(fxmlLoader.load()));
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        stage.show();
     }
 }

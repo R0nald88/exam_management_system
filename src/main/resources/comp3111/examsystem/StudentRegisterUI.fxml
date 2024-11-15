@@ -28,7 +28,7 @@
 
             <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <TextField fx:id="nameTxt" promptText="Please enter your name" GridPane.columnIndex="1"
-                           GridPane.rowIndex="1"/>
+                       GridPane.rowIndex="1"/>
 
             <Label text="Gender:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <ComboBox fx:id="genderSelect" prefWidth="150.0" promptText="Select Gender">
@@ -42,11 +42,11 @@
 
             <Label text="Age:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <TextField fx:id="ageTxt" promptText="Please enter your age" GridPane.columnIndex="1"
-                           GridPane.rowIndex="3"/>
+                       GridPane.rowIndex="3"/>
 
             <Label text="Department:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <TextField fx:id="departmentTxt" promptText="Please enter your department" GridPane.columnIndex="1"
-                           GridPane.rowIndex="4"/>
+                       GridPane.rowIndex="4"/>
 
             <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <PasswordField fx:id="passwordTxt" promptText="Please enter the password" GridPane.columnIndex="1"
