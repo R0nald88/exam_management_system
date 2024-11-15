@@ -1,5 +1,7 @@
 package comp3111.examsystem.tools;
 
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import comp3111.examsystem.entity.Entity;
 
 import java.io.File;
@@ -269,12 +271,21 @@ public class Database<T> {
             try {
                 Field field = clazz.getDeclaredField(fieldName);
                 field.setAccessible(true);
-                field.set(entity, fieldValue);
+
+                if (fieldValue == null || "null".equals(fieldValue.toString())) {
+                    field.set(entity, null);
+                } else if (field.getType().equals(String.class)) {
+                    field.set(entity, fieldValue.toString());
+                } else {
+                    Gson gson = new Gson();
+                    field.set(entity, gson.fromJson(fieldValue.toString(), field.getType()));
+                }
                 break;
             }
             catch (NoSuchFieldException e) {
                 if (clazz.equals(Object.class))
                     throw new RuntimeException(e);
+                System.out.println(e.getMessage());
             }
             catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
@@ -292,45 +303,51 @@ public class Database<T> {
     }
 
     private T txtToEntity(String txt) {
-        T t = null;
-        try {
-            t = entitySample.getConstructor().newInstance();
-            String[] pros = txt.split(",");
-            for (int i = 0; i < pros.length; i++) {
-                String[] pro = pros[i].split(":");
-                if (pro[0].equals("id")) {
-                    setValue(t, pro[0], Long.valueOf(pro[1]));
-                } else {
-                    setValue(t, pro[0], pro[1]);
-                }
-            }
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-        return t;
+//        T t = null;
+//
+//        try {
+//            t = entitySample.getConstructor().newInstance();
+//            String[] pros = txt.split(",");
+//            for (int i = 0; i < pros.length; i++) {
+//                String[] pro = pros[i].split(":");
+//                if (pro[0].equals("id")) {
+//                    setValue(t, pro[0], Long.valueOf(pro[1]));
+//                } else {
+//                    setValue(t, pro[0], pro[1]);
+//                }
+//            }
+//        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+//                 NoSuchMethodException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        Gson gson = new Gson();
+        return gson.fromJson(txt, entitySample);
     }
 
     private String entityToTxt(T t) {
-        StringBuffer sbf = new StringBuffer();
-        Class<?> clazz = entitySample;
-        while (true) {
-            for (Field field : clazz.getDeclaredFields()) {
-                if (!field.getName().equals("dbutil")) {
-                    Object obj = getValue(t, field.getName());
-                    if (obj != null && !obj.toString().isEmpty()) {
-                        sbf.append(field.getName()).append(":").append(obj).append(",");
-                    }
-                }
-            }
-            if (clazz.equals(Entity.class)) {
-                break;
-            }
-            else {
-                clazz = clazz.getSuperclass();
-            }
-        }
+//        StringBuffer sbf = new StringBuffer();
+//        Class<?> clazz = entitySample;
+//        while (true) {
+//            for (Field field : clazz.getDeclaredFields()) {
+//                if (!field.getName().equals("dbutil")) {
+//                    Object obj = getValue(t, field.getName());
+//                    if (obj != null && !obj.toString().isEmpty()) {
+//                        sbf.append(field.getName()).append(":").append(obj).append(",");
+//                    }
+//                }
+//            }
+//            if (clazz.equals(Entity.class)) {
+//                break;
+//            }
+//            else {
+//                clazz = clazz.getSuperclass();
+//            }
+//        }
+//
+//        return sbf.toString();
 
-        return sbf.toString();
+        Gson gson = new Gson();
+        return gson.toJson(t);
     }
 }

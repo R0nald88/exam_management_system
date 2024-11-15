@@ -1,22 +1,16 @@
 package comp3111.examsystem.entity.Questions;
 
+import com.google.gson.Gson;
 import comp3111.examsystem.entity.Entity;
-import javafx.fxml.Initializable;
 
 import java.util.Objects;
 
 public class Question extends Entity {
-    public static final int OPTION_LENGTH_LIMIT = 20;
-    public static final int ANSWER_LENGTH_LIMIT = -1;
-    public static final int QUESTION_LENGTH_LIMIT = -1;
-    public static final int SCORE_UPPER_LIMIT = -1;
-    public static final int SCORE_LOWER_LIMIT = 0;
-
     private String question;
     private String answer;
     private int score;
     private QuestionType type;
-    private String optionA, optionB, optionC, optionD;
+    private String optionA = "", optionB = "", optionC = "", optionD = "";
 
     public Question() {
         super(System.currentTimeMillis());
@@ -32,8 +26,8 @@ public class Question extends Entity {
         if (question.isEmpty()) {
             throw new Exception("Question should not be empty.");
         }
-        if (QUESTION_LENGTH_LIMIT > 0 && question.length() > QUESTION_LENGTH_LIMIT) {
-            throw new Exception("Question length should not exceed " + QUESTION_LENGTH_LIMIT + ".");
+        if (QuestionDatabase.QUESTION_LENGTH_LIMIT > 0 && question.length() > QuestionDatabase.QUESTION_LENGTH_LIMIT) {
+            throw new Exception("Question length should not exceed " + QuestionDatabase.QUESTION_LENGTH_LIMIT + ".");
         }
         this.question = question;
     }
@@ -58,7 +52,6 @@ public class Question extends Entity {
 
     public void setType(QuestionType type) {
         this.type = type;
-        getTypeFactory().initialize(this);
     }
 
     public int getScore() {
@@ -67,17 +60,17 @@ public class Question extends Entity {
 
     public void setScore(int score) throws Exception {
         String error = "Invalid exam time.";
-        if (SCORE_UPPER_LIMIT > SCORE_LOWER_LIMIT && SCORE_LOWER_LIMIT >= 0) {
-            error = "Please input a valid score between " + SCORE_LOWER_LIMIT +
-                    " and " + SCORE_UPPER_LIMIT + " second(s).";
-        } else if (SCORE_UPPER_LIMIT > 0) {
-            error = "Please input a valid score less than " + SCORE_UPPER_LIMIT + " second(s).";
-        } else if (SCORE_LOWER_LIMIT >= 0) {
-            error = "Please input a valid score larger than " + SCORE_LOWER_LIMIT + " second(s).";
+        if (QuestionDatabase.SCORE_UPPER_LIMIT > QuestionDatabase.SCORE_LOWER_LIMIT && QuestionDatabase.SCORE_LOWER_LIMIT >= 0) {
+            error = "Please input a valid score between " + QuestionDatabase.SCORE_LOWER_LIMIT +
+                    " and " + QuestionDatabase.SCORE_UPPER_LIMIT + " second(s).";
+        } else if (QuestionDatabase.SCORE_UPPER_LIMIT > 0) {
+            error = "Please input a valid score less than " + QuestionDatabase.SCORE_UPPER_LIMIT + " second(s).";
+        } else if (QuestionDatabase.SCORE_LOWER_LIMIT >= 0) {
+            error = "Please input a valid score larger than " + QuestionDatabase.SCORE_LOWER_LIMIT + " second(s).";
         }
 
-        if ((SCORE_LOWER_LIMIT >= 0 && score < SCORE_LOWER_LIMIT) ||
-                (SCORE_UPPER_LIMIT > 0 && score > SCORE_UPPER_LIMIT)) {
+        if ((QuestionDatabase.SCORE_LOWER_LIMIT >= 0 && score < QuestionDatabase.SCORE_LOWER_LIMIT) ||
+                (QuestionDatabase.SCORE_UPPER_LIMIT > 0 && score > QuestionDatabase.SCORE_UPPER_LIMIT)) {
             throw new Exception(error);
         }
         this.score = score;
@@ -137,6 +130,11 @@ public class Question extends Entity {
         optionD = optionD.trim();
         getTypeFactory().validateOption(optionD, 3);
         this.optionD = optionD;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 
     @Override

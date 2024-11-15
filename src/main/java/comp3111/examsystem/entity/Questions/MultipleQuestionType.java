@@ -18,7 +18,7 @@ public final class MultipleQuestionType extends QuestionTypeFactory {
         boolean isAvailable = false;
         String availableAnswer = "ABCD";
         for (int i = 0; i < answer.length(); i++) {
-            String currentOption = answer.charAt(1) + "";
+            String currentOption = answer.charAt(i) + "";
             if (availableAnswer.contains(currentOption)) {
                 availableAnswer = availableAnswer.replace(currentOption, "");
             } else if ("ABCD".contains(currentOption)) {
@@ -27,15 +27,5 @@ public final class MultipleQuestionType extends QuestionTypeFactory {
                 throw new Exception("The answer of Multiple Question should be 2 to 4 letters from A to D");
             }
         }
-    }
-
-    @Override
-    public void setUpForm() {
-
-    }
-
-    @Override
-    public void initialize(Question form) {
-
     }
 }

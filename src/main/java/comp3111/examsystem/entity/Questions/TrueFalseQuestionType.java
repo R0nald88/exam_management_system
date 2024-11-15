@@ -1,5 +1,10 @@
 package comp3111.examsystem.entity.Questions;
 
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+
 public final class TrueFalseQuestionType extends QuestionTypeFactory {
     private static TrueFalseQuestionType instance = null;
 
@@ -36,19 +41,28 @@ public final class TrueFalseQuestionType extends QuestionTypeFactory {
     }
 
     @Override
-    public void setUpForm() {
+    public void setUpForm(Label[] labels, TextField[] fields, String[] options, Label originalLabel, TextField originalField) {
+        for (int i = 0; i < 4; i++) {
+            labels[i].setDisable(true);
+            fields[i].setDisable(true);
+        }
 
+        fields[0].setText("True");
+        fields[1].setText("False");
+        fields[2].setText("");
+        fields[3].setText("");
     }
 
     @Override
-    public void initialize(Question form) {
-        try {
-            form.setOptionA("True");
-            form.setOptionB("False");
-            form.setOptionC("");
-            form.setOptionD("");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void initialize(TextField[] fields, Question form) throws Exception {
+        form.setOptionA("True");
+        form.setOptionB("False");
+        form.setOptionC("");
+        form.setOptionD("");
+    }
+
+    @Override
+    public void saveOptions(TextField[] fields, String[] options) {
+
     }
 }

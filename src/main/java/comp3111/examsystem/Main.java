@@ -1,5 +1,6 @@
 package comp3111.examsystem;
 
+import comp3111.examsystem.tools.MsgSender;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,7 +15,7 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
-			e.printStackTrace();
+			MsgSender.showMsg(e.getMessage());
 		}
 	}
 	
