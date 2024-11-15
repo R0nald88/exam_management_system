@@ -1,5 +1,7 @@
-package comp3111.examsystem.entity.Exam;
+package comp3111.examsystem.entity;
 
+import comp3111.examsystem.entity.Exam.Exam;
+import comp3111.examsystem.entity.Exam.ExamDatabase;
 import org.junit.Test;
 
 import java.util.List;
