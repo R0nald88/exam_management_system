@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="comp3111.examsystem.controller.TeacherExamManagementController"
+            prefHeight="650.0" prefWidth="1050.0">
+    <top>
+        <HBox alignment="CENTER" prefHeight="120.0">
+            <VBox prefWidth="350.0" prefHeight="120.0">
+                <Label text="Exam Bank" prefHeight="30">
+                    <font>
+                        <Font name="System Bold" size="17.5" />
+                    </font>
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                </Label>
+
+                <HBox prefHeight="30.0" prefWidth="350.0" alignment="CENTER">
+                    <Label text="Exam Name" prefWidth="70.0">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <TextField fx:id="examNameSearchTxt" prefWidth="270.0"/>
+                </HBox>
+
+                <HBox prefHeight="30.0" prefWidth="350.0" alignment="CENTER">
+                    <Label text="Course ID" prefWidth="70.0">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <ChoiceBox fx:id="examCourseIdSearchCombox" prefWidth="95"/>
+                    <Label text="Published" prefWidth="70.0">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <ChoiceBox fx:id="examPublishedSearchCombox" prefWidth="95"/>
+                </HBox>
+
+                <HBox prefHeight="30.0" prefWidth="350.0" alignment="BASELINE_RIGHT" BorderPane.alignment="BASELINE_RIGHT">
+                    <Button text="Reset"  fx:id="examResetBtn" onAction="#examReset">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                    <Button text="Filter" fx:id="examFilterBtn" onAction="#examFilter">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                </HBox>
+            </VBox>
+
+            <VBox prefWidth="350.0" prefHeight="120">
+                <Label text="Question in Exam" prefHeight="30">
+                    <font>
+                        <Font name="System Bold" size="17.5" />
+                    </font>
+                </Label>
+            </VBox>
+
+            <VBox prefWidth="350.0" prefHeight="120">
+                <Label text="Question Bank" prefHeight="30">
+                    <font>
+                        <Font name="System Bold" size="17.5" />
+                    </font>
+                </Label>
+
+                <HBox prefHeight="30.0" prefWidth="350.0" alignment="CENTER">
+                    <Label text="Question" prefWidth="70.0"/>
+                    <TextField fx:id="questionSearchTxt" prefWidth="270.0">
+                        <HBox.margin>
+                            <Insets right="10.0"/>
+                        </HBox.margin>
+                    </TextField>
+                </HBox>
+
+                <HBox prefHeight="30.0" prefWidth="350.0" alignment="CENTER">
+                    <Label text="Type" prefWidth="70.0"/>
+                    <ChoiceBox fx:id="questionTypeSearchCombox" prefWidth="95"/>
+                    <Label text="Score" prefWidth="70.0">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <TextField fx:id="questionScoreSearchTxt" prefWidth="95">
+                        <HBox.margin>
+                            <Insets right="10.0"/>
+                        </HBox.margin>
+                    </TextField>
+                </HBox>
+
+                <HBox prefHeight="30.0" prefWidth="350.0" alignment="BASELINE_RIGHT" BorderPane.alignment="BASELINE_RIGHT">
+                    <Button text="Reset" fx:id="questionResetBtn" onAction="#questionReset">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                    <Button text="Filter" fx:id="questionFilterBtn" onAction="#questionFilter">
+                        <HBox.margin>
+                            <Insets left="10.0" right="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                </HBox>
+            </VBox>
+
+        </HBox>
+    </top>
+
+    <left>
+        <TableView prefHeight="490" prefWidth="350" fx:id="examTable">
+            <columns>
+                <TableColumn fx:id="examNameCol" prefWidth="87.5" text="Exam Name"/>
+                <TableColumn fx:id="examCourseIdCol" prefWidth="87.5" text="Course ID"/>
+                <TableColumn fx:id="examTimeCol" prefWidth="87.5" text="Exam Time"/>
+                <TableColumn fx:id="examPublishedCol" prefWidth="87.5" text="Published"/>
+            </columns>
+        </TableView>
+    </left>
+
+    <right>
+        <VBox prefHeight="490" prefWidth="700">
+            <HBox prefHeight="400" prefWidth="700">
+                <TableView prefHeight="400" prefWidth="350" fx:id="examQuestionTable">
+                    <columns>
+                        <TableColumn fx:id="examQuestionCol" prefWidth="117" text="Question"/>
+                        <TableColumn fx:id="examQuestionTypeCol" prefWidth="116" text="Type"/>
+                        <TableColumn fx:id="examQuestionScoreCol" prefWidth="116" text="Score"/>
+                    </columns>
+                </TableView>
+
+                <TableView prefHeight="400" prefWidth="350" fx:id="questionTable">
+                    <columns>
+                        <TableColumn fx:id="questionCol" prefWidth="117" text="Question"/>
+                        <TableColumn fx:id="questionTypeCol" prefWidth="116" text="Type"/>
+                        <TableColumn fx:id="questionScoreCol" prefWidth="116" text="Score"/>
+                    </columns>
+                </TableView>
+            </HBox>
+
+            <HBox prefHeight="30" alignment="CENTER_RIGHT">
+                <Button fx:id="deleteQuestionBtn" text="Delete From Left" onAction="#deleteQuestion">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="addQuestionBtn" text="Add To Left" onAction="#addQuestion">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10"/>
+                    </HBox.margin>
+                </Button>
+            </HBox>
+
+            <HBox prefHeight="30" alignment="CENTER_LEFT" prefWidth="700">
+                <Label text="Exam Name" prefWidth="70.0">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField fx:id="examNameTxt" prefWidth="265.0"/>
+                <Label text="Exam Time" prefWidth="70.0">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField fx:id="examTimeTxt" prefWidth="265.0">
+                    <HBox.margin>
+                        <Insets right="10.0"/>
+                    </HBox.margin>
+                </TextField>
+            </HBox>
+
+            <HBox prefHeight="30" alignment="CENTER_LEFT" prefWidth="700">
+                <Label text="Course ID" prefWidth="70.0">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <ChoiceBox fx:id="examCourseIdCombox" prefWidth="265.0"/>
+                <Label text="Publish" prefWidth="70.0">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <ChoiceBox fx:id="examPublishedCombox" prefWidth="265.0">
+                    <HBox.margin>
+                        <Insets right="10.0"/>
+                    </HBox.margin>
+                </ChoiceBox>
+            </HBox>
+        </VBox>
+    </right>
+
+    <bottom>
+        <HBox prefHeight="40.0" prefWidth="1050.0">
+            <HBox prefHeight="40.0" prefWidth="350.0" alignment="CENTER_RIGHT">
+                <HBox.margin>
+                    <Insets top="5.0"/>
+                </HBox.margin>
+                <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#refresh" text="Refresh">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#delete" text="Delete">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10"/>
+                    </HBox.margin>
+                </Button>
+            </HBox>
+            <HBox prefHeight="40.0" prefWidth="700.0" alignment="CENTER_RIGHT">
+                <HBox.margin>
+                    <Insets top="5.0"/>
+                </HBox.margin>
+                <Button fx:id="updateBtn" mnemonicParsing="false" onAction="#update" text="Update">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#add" text="Add">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10"/>
+                    </HBox.margin>
+                </Button>
+            </HBox>
+        </HBox>
+    </bottom>
+</BorderPane>

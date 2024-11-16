@@ -12,9 +12,14 @@ public enum QuestionType implements Serializable {
     QuestionType(String n) {
         name = n;
     }
-
-    @Override
-    public String toString() {
+    public String getName() {
         return name;
+    }
+
+    public static QuestionType toType(String s) {
+        for (QuestionType t : QuestionType.values()) {
+            if (t.getName().equals(s)) return t;
+        }
+        return QuestionType.valueOf(s);
     }
 }

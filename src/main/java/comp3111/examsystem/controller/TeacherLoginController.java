@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import comp3111.examsystem.Main;
+import comp3111.examsystem.entity.Personnel.TeacherDatabase;
+import comp3111.examsystem.tools.MsgSender;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,19 +30,36 @@ public class TeacherLoginController implements Initializable {
 
     @FXML
     public void login(ActionEvent e) {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherMainUI.fxml"));
+        try {
+            TeacherDatabase.getInstance().validateTeacherLogin(usernameTxt.getText(), passwordTxt.getText());
+            MsgSender.showConfirm("Login Successfully", "Successful Login", () -> {
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherMainUI.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
+                try {
+                    stage.setScene(new Scene(fxmlLoader.load()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+                stage.show();
+            });
+        } catch (Exception e1) {
+            MsgSender.showConfirm("Login Error", e1.getMessage(), () -> {});
+        }
+
+    }
+
+    @FXML
+    public void register() {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherRegisterUI.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
+        stage.setTitle("Teacher Register");
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
         } catch (IOException e1) {
             e1.printStackTrace();
         }
         stage.show();
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
-    }
-
-    @FXML
-    public void register() {
     }
 }

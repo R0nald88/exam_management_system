@@ -5,6 +5,9 @@ import comp3111.examsystem.tools.Database;
 import java.util.List;
 
 public class ExamDatabase extends Database<Exam> {
+    public static final int EXAM_TIME_UPPER_LIMIT = -1;
+    public static final int EXAM_TIME_LOWER_LIMIT = -1;
+    public static final int EXAM_NAME_LENGTH_LIMIT = -1;
     private static ExamDatabase instance = null;
 
     private ExamDatabase() {
@@ -81,5 +84,9 @@ public class ExamDatabase extends Database<Exam> {
         for (Exam e : exams) {
             deleteExam(e);
         }
+    }
+
+    public void deleteAll() throws Exception {
+        deleteExams(getAll());
     }
 }
