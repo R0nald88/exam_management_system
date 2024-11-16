@@ -2,6 +2,7 @@ package comp3111.examsystem.entity.Questions;
 
 import com.google.gson.Gson;
 import comp3111.examsystem.entity.Entity;
+import comp3111.examsystem.tools.Database;
 
 import java.util.Objects;
 
@@ -23,12 +24,7 @@ public class Question extends Entity {
 
     public void setQuestion(String question) throws Exception {
         question = question.trim();
-        if (question.isEmpty()) {
-            throw new Exception("Question should not be empty.");
-        }
-        if (QuestionDatabase.QUESTION_LENGTH_LIMIT > 0 && question.length() > QuestionDatabase.QUESTION_LENGTH_LIMIT) {
-            throw new Exception("Question length should not exceed " + QuestionDatabase.QUESTION_LENGTH_LIMIT + ".");
-        }
+        Database.validateTextLength(QuestionDatabase.QUESTION_LENGTH_LIMIT, question, "question");
         this.question = question;
     }
 
@@ -59,37 +55,26 @@ public class Question extends Entity {
     }
 
     public void setScore(int score) throws Exception {
-        String error = "Invalid exam time.";
-        if (QuestionDatabase.SCORE_UPPER_LIMIT > QuestionDatabase.SCORE_LOWER_LIMIT && QuestionDatabase.SCORE_LOWER_LIMIT >= 0) {
-            error = "Please input a valid score between " + QuestionDatabase.SCORE_LOWER_LIMIT +
-                    " and " + QuestionDatabase.SCORE_UPPER_LIMIT + " second(s).";
-        } else if (QuestionDatabase.SCORE_UPPER_LIMIT > 0) {
-            error = "Please input a valid score less than " + QuestionDatabase.SCORE_UPPER_LIMIT + " second(s).";
-        } else if (QuestionDatabase.SCORE_LOWER_LIMIT >= 0) {
-            error = "Please input a valid score larger than " + QuestionDatabase.SCORE_LOWER_LIMIT + " second(s).";
-        }
-
-        if ((QuestionDatabase.SCORE_LOWER_LIMIT >= 0 && score < QuestionDatabase.SCORE_LOWER_LIMIT) ||
-                (QuestionDatabase.SCORE_UPPER_LIMIT > 0 && score > QuestionDatabase.SCORE_UPPER_LIMIT)) {
-            throw new Exception(error);
-        }
+        Database.validateNumberRange(
+                QuestionDatabase.SCORE_LOWER_LIMIT,
+                QuestionDatabase.SCORE_UPPER_LIMIT,
+                score,
+                "score",
+                ""
+        );
         this.score = score;
     }
 
     public void setScore(String score) throws Exception {
         score = score.trim();
-
-        if (score.isEmpty()) {
-            throw new Exception("Please enter the question score.");
-        }
-
-        int s = 0;
-        try {
-            s = Integer.parseInt(score);
-        } catch (Exception e) {
-            throw new Exception("Score should be an integer.");
-        }
-        setScore(s);
+        Database.validateNumberRange(
+                QuestionDatabase.SCORE_LOWER_LIMIT,
+                QuestionDatabase.SCORE_UPPER_LIMIT,
+                score,
+                "score",
+                ""
+        );
+        this.score = Integer.parseInt(score);
     }
 
     public String getOptionA() {
