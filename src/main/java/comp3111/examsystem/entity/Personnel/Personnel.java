@@ -42,7 +42,10 @@ public class Personnel extends Entity {
         }
 
         for (Personnel personnel : registeredPersonnels.values()) {
-            if (personnel.getName().equals(name)) {
+            if (personnel.getName().equals(name)
+             && personnel.getAge() == age
+             && personnel.getGender().equals(gender)
+             && personnel.getDepartment().equals(department)) {
                 errorMessages.add("Error: Student had already registered.");
             }
         }
@@ -62,8 +65,8 @@ public class Personnel extends Entity {
         }
 
         if (errorMessages.isEmpty()) {
-            Student newStudent = new Student(username, name, age, gender, department, password, passwordConfirm);
-            registeredPersonnels.put(username, newStudent);
+            Personnel newPersonnel = new Personnel(username, name, age, gender, department, password);
+            registeredPersonnels.put(username, newPersonnel);
         }
 
         if (errorMessages.isEmpty()) {

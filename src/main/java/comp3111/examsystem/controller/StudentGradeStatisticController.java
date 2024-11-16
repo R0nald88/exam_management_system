@@ -1,5 +1,7 @@
 package comp3111.examsystem.controller;
 
+import comp3111.examsystem.entity.Exam.Exam;
+import comp3111.examsystem.entity.Personnel.Student;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,6 +13,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class StudentGradeStatisticController implements Initializable {
@@ -52,6 +55,13 @@ public class StudentGradeStatisticController implements Initializable {
     CategoryAxis categoryAxisBar;
     @FXML
     NumberAxis numberAxisBar;
+
+    private Student student;
+    private List<Exam> examList;
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
     private final ObservableList<GradeExampleClass> gradeList = FXCollections.observableArrayList();
 
