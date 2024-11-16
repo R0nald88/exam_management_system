@@ -1,5 +1,7 @@
 package comp3111.examsystem.tools;
 
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import comp3111.examsystem.entity.Entity;
 
 import java.io.File;
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database<T> {
+    public static final int TEXT_LENGTH_LIMIT = -1;
+
     Class<T> entitySample;
     String tableName;
     String jsonFile;
@@ -269,12 +273,21 @@ public class Database<T> {
             try {
                 Field field = clazz.getDeclaredField(fieldName);
                 field.setAccessible(true);
-                field.set(entity, fieldValue);
+
+                if (fieldValue == null || "null".equals(fieldValue.toString())) {
+                    field.set(entity, null);
+                } else if (field.getType().equals(String.class)) {
+                    field.set(entity, fieldValue.toString());
+                } else {
+                    Gson gson = new Gson();
+                    field.set(entity, gson.fromJson(fieldValue.toString(), field.getType()));
+                }
                 break;
             }
             catch (NoSuchFieldException e) {
                 if (clazz.equals(Object.class))
                     throw new RuntimeException(e);
+                System.out.println(e.getMessage());
             }
             catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
@@ -292,45 +305,91 @@ public class Database<T> {
     }
 
     private T txtToEntity(String txt) {
-        T t = null;
-        try {
-            t = entitySample.getConstructor().newInstance();
-            String[] pros = txt.split(",");
-            for (int i = 0; i < pros.length; i++) {
-                String[] pro = pros[i].split(":");
-                if (pro[0].equals("id")) {
-                    setValue(t, pro[0], Long.valueOf(pro[1]));
-                } else {
-                    setValue(t, pro[0], pro[1]);
-                }
-            }
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-        return t;
+//        T t = null;
+//
+//        try {
+//            t = entitySample.getConstructor().newInstance();
+//            String[] pros = txt.split(",");
+//            for (int i = 0; i < pros.length; i++) {
+//                String[] pro = pros[i].split(":");
+//                if (pro[0].equals("id")) {
+//                    setValue(t, pro[0], Long.valueOf(pro[1]));
+//                } else {
+//                    setValue(t, pro[0], pro[1]);
+//                }
+//            }
+//        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+//                 NoSuchMethodException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        Gson gson = new Gson();
+        return gson.fromJson(txt, entitySample);
     }
 
     private String entityToTxt(T t) {
-        StringBuffer sbf = new StringBuffer();
-        Class<?> clazz = entitySample;
-        while (true) {
-            for (Field field : clazz.getDeclaredFields()) {
-                if (!field.getName().equals("dbutil")) {
-                    Object obj = getValue(t, field.getName());
-                    if (obj != null && !obj.toString().isEmpty()) {
-                        sbf.append(field.getName()).append(":").append(obj).append(",");
-                    }
-                }
-            }
-            if (clazz.equals(Entity.class)) {
-                break;
-            }
-            else {
-                clazz = clazz.getSuperclass();
-            }
+//        StringBuffer sbf = new StringBuffer();
+//        Class<?> clazz = entitySample;
+//        while (true) {
+//            for (Field field : clazz.getDeclaredFields()) {
+//                if (!field.getName().equals("dbutil")) {
+//                    Object obj = getValue(t, field.getName());
+//                    if (obj != null && !obj.toString().isEmpty()) {
+//                        sbf.append(field.getName()).append(":").append(obj).append(",");
+//                    }
+//                }
+//            }
+//            if (clazz.equals(Entity.class)) {
+//                break;
+//            }
+//            else {
+//                clazz = clazz.getSuperclass();
+//            }
+//        }
+//
+//        return sbf.toString();
+
+        Gson gson = new Gson();
+        return gson.toJson(t);
+    }
+
+    public static void validateNumberRange(int lower, int upper, int input, String fieldName, String unit) {
+        String s = "";
+        if (upper > lower && lower >= 0) {
+            s = " between " + lower + " and " + upper;
+        } else if (upper > 0) {
+            s = " less than " + upper;
+        } else if (lower >= 0) {
+            s = " larger than " + lower;
         }
 
-        return sbf.toString();
+        if ((lower >= 0 && input < lower) || (upper > 0 && input > upper)) {
+            throw new RuntimeException(
+                    "Please enter a valid " +
+                    fieldName.toLowerCase().trim() + s +
+                    (unit == null || unit.trim().isEmpty() ? "." : " " + unit.trim() + "."));
+        }
+    }
+
+    public static void validateNumberRange(int lower, int upper, String input, String fieldName, String unit) {
+        validateTextLength(-1, input, fieldName);
+        int a;
+        try {
+            a = Integer.parseInt(input);
+        } catch (Exception e) {
+            throw new RuntimeException("The " + fieldName.trim().toLowerCase() + " should be an integer.");
+        }
+
+        validateNumberRange(lower, upper, a, fieldName, unit);
+    }
+
+    public static void validateTextLength(int length, String input, String fieldName) {
+        if (input == null || input.trim().isEmpty()) {
+            throw new RuntimeException("Please enter the " + fieldName.trim().toLowerCase() + ".");
+        }
+
+        if (length > 0 && input.length() > length) {
+            throw new RuntimeException("Length of " + fieldName.trim().toLowerCase() + " should not be larger than " + length + ".");
+        }
     }
 }
