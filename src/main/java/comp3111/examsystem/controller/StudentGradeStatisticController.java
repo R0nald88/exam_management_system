@@ -33,6 +33,8 @@ public class StudentGradeStatisticController implements Initializable {
     }
 
     @FXML
+    private ChoiceBox<String> courseCombox;
+    @FXML
     private TableView<GradeExampleClass> gradeTable;
     @FXML
     private TableColumn<GradeExampleClass, String> courseColumn;
@@ -55,6 +57,9 @@ public class StudentGradeStatisticController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        //TODO: set Student Grade Statistics content to this student
+
         barChart.setLegendVisible(false);
         categoryAxisBar.setLabel("Exam");
         numberAxisBar.setLabel("Score");
@@ -73,9 +78,15 @@ public class StudentGradeStatisticController implements Initializable {
 
     @FXML
     public void refresh() {
+        reset();
+        loadChart();
     }
 
     private void loadChart() {
+
+        //TODO: set Student Grade Statistics content to this student and handle filter
+        //TODO: may also change it to load table as well
+
         XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
         seriesBar.getData().clear();
         barChart.getData().clear();
@@ -88,9 +99,11 @@ public class StudentGradeStatisticController implements Initializable {
 
     @FXML
     public void reset() {
+        courseCombox.setValue(null); // Clear the selected item
     }
 
     @FXML
     public void query() {
+        loadChart();
     }
 }
