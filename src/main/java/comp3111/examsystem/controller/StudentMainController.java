@@ -3,6 +3,7 @@ package comp3111.examsystem.controller;
 import comp3111.examsystem.Main;
 import comp3111.examsystem.entity.Exam.Exam;
 import comp3111.examsystem.entity.Exam.ExamDatabase;
+import comp3111.examsystem.entity.Exam.Submission;
 import comp3111.examsystem.entity.Personnel.Student;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -43,6 +44,9 @@ public class StudentMainController implements Initializable {
     public void openExamUI(ActionEvent e) {
         if (examCombox.getValue() != null) {
             Exam selectedExam = ExamDatabase.getInstance().queryByField("Name", examCombox.getValue()).getFirst();
+            Submission submission = new Submission();
+            submission.setStudent(student);
+            submission.setExam(selectedExam);
 
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentStartExamUI.fxml"));
             Stage stage = new Stage();
@@ -50,7 +54,7 @@ public class StudentMainController implements Initializable {
             try {
                 Parent root = fxmlLoader.load();
                 StudentStartExamController studentStartExamController = fxmlLoader.getController();
-                studentStartExamController.setExam(selectedExam);
+                studentStartExamController.setSubmission(submission);
                 stage.setScene(new Scene(fxmlLoader.load()));
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -62,13 +66,13 @@ public class StudentMainController implements Initializable {
 
     @FXML
     public void openGradeStatistic(ActionEvent e) {
-        //TODO: set Student Grade Statistics content to this student
-
-
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentGradeStatisticUI.fxml"));
         Stage stage = new Stage();
         stage.setTitle("Grade Statistics");
         try {
+            Parent root = fxmlLoader.load();
+            StudentGradeStatisticController studentGradeStatisticController = fxmlLoader.getController();
+            studentGradeStatisticController.setStudent(student);
             stage.setScene(new Scene(fxmlLoader.load()));
         } catch ( IOException e1) {
             e1.printStackTrace();
