@@ -6,62 +6,117 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.text.*?>
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-      style="-fx-background-repeat: stretch;-fx-background-position: center center;" minHeight="-Infinity"
-      minWidth="-Infinity" prefHeight="600" prefWidth="600" spacing="20.0" xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.StudentRegisterController">
-    <children>
-        <Region prefHeight="10.0" prefWidth="600.0"/>
-        <GridPane
-                alignment="CENTER"
-                hgap="10"
-                vgap="10">
-
-            <columnConstraints>
-                <ColumnConstraints halignment="RIGHT"/>
-                <ColumnConstraints halignment="LEFT"/>
-            </columnConstraints>
-
-            <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <TextField fx:id="usernameTxt" promptText="Please enter the user ID" GridPane.columnIndex="1"
-                       GridPane.rowIndex="0"/>
-
-            <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="nameTxt" promptText="Please enter your name" GridPane.columnIndex="1"
-                       GridPane.rowIndex="1"/>
-
-            <Label text="Gender:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <ComboBox fx:id="genderSelect" prefWidth="150.0" promptText="Select Gender">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Male" />
-                        <String fx:value="Female" />
-                    </FXCollections>
-                </items>
-            </ComboBox>
-
-            <Label text="Age:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="ageTxt" promptText="Please enter your age" GridPane.columnIndex="1"
-                       GridPane.rowIndex="3"/>
-
-            <Label text="Department:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="departmentTxt" promptText="Please enter your department" GridPane.columnIndex="1"
-                       GridPane.rowIndex="4"/>
-
-            <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <PasswordField fx:id="passwordTxt" promptText="Please enter the password" GridPane.columnIndex="1"
-                           GridPane.rowIndex="5"/>
-
-            <Label text="PasswordConfirm:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <PasswordField fx:id="passwordConfirmTxt" promptText="Please enter the password" GridPane.columnIndex="1"
-                           GridPane.rowIndex="6"/>
-
-        </GridPane>
-        <HBox alignment="CENTER" prefHeight="47.0" prefWidth="600.0" spacing="20.0">
-            <children>
-                <Button mnemonicParsing="false" onAction="#close" text="close"/>
-                <Button mnemonicParsing="false" onAction="#register" text="Register"/>
-            </children>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="comp3111.examsystem.controller.StudentRegisterController"
+            prefHeight="600.0" prefWidth="600.0">
+    <top>
+        <VBox prefHeight="150" prefWidth="400" alignment="CENTER">
+            <Label text="Student Registration">
+                <font>
+                    <Font name="System Bold" size="25" />
+                </font>
+            </Label>
+        </VBox>
+    </top>
+    <right>
+        <VBox prefHeight="600" prefWidth="50"/>
+    </right>
+    <left>
+        <VBox prefHeight="600" prefWidth="50"/>
+    </left>
+    <bottom>
+        <HBox prefHeight="150" prefWidth="400" alignment="TOP_CENTER">
+            <Button text="Close" prefWidth="195" prefHeight="30" onAction="#close">
+                <HBox.margin>
+                    <Insets right="10.0"/>
+                </HBox.margin>
+            </Button>
+            <Button text="Register" prefWidth="195" prefHeight="30" onAction="#register"/>
         </HBox>
-    </children>
-</VBox>
+    </bottom>
+    <center>
+        <VBox prefHeight="400" prefWidth="300">
+            <HBox prefWidth="300" alignment="CENTER">
+                <Label prefWidth="80" text="Username" textAlignment="RIGHT">
+                    <HBox.margin>
+                        <Insets right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField prefWidth="310.0" promptText="Please enter the username" fx:id="usernameTxt"/>
+            </HBox>
+
+            <HBox prefWidth="300" alignment="CENTER">
+                <VBox.margin>
+                    <Insets top="5"/>
+                </VBox.margin>
+                <Label prefWidth="80" text="Name" textAlignment="RIGHT">
+                    <HBox.margin>
+                        <Insets right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField prefWidth="310.0" promptText="Please enter your name" fx:id="nameTxt"/>
+            </HBox>
+
+            <HBox prefWidth="300" alignment="CENTER">
+                <VBox.margin>
+                    <Insets top="5"/>
+                </VBox.margin>
+                <Label prefWidth="80" text="Gender" textAlignment="RIGHT">
+                    <HBox.margin>
+                        <Insets right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <ChoiceBox prefWidth="310.0" fx:id="genderCombox"/>
+            </HBox>
+
+            <HBox prefWidth="300" alignment="CENTER">
+                <VBox.margin>
+                    <Insets top="5"/>
+                </VBox.margin>
+                <Label prefWidth="80" text="Age" textAlignment="RIGHT">
+                    <HBox.margin>
+                        <Insets right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField prefWidth="310.0" promptText="Please enter your age" fx:id="ageTxt"/>
+            </HBox>
+
+            <HBox prefWidth="300" alignment="CENTER">
+                <VBox.margin>
+                    <Insets top="5"/>
+                </VBox.margin>
+                <Label prefWidth="80" text="Department" textAlignment="RIGHT">
+                    <HBox.margin>
+                        <Insets right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField prefWidth="310.0" promptText="Please enter your department" fx:id="deptTxt"/>
+            </HBox>
+
+            <HBox prefWidth="300" alignment="CENTER">
+                <VBox.margin>
+                    <Insets top="5"/>
+                </VBox.margin>
+                <Label prefWidth="80" text="Password" textAlignment="RIGHT">
+                    <HBox.margin>
+                        <Insets right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField prefWidth="310.0" promptText="Please enter the password" fx:id="pwdTxt"/>
+            </HBox>
+
+            <HBox prefWidth="300" alignment="CENTER">
+                <VBox.margin>
+                    <Insets top="5"/>
+                </VBox.margin>
+                <Label prefWidth="120" text="Confirmed Password" textAlignment="RIGHT">
+                    <HBox.margin>
+                        <Insets right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField prefWidth="270.0" promptText="Please enter the password again" fx:id="confirmedPwdTxt"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
