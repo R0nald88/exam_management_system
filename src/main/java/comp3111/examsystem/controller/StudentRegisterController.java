@@ -1,15 +1,15 @@
 package comp3111.examsystem.controller;
 
 import comp3111.examsystem.Main;
+import comp3111.examsystem.entity.Personnel.Student;
+import comp3111.examsystem.entity.Personnel.StudentDatabase;
+import comp3111.examsystem.tools.MsgSender;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class StudentRegisterController implements Initializable {
     @FXML
     private TextField nameTxt;
     @FXML
-    private ComboBox<String> genderSelect;
+    private ChoiceBox<String> genderCombox;
     @FXML
     private TextField ageTxt;
     @FXML
@@ -53,9 +53,26 @@ public class StudentRegisterController implements Initializable {
 
     @FXML
     public void register(ActionEvent e) {
-
-        //TODO: set dialog register successful
+        try {
+            Student student = getStudent();
+            StudentDatabase.getInstance().registerStudent(student);
+            MsgSender.showConfirm("Hint", "Student Register successful.", () -> close(e));
+        } catch (Exception e1) {
+            MsgSender.showConfirm("Registration Error", e1.getMessage(), () -> {});
+        }
 
         close(e);
+    }
+
+    private Student getStudent() {
+        Student student = new Student();
+        student.setUsername(usernameTxt.getText());
+        student.setName(nameTxt.getText());
+        student.setGender(genderCombox.getSelectionModel().getSelectedItem());
+        student.setAge(ageTxt.getText());
+        student.setDepartment(departmentTxt.getText());
+        student.setPassword(passwordTxt.getText());
+        student.confirmPassword(passwordConfirmTxt.getText());
+        return student;
     }
 }

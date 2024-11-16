@@ -1,7 +1,11 @@
 package comp3111.examsystem.controller;
 
 import comp3111.examsystem.entity.Exam.Exam;
+import comp3111.examsystem.entity.Exam.Submission;
+import comp3111.examsystem.entity.Exam.SubmissionDatabase;
 import comp3111.examsystem.entity.Personnel.Student;
+import comp3111.examsystem.entity.Questions.Question;
+import comp3111.examsystem.entity.Questions.QuestionDatabase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +21,30 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class StudentGradeStatisticController implements Initializable {
-    public static class GradeExampleClass {
+
+    public static class GradeDetailClass {
+        private String courseNum, examName, score, fullScore, timeSpent;
+
+        public void setCourseNum(String courseNum) {
+            this.courseNum = courseNum;
+        }
+
+        public void setExamName(String examName) {
+            this.examName = examName;
+        }
+
+        public void setScore(String score) {
+            this.score = score;
+        }
+
+        public void setFullScore(String fullScore) {
+            this.fullScore = fullScore;
+        }
+
+        public void setTimeSpent(String timeSpent) {
+            this.timeSpent = timeSpent;
+        }
+
         public String getCourseNum() {
             return "comp3111";
         }
@@ -38,17 +65,18 @@ public class StudentGradeStatisticController implements Initializable {
     @FXML
     private ChoiceBox<String> courseCombox;
     @FXML
-    private TableView<GradeExampleClass> gradeTable;
+    private TableView<GradeDetailClass> gradeTable;
     @FXML
-    private TableColumn<GradeExampleClass, String> courseColumn;
+    private TableColumn<GradeDetailClass, String> courseColumn;
+    private ObservableList<String> courseList;
     @FXML
-    private TableColumn<GradeExampleClass, String> examColumn;
+    private TableColumn<GradeDetailClass, String> examColumn;
     @FXML
-    private TableColumn<GradeExampleClass, String> scoreColumn;
+    private TableColumn<GradeDetailClass, String> scoreColumn;
     @FXML
-    private TableColumn<GradeExampleClass, String> fullScoreColumn;
+    private TableColumn<GradeDetailClass, String> fullScoreColumn;
     @FXML
-    private TableColumn<GradeExampleClass, String> timeSpendColumn;
+    private TableColumn<GradeDetailClass, String> timeSpendColumn;
     @FXML
     BarChart<String, Number> barChart;
     @FXML
@@ -57,24 +85,45 @@ public class StudentGradeStatisticController implements Initializable {
     NumberAxis numberAxisBar;
 
     private Student student;
-    private List<Exam> examList;
+    private List<Submission> studentGradeList;
 
     public void setStudent(Student student) {
         this.student = student;
     }
 
-    private final ObservableList<GradeExampleClass> gradeList = FXCollections.observableArrayList();
+    private final ObservableList<GradeDetailClass> gradeList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        //TODO: set Student Grade Statistics content to this student
+
+        studentGradeList = SubmissionDatabase.getInstance().filter(student.getName(), null, null);
+        for (Submission submission : studentGradeList) {
+            if (courseList.isEmpty() || !courseList.contains(submission.getExam().getCourseId())) {
+                courseList.add(submission.getExam().getCourseId());
+            }
+        }
+        courseCombox.setItems(courseList);
+
+        gradeList.clear();
+        for (Submission submission : studentGradeList) {
+            GradeDetailClass gradeDetail = new GradeDetailClass();
+
+            gradeDetail.setCourseNum(submission.getExam().getCourseId());
+            gradeDetail.setExamName(submission.getExam().getName());
+            gradeDetail.setScore(String.valueOf(submission.getScore()));
+            gradeDetail.setFullScore(String.valueOf(submission.getExam().getFullScore()));
+            gradeDetail.setTimeSpent(String.valueOf(submission.getTimeSpent()));
+
+            // Add the populated grade detail to the grade list
+            gradeList.add(gradeDetail);
+        }
 
         barChart.setLegendVisible(false);
         categoryAxisBar.setLabel("Exam");
         numberAxisBar.setLabel("Score");
 
-        gradeList.add(new GradeExampleClass());
+        gradeList.add(new GradeDetailClass());
         gradeTable.setItems(gradeList);
         courseColumn.setCellValueFactory(new PropertyValueFactory<>("courseNum"));
         examColumn.setCellValueFactory(new PropertyValueFactory<>("examName"));
@@ -94,14 +143,14 @@ public class StudentGradeStatisticController implements Initializable {
 
     private void loadChart() {
 
-        //TODO: set Student Grade Statistics content to this student and handle filter
-        //TODO: may also change it to load table as well
+        studentGradeList = SubmissionDatabase.getInstance().filter(student.getName(), courseCombox.getValue(), null);
 
         XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
         seriesBar.getData().clear();
         barChart.getData().clear();
-        for (int i = 0;  i < 5; i++) {
-            seriesBar.getData().add(new XYChart.Data<>("COMP" + i, 50));
+        for (Submission submission: studentGradeList) {
+            seriesBar.getData().add(new XYChart.Data<>(submission.getExam().getCourseId()+"-"+submission.getExam().getName(),
+                    submission.getScore()));
         }
         barChart.getData().add(seriesBar);
 

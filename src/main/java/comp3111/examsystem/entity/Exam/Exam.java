@@ -45,6 +45,17 @@ public class Exam extends Entity {
         return questionIds;
     }
 
+    public int getFullScore() {
+        int fullScore = 0;
+        if (!questionIds.isEmpty()) {
+            for (Long id : questionIds) {
+                fullScore += QuestionDatabase.getInstance().queryByKey(id.toString()).getScore();
+            }
+            return fullScore;
+        }
+        return -1;
+    }
+
     public void setQuestionIds(List<Long> questionIds) throws Exception {
         if (questionIds == null || questionIds.isEmpty()) {
             throw new Exception("Exam should contain at least 1 question.");
