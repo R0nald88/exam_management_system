@@ -1,5 +1,6 @@
 package comp3111.examsystem.entity.Questions;
 
+import comp3111.examsystem.tools.Database;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -18,12 +19,7 @@ public final class ShortQuestionType extends QuestionTypeFactory {
     }
     @Override
     public void validateAnswer(String answer) throws Exception {
-        if (answer.isEmpty()) {
-            throw new Exception("Answer should not be empty.");
-        }
-        if (ANSWER_LENGTH_LIMIT > 0 && answer.length() > ANSWER_LENGTH_LIMIT) {
-            throw new Exception("Answer length should not exceeds " + ANSWER_LENGTH_LIMIT + ".");
-        }
+        Database.validateTextLength(ANSWER_LENGTH_LIMIT, answer, "answer");
     }
 
     @Override

@@ -1,14 +1,16 @@
 package comp3111.examsystem.entity.Personnel;
+import comp3111.examsystem.entity.Entity;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Personnel {
+public class Personnel extends Entity {
     private String username;
     private String name;
     private int age;
-    private String gender;
+    private Gender gender;
     private String department;
     private String password;
 
@@ -16,9 +18,13 @@ public class Personnel {
         this.username = username;
         this.name = name;
         this.age = age;
-        this.gender = gender;
+        this.gender = Gender.toGender(gender);
         this.department = department;
         this.password = password;
+    }
+
+    public Personnel() {
+        super(System.currentTimeMillis());
     }
 
     private static Map<String, Personnel> registeredPersonnels = new HashMap<>();
@@ -73,7 +79,7 @@ public class Personnel {
         return name;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
@@ -98,7 +104,7 @@ public class Personnel {
     }
 
     public void setGender(String gender) {
-        this.gender = gender;
+        this.gender = Gender.toGender(gender);
     }
 
     public void setAge(int age) {

@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database<T> {
+    public static final int TEXT_LENGTH_LIMIT = -1;
+
     Class<T> entitySample;
     String tableName;
     String jsonFile;
@@ -349,5 +351,45 @@ public class Database<T> {
 
         Gson gson = new Gson();
         return gson.toJson(t);
+    }
+
+    public static void validateNumberRange(int lower, int upper, int input, String fieldName, String unit) {
+        String s = "";
+        if (upper > lower && lower >= 0) {
+            s = " between " + lower + " and " + upper;
+        } else if (upper > 0) {
+            s = " less than " + upper;
+        } else if (lower >= 0) {
+            s = " larger than " + lower;
+        }
+
+        if ((lower >= 0 && input < lower) || (upper > 0 && input > upper)) {
+            throw new RuntimeException(
+                    "Please enter a valid " +
+                    fieldName.toLowerCase().trim() + s +
+                    (unit == null || unit.trim().isEmpty() ? "." : " " + unit.trim() + "."));
+        }
+    }
+
+    public static void validateNumberRange(int lower, int upper, String input, String fieldName, String unit) {
+        validateTextLength(-1, input, fieldName);
+        int a;
+        try {
+            a = Integer.parseInt(input);
+        } catch (Exception e) {
+            throw new RuntimeException("The " + fieldName.trim().toLowerCase() + " should be an integer.");
+        }
+
+        validateNumberRange(lower, upper, a, fieldName, unit);
+    }
+
+    public static void validateTextLength(int length, String input, String fieldName) {
+        if (input == null || input.trim().isEmpty()) {
+            throw new RuntimeException("Please enter the " + fieldName.trim().toLowerCase() + ".");
+        }
+
+        if (length > 0 && input.length() > length) {
+            throw new RuntimeException("Length of " + fieldName.trim().toLowerCase() + " should not be larger than " + length + ".");
+        }
     }
 }

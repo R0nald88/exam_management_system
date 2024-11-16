@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import comp3111.examsystem.entity.Entity;
 import comp3111.examsystem.entity.Questions.Question;
 import comp3111.examsystem.entity.Questions.QuestionDatabase;
+import comp3111.examsystem.tools.Database;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,48 +99,31 @@ public class Exam extends Entity {
     }
 
     public void setTime(int time) throws Exception {
-        String error = "Invalid exam time.";
-        if (ExamDatabase.EXAM_TIME_UPPER_LIMIT > ExamDatabase.EXAM_TIME_LOWER_LIMIT && ExamDatabase.EXAM_TIME_LOWER_LIMIT >= 0) {
-            error = "Please input a valid exam time between " + ExamDatabase.EXAM_TIME_LOWER_LIMIT +
-                    " and " + ExamDatabase.EXAM_TIME_UPPER_LIMIT + " second(s).";
-        } else if (ExamDatabase.EXAM_TIME_UPPER_LIMIT > 0) {
-            error = "Please input a valid exam time less than " + ExamDatabase.EXAM_TIME_UPPER_LIMIT + " second(s).";
-        } else if (ExamDatabase.EXAM_TIME_LOWER_LIMIT >= 0) {
-            error = "Please input a valid exam time larger than " + ExamDatabase.EXAM_TIME_LOWER_LIMIT + " second(s).";
-        }
-
-        if ((ExamDatabase.EXAM_TIME_LOWER_LIMIT >= 0 && time < ExamDatabase.EXAM_TIME_LOWER_LIMIT) ||
-            (ExamDatabase.EXAM_TIME_UPPER_LIMIT > 0 && time > ExamDatabase.EXAM_TIME_UPPER_LIMIT)) {
-            throw new Exception(error);
-        }
+        Database.validateNumberRange(
+                ExamDatabase.EXAM_TIME_LOWER_LIMIT,
+                ExamDatabase.EXAM_TIME_UPPER_LIMIT,
+                time,
+                "exam time",
+                "second(s)"
+        );
         this.time = time;
     }
 
     public void setTime(String time) throws Exception {
         time = time.trim();
-
-        if (time.isEmpty()) {
-            throw new Exception("Please enter the exam time.");
-        }
-
-        int t = -1;
-        try {
-            t = Integer.parseInt(time);
-        } catch (Exception e) {
-            throw new Exception("Exam time should be an integer.");
-        }
-
-        setTime(t);
+        Database.validateNumberRange(
+                ExamDatabase.EXAM_TIME_LOWER_LIMIT,
+                ExamDatabase.EXAM_TIME_UPPER_LIMIT,
+                time,
+                "exam time",
+                "second(s)"
+        );
+        this.time = Integer.parseInt(time);
     }
 
     public void setName(String name) throws Exception {
         name = name.trim();
-        if (name.isEmpty()) {
-            throw new Exception("Please enter the exam name.");
-        }
-        if (ExamDatabase.EXAM_NAME_LENGTH_LIMIT > 0 && name.length() > ExamDatabase.EXAM_NAME_LENGTH_LIMIT) {
-            throw new Exception("Length of exam name should not be larger than " + ExamDatabase.EXAM_NAME_LENGTH_LIMIT + ".");
-        }
+        Database.validateTextLength(ExamDatabase.EXAM_NAME_LENGTH_LIMIT, name, "exam name");
         this.name = name;
     }
 

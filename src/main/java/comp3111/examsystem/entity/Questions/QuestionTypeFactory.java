@@ -1,5 +1,6 @@
 package comp3111.examsystem.entity.Questions;
 
+import comp3111.examsystem.tools.Database;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
@@ -18,12 +19,7 @@ public sealed abstract class QuestionTypeFactory
 
     public void validateOption(String option, int index) throws Exception {
         char i = (char) (index + 'A');
-        if (option.isEmpty()) {
-            throw new Exception("Option " + i + " should not be empty.");
-        }
-        if (OPTION_LENGTH_LIMIT > 0 && option.length() > OPTION_LENGTH_LIMIT) {
-            throw new Exception("Option " + i + " length should not exceed " + OPTION_LENGTH_LIMIT + ".");
-        }
+        Database.validateTextLength(OPTION_LENGTH_LIMIT, option, "option " + i);
     }
 
     public void saveOptions(TextField[] fields, String[] options) {

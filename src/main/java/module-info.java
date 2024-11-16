@@ -15,4 +15,5 @@ module comp3111.examsystem {
     opens comp3111.examsystem.entity to com.google.gson;
     opens comp3111.examsystem.entity.Questions to com.google.gson;
     opens comp3111.examsystem.entity.Exam to com.google.gson;
+    opens comp3111.examsystem.entity.Personnel to com.google.gson;
 }
