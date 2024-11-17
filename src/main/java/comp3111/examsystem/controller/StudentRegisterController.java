@@ -1,9 +1,12 @@
 package comp3111.examsystem.controller;
 
 import comp3111.examsystem.Main;
+import comp3111.examsystem.entity.Personnel.Gender;
 import comp3111.examsystem.entity.Personnel.Student;
 import comp3111.examsystem.entity.Personnel.StudentDatabase;
 import comp3111.examsystem.tools.MsgSender;
+import javafx.beans.Observable;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,36 +21,32 @@ import java.util.ResourceBundle;
 
 public class StudentRegisterController implements Initializable {
     @FXML
-    private TextField usernameTxt;
+    private TextField usernameTxt, ageTxt, departmentTxt;
     @FXML
     private TextField nameTxt;
     @FXML
     private ChoiceBox<String> genderCombox;
     @FXML
-    private TextField ageTxt;
+    private PasswordField passwordTxt, passwordConfirmTxt;
+
     @FXML
-    private TextField departmentTxt;
-    @FXML
-    private PasswordField passwordTxt;
-    @FXML
-    private PasswordField passwordConfirmTxt;
+    private Label hintLabel;
 
 
     public void initialize(URL location, ResourceBundle resources) {
-
+        genderCombox.getItems().addAll(Gender.MALE.getName(), Gender.FEMALE.getName());
+        hintLabel.setText(
+                "Password should contain:\n" +
+                        "1. At least 1 special character from \"!@$%^&*_+<>/-\"\n" +
+                        "2. At least 1 number from 0 to 9\n" +
+                        "3. At least 1 small letter from a to z\n" +
+                        "4. At least 1 capital letter from A to Z\n" +
+                        "5. No blank space"
+        );
     }
 
     @FXML
     public void close(ActionEvent e) {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentMainUI.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
-        try {
-            stage.setScene(new Scene(fxmlLoader.load()));
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        stage.show();
         ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 
@@ -60,8 +59,6 @@ public class StudentRegisterController implements Initializable {
         } catch (Exception e1) {
             MsgSender.showConfirm("Registration Error", e1.getMessage(), () -> {});
         }
-
-        close(e);
     }
 
     private Student getStudent() {
