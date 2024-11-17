@@ -17,13 +17,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class StudentGradeStatisticController implements Initializable {
 
     public static class GradeDetailClass {
-        private String courseNum, examName, score, fullScore, timeSpent;
+        private String courseNum, examName, score, fullScore, timeSpend;
 
         public void setCourseNum(String courseNum) {
             this.courseNum = courseNum;
@@ -41,24 +40,24 @@ public class StudentGradeStatisticController implements Initializable {
             this.fullScore = fullScore;
         }
 
-        public void setTimeSpent(String timeSpent) {
-            this.timeSpent = timeSpent;
+        public void setTimeSpend(String timeSpend) {
+            this.timeSpend = timeSpend;
         }
 
         public String getCourseNum() {
-            return "comp3111";
+            return courseNum;
         }
         public String getExamName() {
-            return "final";
+            return examName;
         }
         public String getScore() {
-            return "100";
+            return score;
         }
         public String getFullScore() {
-            return "100";
+            return fullScore;
         }
         public String getTimeSpend() {
-            return "60";
+            return timeSpend;
         }
     }
 
@@ -89,34 +88,49 @@ public class StudentGradeStatisticController implements Initializable {
 
     public void setStudent(Student student) {
         this.student = student;
+
+        studentGradeList = SubmissionDatabase.getInstance().filter(student.getName(), null, null);
+        if (!studentGradeList.isEmpty()) {
+            for (Submission submission : studentGradeList) {
+                if (courseList.isEmpty() || !courseList.contains(submission.getExam().getCourseId())) {
+                    courseList.add(submission.getExam().getCourseId());
+                }
+            }
+            courseCombox.getItems().addAll(courseList);
+
+
+            for (Submission submission : studentGradeList) {
+                GradeDetailClass gradeDetail = new GradeDetailClass();
+
+                gradeDetail.setCourseNum(submission.getExam().getCourseId());
+                gradeDetail.setExamName(submission.getExam().getName());
+                gradeDetail.setScore(String.valueOf(submission.getScore()));
+                gradeDetail.setFullScore(String.valueOf(submission.getExam().getFullScore()));
+                gradeDetail.setTimeSpend(submission.getTimeSpent());
+
+                // Add the populated grade detail to the grade list
+                gradeList.add(gradeDetail);
+
+
+                refresh();
+                loadChart();
+            }
+        }
     }
 
     private final ObservableList<GradeDetailClass> gradeList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-
-        studentGradeList = SubmissionDatabase.getInstance().filter(student.getName(), null, null);
-        for (Submission submission : studentGradeList) {
-            if (courseList.isEmpty() || !courseList.contains(submission.getExam().getCourseId())) {
-                courseList.add(submission.getExam().getCourseId());
-            }
-        }
-        courseCombox.setItems(courseList);
-
         gradeList.clear();
-        for (Submission submission : studentGradeList) {
-            GradeDetailClass gradeDetail = new GradeDetailClass();
-
-            gradeDetail.setCourseNum(submission.getExam().getCourseId());
-            gradeDetail.setExamName(submission.getExam().getName());
-            gradeDetail.setScore(String.valueOf(submission.getScore()));
-            gradeDetail.setFullScore(String.valueOf(submission.getExam().getFullScore()));
-            gradeDetail.setTimeSpent(String.valueOf(submission.getTimeSpent()));
-
-            // Add the populated grade detail to the grade list
-            gradeList.add(gradeDetail);
+        studentGradeList = SubmissionDatabase.getInstance().filter(null, null, null);
+        if (!studentGradeList.isEmpty()) {
+            for (Submission submission : studentGradeList) {
+                if (courseList.isEmpty() || !courseList.contains(submission.getExam().getCourseId())) {
+                    courseList.add(submission.getExam().getCourseId());
+                }
+            }
+            courseCombox.getItems().addAll(courseList);
         }
 
         barChart.setLegendVisible(false);
@@ -132,7 +146,6 @@ public class StudentGradeStatisticController implements Initializable {
         timeSpendColumn.setCellValueFactory(new PropertyValueFactory<>("timeSpend"));
 
         refresh();
-        loadChart();
     }
 
     @FXML
@@ -142,17 +155,16 @@ public class StudentGradeStatisticController implements Initializable {
     }
 
     private void loadChart() {
-
-        studentGradeList = SubmissionDatabase.getInstance().filter(student.getName(), courseCombox.getValue(), null);
-
         XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
         seriesBar.getData().clear();
         barChart.getData().clear();
-        for (Submission submission: studentGradeList) {
-            seriesBar.getData().add(new XYChart.Data<>(submission.getExam().getCourseId()+"-"+submission.getExam().getName(),
-                    submission.getScore()));
+        if (!studentGradeList.isEmpty()) {
+            for (Submission submission : studentGradeList) {
+                seriesBar.getData().add(new XYChart.Data<>(submission.getExam().getCourseId() + "-" + submission.getExam().getName(),
+                        submission.getScore()));
+            }
+            barChart.getData().add(seriesBar);
         }
-        barChart.getData().add(seriesBar);
 
     }
 

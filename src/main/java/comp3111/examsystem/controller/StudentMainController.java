@@ -32,7 +32,7 @@ public class StudentMainController implements Initializable {
     }
 
     public void initialize(URL location, ResourceBundle resources) {
-        examList = ExamDatabase.getInstance().filter(student.getName(), null, "yes");
+        examList = ExamDatabase.getInstance().filter(null, null, "yes");
         if (!examList.isEmpty()) {
             for (Exam e: examList) {
                 examCombox.getItems().add(e.getName());
@@ -66,19 +66,23 @@ public class StudentMainController implements Initializable {
 
     @FXML
     public void openGradeStatistic(ActionEvent e) {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentGradeStatisticUI.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Grade Statistics");
         try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentGradeStatisticUI.fxml"));
+
             Parent root = fxmlLoader.load();
             StudentGradeStatisticController studentGradeStatisticController = fxmlLoader.getController();
             studentGradeStatisticController.setStudent(student);
-            stage.setScene(new Scene(fxmlLoader.load()));
+
+            Stage stage = new Stage();
+            stage.setTitle("Grade Statistics");
+            stage.setScene(new Scene(root));
+
+            stage.show();
+            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+
         } catch ( IOException e1) {
             e1.printStackTrace();
         }
-        stage.show();
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 
     @FXML

@@ -35,27 +35,32 @@ public class StudentLoginController implements Initializable {
         try {
             Student loginStudent = StudentDatabase.getInstance().validateStudentLogin(usernameTxt.getText(), passwordTxt.getText());
             MsgSender.showConfirm("Hint", "Login Successful", () -> {
-
-                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentMainUI.fxml"));
-                Stage stage = new Stage();
-                stage.setTitle("Hi " + usernameTxt.getText() + ", Welcome to HKUST Examination System");
                 try {
-                    Parent root = fxmlLoader.load();
+                    // Load the FXML file first
+                    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentMainUI.fxml"));
+                    Parent root = fxmlLoader.load(); // Load the root
+
+                    // Get the controller and set the student
                     StudentMainController studentMainController = fxmlLoader.getController();
                     studentMainController.setStudent(loginStudent);
-                    stage.setScene(new Scene(fxmlLoader.load()));
+
+                    // Create the new stage and set the scene
+                    Stage stage = new Stage();
+                    stage.setTitle("Hi " + usernameTxt.getText() + ", Welcome to HKUST Examination System");
+                    stage.setScene(new Scene(root)); // Use the loaded root
+
+                    // Close the current login window
+                    ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+                    stage.show();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
-                stage.show();
             });
         } catch (Exception e1) {
             MsgSender.showConfirm("Login Error", e1.getMessage(), () -> {
             });
         }
-
-        }
+    }
 
     @FXML
     public void register() {
