@@ -1,0 +1,4 @@
+{"question":"Single-Selected MC Question: Please select A.","answer":"A","score":5,"type":"SINGLE","optionA":"A","optionB":"B","optionC":"C","optionD":"D","id":1731881380471}
+{"question":"Multiple-Selected MCQ: Please select A and C.","answer":"AC","score":10,"type":"MULTIPLE","optionA":"A","optionB":"B","optionC":"C","optionD":"D","id":1731881539344}
+{"question":"T/F Q: Please select True.","answer":"T","score":5,"type":"TRUE_FALSE","optionA":"True","optionB":"False","optionC":"","optionD":"","id":1731881681725}
+{"question":"ShortQ: Please Type SQ","answer":"SQ","score":10,"type":"SHORT_Q","optionA":"","optionB":"","optionC":"","optionD":"","id":1731881724320}
