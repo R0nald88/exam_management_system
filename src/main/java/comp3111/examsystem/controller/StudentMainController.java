@@ -26,41 +26,55 @@ public class StudentMainController implements Initializable {
     private ChoiceBox<String> examCombox;
     private Student student;
     private List<Exam> examList;
+    private String selectedExamName;
+    private String selectedExamCourseId;
 
     public void setStudent(Student student) {
         this.student = student;
     }
 
     public void initialize(URL location, ResourceBundle resources) {
-        examList = ExamDatabase.getInstance().filter(null, null, "yes");
+        examList = ExamDatabase.getInstance().filter(null, null, "true");
         if (!examList.isEmpty()) {
+            System.out.println("ExamList have exam");
             for (Exam e: examList) {
-                examCombox.getItems().add(e.getName());
+                examCombox.getItems().add(e.getCourseId()+"-"+e.getName());
+
             }
-        }
+
+            examCombox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                int selectedExamIndex = examCombox.getItems().indexOf(newValue);
+                System.out.println("Selected index: " + selectedExamIndex);
+                selectedExamName = examList.get(selectedExamIndex).getName();
+                selectedExamCourseId = examList.get(selectedExamIndex).getCourseId();
+            });
+
+        } else System.out.println("ExamList have no exam");
+
     }
 
     @FXML
     public void openExamUI(ActionEvent e) {
         if (examCombox.getValue() != null) {
-            Exam selectedExam = ExamDatabase.getInstance().queryByField("Name", examCombox.getValue()).getFirst();
+            Exam selectedExam = ExamDatabase.getInstance().filter(selectedExamName, selectedExamCourseId,"true").getFirst();
             Submission submission = new Submission();
             submission.setStudent(student);
             submission.setExam(selectedExam);
 
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentStartExamUI.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Start Exam");
             try {
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentStartExamUI.fxml"));
                 Parent root = fxmlLoader.load();
                 StudentStartExamController studentStartExamController = fxmlLoader.getController();
                 studentStartExamController.setSubmission(submission);
-                stage.setScene(new Scene(fxmlLoader.load()));
+                Stage stage = new Stage();
+                stage.setTitle("Start Exam");
+                stage.setScene(new Scene(root));
+
+                ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+                stage.show();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            stage.show();
-            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
         }
     }
 

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.text.Font?>
-<BorderPane prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.StudentStartExamController">
+<BorderPane prefHeight="400.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.StudentStartExamController">
    <top>
       <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
             style="-fx-background-repeat: stretch;-fx-background-position: center center;" minHeight="-Infinity"
@@ -35,15 +35,16 @@
     <bottom>
         <HBox>
             <children>
-                <TableView fx:id="questionTable" prefHeight="600.0" prefWidth="200.0">
+                <TableView fx:id="questionTable" prefHeight="300.0" prefWidth="200.0">
                     <columns>
                         <TableColumn fx:id="questionColumn" prefWidth="75.0"/>
                     </columns>
                 </TableView>
-                <VBox alignment="CENTER_RIGHT" prefHeight="600.0" prefWidth="700.0" BorderPane.alignment="CENTER">
+                <VBox alignment="CENTER_RIGHT" prefHeight="300.0" prefWidth="500.0" BorderPane.alignment="CENTER">
                     <children>
-                        <VBox fx:id="questionVBox" alignment="CENTER_RIGHT" prefHeight="600.0" prefWidth="700.0" BorderPane.alignment="CENTER">> </VBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="700.0" BorderPane.alignment="CENTER">
+                        <Label fx:id="currQuestionNumberLabel" text="Question Number"/>
+                        <VBox fx:id="questionVBox" alignment="CENTER_RIGHT" prefHeight="250.0" prefWidth="500.0" BorderPane.alignment="CENTER"> </VBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="500.0" BorderPane.alignment="CENTER">
                             <children>
                                 <Button fx:id="previousBtn" mnemonicParsing="false" onAction="#previous" text="Previous">
                                     <HBox.margin>
