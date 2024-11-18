@@ -51,10 +51,6 @@ public class StudentStartExamController implements Initializable {
 
     private Timeline countdownTimer;
 
-    public void setSubmission(Submission submission) {
-        this.submission = submission;
-    }
-
     private static class CountdownValue {
         int value;
 
@@ -65,8 +61,12 @@ public class StudentStartExamController implements Initializable {
         void decrement() {
             this.value--;
         }
-    }
 
+        int getValue() {
+            return value;
+        }
+    }
+    @FXML
     Label currQuestionNumberLabel;
     Label optionALabel;
     RadioButton radioButtonA;
@@ -96,9 +96,18 @@ public class StudentStartExamController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        examNameLbl.setText(submission.getExam().getName());
-        totalQuestionLbl.setText("Total Question: " + questionList.size());
+        System.out.println("Start initializing start exam");
+        examNameLbl.setText("Exam Name");
+        totalQuestionLbl.setText("Total Question: ");
+        currQuestionNumber = 0;
+    }
+
+    public void setSubmission(Submission submission) {
+        this.submission = submission;
+
+        examNameLbl.setText(submission.getExam().getCourseId()+"-"+submission.getExam().getName());
         questionList = submission.getExam().getQuestionIds();
+        totalQuestionLbl.setText("Total Question: " + questionList.size());
         ObservableList<String> questionObservableList = FXCollections.observableArrayList();
         currQuestionNumber = 0;
         for (Long questionId : questionList) {
@@ -119,14 +128,14 @@ public class StudentStartExamController implements Initializable {
             return cell;
         });
         questionTable.setItems(questionObservableList);
-        switchToQuestion(1);
+        switchToQuestion(0);
 
         CountdownValue countdownFrom = new CountdownValue(submission.getExam().getTime());
 
         countdownTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if (countdownFrom.value > 0) {
                 countdownFrom.decrement();
-                remainTimeLbl.setText("Remain Time: " + countdownFrom);
+                remainTimeLbl.setText("Remain Time: " + countdownFrom.getValue());
             } else {
                 countdownTimer.stop(); // Stop the timer when countdown reaches 0
                 handleTimeUp();
@@ -134,7 +143,6 @@ public class StudentStartExamController implements Initializable {
         }));
         countdownTimer.setCycleCount(Timeline.INDEFINITE);
         countdownTimer.play();
-
     }
 
     public void switchToQuestion(int destQuestionNumber) {
@@ -145,7 +153,7 @@ public class StudentStartExamController implements Initializable {
 
         saveAnswer();
 
-        currQuestionNumberLabel.setText("Question " + destQuestionNumber+1);
+        currQuestionNumberLabel.setText("Question " + (destQuestionNumber+1));
 
 
         questionVBox.getChildren().clear(); // Clear existing content
@@ -221,15 +229,17 @@ public class StudentStartExamController implements Initializable {
                 questionVBox.getChildren().add(optionDHBox);
             }
 
-            if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
-                    radioButtonA.setSelected(true);
-                } else if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
-                    radioButtonB.setSelected(true);
-                } else if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
-                    radioButtonC.setSelected(true);
-                } else if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
-                    radioButtonD.setSelected(true);
+            if (submission.getAnswer() != null) {
+                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
+                        radioButtonA.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
+                        radioButtonB.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
+                        radioButtonC.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
+                        radioButtonD.setSelected(true);
+                    }
                 }
             }
 
@@ -263,15 +273,17 @@ public class StudentStartExamController implements Initializable {
                 questionVBox.getChildren().add(optionDHBox);
             }
 
-            if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
-                    checkBoxA.setSelected(true);
-                } else if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
-                    checkBoxB.setSelected(true);
-                } else if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
-                    checkBoxC.setSelected(true);
-                } else if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
-                    checkBoxD.setSelected(true);
+            if(submission.getAnswer() != null) {
+                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
+                        checkBoxA.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
+                        checkBoxB.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
+                        checkBoxC.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
+                        checkBoxD.setSelected(true);
+                    }
                 }
             }
 
@@ -291,19 +303,24 @@ public class StudentStartExamController implements Initializable {
             falseHBox.getChildren().addAll(falseRadioButton, falseLabel);
             questionVBox.getChildren().addAll(questionField, trueHBox, falseHBox);
 
-            if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                if (submission.getAnswer().get(destQuestionNumber).contains("T")) {
-                    trueRadioButton.setSelected(true);
-                } else if (submission.getAnswer().get(destQuestionNumber).contains("F")) {
-                    falseRadioButton.setSelected(true);
+            if(submission.getAnswer() != null) {
+                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswer().get(destQuestionNumber).contains("T")) {
+                        trueRadioButton.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("F")) {
+                        falseRadioButton.setSelected(true);
+                    }
                 }
             }
 
         } else {
             shortQuestionAnswerField = new TextField();
             questionVBox.getChildren().addAll(questionField, shortQuestionAnswerField);
-            if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                shortQuestionAnswerField.setText(submission.getAnswer().get(destQuestionNumber));
+
+            if(submission.getAnswer() != null) {
+                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+                    shortQuestionAnswerField.setText(submission.getAnswer().get(destQuestionNumber));
+                }
             }
         }
     }
@@ -311,10 +328,13 @@ public class StudentStartExamController implements Initializable {
     //Save answer: will be used by question label cell and previous and next button
     private void saveAnswer() {
         QuestionType currQuestionType = QuestionDatabase.getInstance().queryByKey(questionList.get(currQuestionNumber).toString()).getType();
+        currQuestionAnswer = null;
         if (currQuestionType == QuestionType.SINGLE || currQuestionType == QuestionType.TRUE_FALSE) {
-            RadioButton selectedRadioButton = (RadioButton) toggleGroup.getSelectedToggle();
-            if (selectedRadioButton != null) {
-                currQuestionAnswer = selectedRadioButton.getId();
+            if (toggleGroup != null) {
+                RadioButton selectedRadioButton = (RadioButton) toggleGroup.getSelectedToggle();
+                if (selectedRadioButton != null) {
+                    currQuestionAnswer = selectedRadioButton.getId();
+                }
             }
         } else if (currQuestionType == QuestionType.MULTIPLE) {
             StringBuilder selectedOptions = new StringBuilder();
@@ -335,7 +355,7 @@ public class StudentStartExamController implements Initializable {
         } else { //currQuestionType == QuestionType.SHORT_Q
             currQuestionAnswer = shortQuestionAnswerField.getText();
         }
-        submission.saveAnswer(currQuestionNumber, currQuestionAnswer);
+        if (currQuestionAnswer != null) submission.saveAnswer(currQuestionNumber, currQuestionAnswer);
     }
 
 
