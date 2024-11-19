@@ -18,12 +18,14 @@ public class Submission extends Entity{
     private String courseId;
     private List<String> answerList;
     private int score = 0;
+    private int fullScore;
     private int numberOfCorrect = 0;
     private int timeSpend;
 
     public Submission() {
         super(System.currentTimeMillis());
     }
+
 
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
@@ -43,6 +45,10 @@ public class Submission extends Entity{
         this.score = score;
     }
 
+    public void setFullScore(int fullScore) {
+        this.fullScore = fullScore;
+    }
+
     public Long getStudentId() {
         return studentId;
     }
@@ -57,6 +63,10 @@ public class Submission extends Entity{
 
     public int getScore() {
         return score;
+    }
+
+    public int getFullScore() {
+        return fullScore;
     }
 
     public String getCourseId() {

@@ -125,6 +125,7 @@ public class StudentStartExamController implements Initializable {
     public void setSubmission(Submission submission) {
         this.submission = submission;
         exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
+        this.submission.setFullScore(exam.getFullScore());
         student = StudentDatabase.getInstance().queryByKey(submission.getStudentId().toString());
 
         // Set the exam name and total questions
