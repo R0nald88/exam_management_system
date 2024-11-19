@@ -1,1 +1,2 @@
-{"courseID":"123","courseName":"123","department":"123","id":1732017937609}
+{"courseID":"comp2316","courseName":"sd","department":"asd","id":1732028164680}
+{"courseID":"elec1010","courseName":"sfd","department":"sdaf","id":1732028177040}

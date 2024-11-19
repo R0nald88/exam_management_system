@@ -2,6 +2,8 @@ package comp3111.examsystem.controller;
 
 import comp3111.examsystem.entity.Course.Course;
 import comp3111.examsystem.entity.Course.CourseDatabase;
+import comp3111.examsystem.entity.Exam.Exam;
+import comp3111.examsystem.entity.Exam.ExamDatabase;
 import comp3111.examsystem.tools.MsgSender;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -83,8 +85,24 @@ public class ManagerCourseController implements Initializable{
     }
 
     public void delete(){
+        deleteCourse(false);
+    }
+
+    private void deleteCourse(boolean deleteExam) {
         try{
             Course selectedCourse = recordTable.getSelectionModel().getSelectedItem();
+            List<Exam> affectedExam = ExamDatabase.getInstance().queryByField("longIdOfCourse", selectedCourse.getId().toString());
+
+            if (!affectedExam.isEmpty() && !deleteExam) {
+                MsgSender.showConfirm("Warning",
+                        "Selected course has associated exam(s).\nClick \"OK\" to continue deleting the course and associated exam(s).",
+                        () -> deleteCourse(true)
+                );
+                return;
+            } else if (!affectedExam.isEmpty()) {
+                ExamDatabase.getInstance().deleteExams(affectedExam);
+            }
+
             CourseDatabase.getInstance().delByFiled("courseID", selectedCourse.getCourseID());
             MsgSender.showConfirm("Successful", "The course record has been deleted.", this::refresh);
         } catch(Exception e){

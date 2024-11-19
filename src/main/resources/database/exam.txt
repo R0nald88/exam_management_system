@@ -1,1 +1,1 @@
-{"name":"123","time":50,"courseId":"COMP2031","published":true,"questionIds":[1731936986451],"id":1732026459277}
+{"name":"Exam","time":60,"courseId":"COMP2031","published":true,"questionIds":[1731881380471,1731881539344,1731881681725,1731881724320],"id":1731881995081}

@@ -6,71 +6,95 @@ import comp3111.examsystem.entity.Questions.Question;
 import comp3111.examsystem.entity.Questions.QuestionDatabase;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import comp3111.examsystem.entity.Personnel.Student;
 // import comp3111.examsystem.entity.Exam;
 
 public class Submission extends Entity{
-    private Student student;
-    private Exam exam;
+    private Long studentId;
+    private Long examId;
+    private String courseId;
     private List<String> answerList;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private double score = 0;
+    private int score = 0;
+    private int numberOfCorrect = 0;
+    private int timeSpend;
 
     public Submission() {
         super(System.currentTimeMillis());
-        startTime = LocalDateTime.now();
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
-    public void setExam(Exam exam) {
-        this.exam = exam;
+    public void setExamId(Long examId) {
+        this.examId = examId;
+        Exam exam = ExamDatabase.getInstance().queryByKey(examId.toString());
+        this.courseId = exam.getCourseId();
     }
 
-    public void endExam() {
-        this.endTime = LocalDateTime.now();
+    public void setTimeSpend(int timeSpend) {
+        this.timeSpend = timeSpend;
     }
 
-    public String getStartTime() {
-        return startTime.toString();
-    }
-
-    public String getEndTime() {
-        return endTime.toString();
-    }
-
-    public String getTimeSpent() {
-        return String.valueOf(Duration.between(startTime, endTime).getSeconds());
-    }
-
-    public void setScore(double score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
-    public Student getStudent() {
-        return student;
+    public Long getStudentId() {
+        return studentId;
     }
 
-    public Exam getExam() {
-        return exam;
+    public Long getExamId() {
+        return examId;
     }
 
     public List<String> getAnswer() {
         return answerList;
     }
 
-    public double getScore() {
+    public int getScore() {
         return score;
     }
 
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public List<String> getAnswerList() {
+        return answerList;
+    }
+
     public void saveAnswer(int questionNumber, String answer) {
-        answerList.set(questionNumber, answer);
+        Exam exam = ExamDatabase.getInstance().queryByKey(examId.toString());
+        if (exam != null) {
+            if (answerList == null) {
+
+                answerList = new ArrayList<>(exam.getQuestionIds().size());
+                // Initialize the list with nulls or default values
+                for (int i = 0; i < exam.getQuestionIds().size(); i++) {
+                    answerList.add(null); // or any default value
+                }
+                System.out.println("getExam().getQuestionIds().size(): " + exam.getQuestionIds().size());
+            }
+
+
+            // Now it's safe to set the answer
+            if (questionNumber >= 0 && questionNumber < exam.getQuestionIds().size() && answer != null) {
+                answerList.set(questionNumber, answer);
+            }
+        }
+    }
+
+
+    public int getTimeSpend() {
+        return timeSpend;
+    }
+
+    public int getNumberOfCorrect() {
+        return numberOfCorrect;
     }
 
     @Override
@@ -79,10 +103,16 @@ public class Submission extends Entity{
     }
 
     public void calculateScore() {
-        for (int i = 0; i < exam.getQuestionIds().size(); i++) {
-            Question question = QuestionDatabase.getInstance().queryByKey(exam.getQuestionIds().get(i).toString());
-            if (answerList.get(i).equals(question.getAnswer())) {
-                score += question.getScore();
+        Exam exam = ExamDatabase.getInstance().queryByKey(examId.toString());
+        if (exam != null) {
+            if (answerList != null) {
+                for (int i = 0; i < exam.getQuestionIds().size(); i++) {
+                    Question question = QuestionDatabase.getInstance().queryByKey(exam.getQuestionIds().get(i).toString());
+                    if (answerList.get(i) != null && answerList.get(i).equals(question.getAnswer())) {
+                        score += question.getScore();
+                        numberOfCorrect++;
+                    }
+                }
             }
         }
     }

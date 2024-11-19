@@ -24,10 +24,28 @@ public class QuestionDatabase extends Database<Question> {
         return instance;
     }
 
+    /**
+     * Filter the question in the database based on parameters provided.
+     *
+     * @param question Question text for filtering.
+     *                 Perform fuzzy matching on this field.
+     *                 Do not perform filtering if this field is empty or null.
+     *
+     * @param type Question type for filtering.
+     *             Perform exact matching on this field.
+     *             Do not perform filtering if this field is null.
+     *
+     * @param score Score for filtering.
+     *              Perform exact matching on this field.
+     *              Do not perform filtering if this field is non-positive integer.
+     *
+     * @return List of questions matching the parameters
+     * @author Cheung Tuen King
+     */
     public List<Question> filter(String question, QuestionType type, int score) {
         List<Question> questionList =
-                (question == null || question.isEmpty()) ?
-                getAll() : queryFuzzyByField("question", question);
+                (question == null || question.trim().isEmpty()) ?
+                getAll() : queryFuzzyByField("question", question.trim());
 
         List<Question> typeList =
                 type == null ? getAll() : queryByField("type", type.toString());
@@ -38,13 +56,31 @@ public class QuestionDatabase extends Database<Question> {
         return join(questionList, join(typeList, scoreList));
     }
 
+    /**
+     * Filter the question in the database based on parameters provided.
+     *
+     * @param question Question text for filtering.
+     *                 Perform fuzzy matching on this field.
+     *                 Do not perform filtering if this field is empty or null.
+     *
+     * @param type Question type for filtering.
+     *             Perform exact matching on this field.
+     *             Do not perform filtering if this field is empty or null.
+     *
+     * @param score Score for filtering.
+     *              Perform exact matching on this field.
+     *              Do not perform filtering if this field is non-positive, non-integer, empty or null.
+     *
+     * @return List of questions matching the parameters
+     * @author Cheung Tuen King
+     */
     public List<Question> filter(String question, String type, String score) throws Exception {
         int s = -1;
         QuestionType t = type == null || type.isEmpty() ? null : QuestionType.toType(type);
 
-        if (score != null && !score.isEmpty()) {
+        if (score != null && !score.trim().isEmpty()) {
             try {
-                s = Integer.parseInt(score);
+                s = Integer.parseInt(score.trim());
             } catch (Exception e) {
                 throw new Exception("Score should be an integer.");
             }
@@ -53,14 +89,34 @@ public class QuestionDatabase extends Database<Question> {
         return filter(question, t, s);
     }
 
+    /**
+     * Check if the provided question ID exists
+     *
+     * @param id Question id for checking
+     * @return Boolean determining if the question ID provided exists
+     * @author Cheung Tuen King
+     */
     public boolean exist(long id) {
         return queryByKey(id + "") != null;
     }
 
+    /**
+     * Check if the provided question exists by checking its ID
+     *
+     * @param question Question for checking
+     * @return Boolean determining if the question provided exists
+     * @author Cheung Tuen King
+     */
     public boolean exist(Question question) {
         return exist(question.getId());
     }
 
+    /**
+     * Validate and add the question provided to the database
+     *
+     * @param question Exam id for checking
+     * @author Cheung Tuen King
+     */
     public void addQuestion(Question question) throws Exception {
         List<Question> q = filter(question.getQuestion(), question.getType(), question.getScore());
 

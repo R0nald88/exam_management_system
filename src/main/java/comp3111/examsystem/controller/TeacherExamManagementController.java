@@ -1,5 +1,7 @@
 package comp3111.examsystem.controller;
 
+import comp3111.examsystem.entity.Course.Course;
+import comp3111.examsystem.entity.Course.CourseDatabase;
 import comp3111.examsystem.entity.Entity;
 import comp3111.examsystem.entity.Exam.Exam;
 import comp3111.examsystem.entity.Exam.ExamDatabase;
@@ -8,8 +10,6 @@ import comp3111.examsystem.entity.Questions.QuestionDatabase;
 import comp3111.examsystem.entity.Questions.QuestionType;
 import comp3111.examsystem.tools.MsgSender;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -74,7 +74,6 @@ public class TeacherExamManagementController implements Initializable {
     @FXML private ChoiceBox<String> examCourseIdCombox;
     @FXML private ChoiceBox<String> examPublishedCombox;
 
-
     @FXML private Button refreshBtn;
     @FXML private Button deleteBtn;
     @FXML private Button updateBtn;
@@ -127,6 +126,7 @@ public class TeacherExamManagementController implements Initializable {
             });
         } catch (Exception e) {
             MsgSender.showConfirm("Exam Creation Error", e.getMessage(), () -> {});
+            e.printStackTrace();
         }
     }
 
@@ -196,6 +196,7 @@ public class TeacherExamManagementController implements Initializable {
     }
 
     private void initExamTable() {
+
         examNameCol.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getName()));
         examCourseIdCol.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getCourseId()));
         examTimeCol.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getTime()));
@@ -314,8 +315,8 @@ public class TeacherExamManagementController implements Initializable {
     }
 
     private static ArrayList<String> getCourseIds() {
-        // TODO: set up course Id combox
-        return new ArrayList<>(List.of("COMP2031", "COMP2130", "COMP3111", "COMP5111", "COMP1010"));
+        List<Course> courseList = CourseDatabase.getInstance().getAll();
+        return new ArrayList<>(courseList.stream().map(Course::getCourseID).toList());
     }
 
     private void clearSelectedExam() {

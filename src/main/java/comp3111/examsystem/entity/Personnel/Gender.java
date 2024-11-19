@@ -17,6 +17,7 @@ public enum Gender implements Serializable {
     }
 
     public static Gender toGender(String s) {
+        if (s == null)  throw new RuntimeException("Please select your Gender.");
         for (Gender g : Gender.values()) {
             if (g.name.equals(s)) return g;
         }
