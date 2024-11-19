@@ -4,6 +4,7 @@ import comp3111.examsystem.Main;
 import comp3111.examsystem.entity.Exam.Exam;
 import comp3111.examsystem.entity.Exam.ExamDatabase;
 import comp3111.examsystem.entity.Exam.Submission;
+import comp3111.examsystem.entity.Exam.SubmissionDatabase;
 import comp3111.examsystem.entity.Personnel.Student;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class StudentMainController implements Initializable {
@@ -31,6 +33,29 @@ public class StudentMainController implements Initializable {
 
     public void setStudent(Student student) {
         this.student = student;
+        List<Submission> studentSubmissionList = SubmissionDatabase.getInstance().filter(student.getId().toString(),null, null);
+        if (!studentSubmissionList.isEmpty()) {
+            examCombox.getItems().clear();
+            examList = ExamDatabase.getInstance().filter(null, null, "true");
+
+            if (!examList.isEmpty()) {
+                for (Exam e : examList) {
+                    for (Submission s : studentSubmissionList) {
+                        if (!Objects.equals(e.getId(), s.getExamId())) {
+                            examCombox.getItems().add(e.getCourseId() + "-" + e.getName());
+                        }
+                    }
+                }
+
+                examCombox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                    int selectedExamIndex = examCombox.getItems().indexOf(newValue);
+                    System.out.println("Selected index: " + selectedExamIndex);
+                    selectedExamName = examList.get(selectedExamIndex).getName();
+                    selectedExamCourseId = examList.get(selectedExamIndex).getCourseId();
+                });
+
+            } else System.out.println("ExamList have no exam");
+        }
     }
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -39,7 +64,6 @@ public class StudentMainController implements Initializable {
             System.out.println("ExamList have exam");
             for (Exam e: examList) {
                 examCombox.getItems().add(e.getCourseId()+"-"+e.getName());
-
             }
 
             examCombox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -58,8 +82,8 @@ public class StudentMainController implements Initializable {
         if (examCombox.getValue() != null) {
             Exam selectedExam = ExamDatabase.getInstance().filter(selectedExamName, selectedExamCourseId,"true").getFirst();
             Submission submission = new Submission();
-            submission.setStudent(student);
-            submission.setExam(selectedExam);
+            submission.setStudentId(student.getId());
+            submission.setExamId(selectedExam.getId());
 
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentStartExamUI.fxml"));
