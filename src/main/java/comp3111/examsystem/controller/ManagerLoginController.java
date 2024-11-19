@@ -27,7 +27,7 @@ public class ManagerLoginController implements Initializable {
     private Boolean Testing = true;
 
     public void initialize(URL location, ResourceBundle resources) {
-        //createRecord("velvet", "12345678");
+        //createRecord("admin", "12345678");
     }
 
     public void createRecord(String username, String password){
