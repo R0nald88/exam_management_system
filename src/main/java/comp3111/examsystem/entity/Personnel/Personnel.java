@@ -27,50 +27,6 @@ public class Personnel extends Entity {
         super(System.currentTimeMillis());
     }
 
-    private static Map<String, Personnel> registeredPersonnels = new HashMap<>();
-
-    public static boolean register(String username, String name, int age, String gender, String department, String password, String passwordConfirm) {
-        List<String> errorMessages;
-        errorMessages = new ArrayList<>();
-
-        if (username.isEmpty()) {
-            errorMessages.add("Error: Username required. Please input a value in Username field.");
-        }
-
-        if (registeredPersonnels.containsKey(username)) {
-            errorMessages.add("Error: Username occupied. Please input another username.");
-        }
-
-        for (Personnel personnel : registeredPersonnels.values()) {
-            if (personnel.getName().equals(name)) {
-                errorMessages.add("Error: Student had already registered.");
-            }
-        }
-
-        if (age < 0) {
-            errorMessages.add("Error: Age invalid. Please check your input in Age field.");
-        }
-
-        try {
-            Integer.parseInt(department);
-            errorMessages.add("Error: Department invalid. Please check your input in Department field.");
-        } catch (NumberFormatException ignored) {
-        }
-
-        if (!password.equals(passwordConfirm)) {
-            errorMessages.add("Error: Password does not match. Please confirm your Password again.");
-        }
-
-        if (errorMessages.isEmpty()) {
-            Student newStudent = new Student(username, name, age, gender, department, password, passwordConfirm);
-            registeredPersonnels.put(username, newStudent);
-        }
-
-        if (errorMessages.isEmpty()) {
-            return true;
-        } else return false;
-    }
-
     public String getUsername() {
         return username;
     }

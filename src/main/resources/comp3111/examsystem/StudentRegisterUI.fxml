@@ -38,7 +38,7 @@
     <center>
         <VBox prefHeight="400" prefWidth="300">
             <HBox prefWidth="300" alignment="CENTER">
-                <Label prefWidth="80" text="Username" textAlignment="RIGHT">
+                <Label prefWidth="120" text="Username" textAlignment="RIGHT">
                     <HBox.margin>
                         <Insets right="10.0"/>
                     </HBox.margin>
@@ -50,7 +50,7 @@
                 <VBox.margin>
                     <Insets top="5"/>
                 </VBox.margin>
-                <Label prefWidth="80" text="Name" textAlignment="RIGHT">
+                <Label prefWidth="120" text="Name" textAlignment="RIGHT">
                     <HBox.margin>
                         <Insets right="10.0"/>
                     </HBox.margin>
@@ -62,7 +62,7 @@
                 <VBox.margin>
                     <Insets top="5"/>
                 </VBox.margin>
-                <Label prefWidth="80" text="Gender" textAlignment="RIGHT">
+                <Label prefWidth="120" text="Gender" textAlignment="RIGHT">
                     <HBox.margin>
                         <Insets right="10.0"/>
                     </HBox.margin>
@@ -74,7 +74,7 @@
                 <VBox.margin>
                     <Insets top="5"/>
                 </VBox.margin>
-                <Label prefWidth="80" text="Age" textAlignment="RIGHT">
+                <Label prefWidth="120" text="Age:" textAlignment="RIGHT">
                     <HBox.margin>
                         <Insets right="10.0"/>
                     </HBox.margin>
@@ -86,37 +86,45 @@
                 <VBox.margin>
                     <Insets top="5"/>
                 </VBox.margin>
-                <Label prefWidth="80" text="Department" textAlignment="RIGHT">
+                <Label prefWidth="120" text="Department:" textAlignment="RIGHT">
                     <HBox.margin>
                         <Insets right="10.0"/>
                     </HBox.margin>
                 </Label>
-                <TextField prefWidth="310.0" promptText="Please enter your department" fx:id="deptTxt"/>
+                <TextField prefWidth="310.0" promptText="Please enter your department" fx:id="departmentTxt"/>
             </HBox>
 
             <HBox prefWidth="300" alignment="CENTER">
                 <VBox.margin>
                     <Insets top="5"/>
                 </VBox.margin>
-                <Label prefWidth="80" text="Password" textAlignment="RIGHT">
+                <Label prefWidth="120" text="Password:" textAlignment="RIGHT">
                     <HBox.margin>
                         <Insets right="10.0"/>
                     </HBox.margin>
                 </Label>
-                <TextField prefWidth="310.0" promptText="Please enter the password" fx:id="pwdTxt"/>
+                <PasswordField prefWidth="310.0" promptText="Please enter the password" fx:id="passwordTxt"/>
             </HBox>
 
             <HBox prefWidth="300" alignment="CENTER">
                 <VBox.margin>
                     <Insets top="5"/>
                 </VBox.margin>
-                <Label prefWidth="120" text="Confirmed Password" textAlignment="RIGHT">
+                <Label prefWidth="120" text="PasswordConfirm:" textAlignment="RIGHT">
                     <HBox.margin>
                         <Insets right="10.0"/>
                     </HBox.margin>
                 </Label>
-                <TextField prefWidth="270.0" promptText="Please enter the password again" fx:id="confirmedPwdTxt"/>
+                <PasswordField prefWidth="310.0" promptText="Please enter the password again" fx:id="passwordConfirmTxt"/>
             </HBox>
+            <Label fx:id="hintLabel" prefWidth="365" alignment="CENTER">
+                <VBox.margin>
+                    <Insets top="5"/>
+                </VBox.margin>
+                <font>
+                    <Font size="11" />
+                </font>
+            </Label>
         </VBox>
     </center>
 </BorderPane>

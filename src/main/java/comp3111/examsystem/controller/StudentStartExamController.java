@@ -1,17 +1,23 @@
 package comp3111.examsystem.controller;
 
-import comp3111.examsystem.entity.Exam.Exam;
+import comp3111.examsystem.entity.Exam.Submission;
+import comp3111.examsystem.entity.Exam.SubmissionDatabase;
+import comp3111.examsystem.entity.Questions.QuestionDatabase;
 import comp3111.examsystem.entity.Questions.QuestionType;
 import comp3111.examsystem.entity.Questions.Question;
+import comp3111.examsystem.tools.MsgSender;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -35,17 +41,15 @@ public class StudentStartExamController implements Initializable {
     @FXML
     private Button previousBtn, nextBtn, submitBtn;
 
-    private Exam exam;
-    private Question currentQuestion; //TODO: change it to id
+    private Submission submission;
+    private int currQuestionNumber;
+    private String currQuestionAnswer;
+
     private ToggleGroup toggleGroup;
 
     private List<Long> questionList;
 
     private Timeline countdownTimer;
-
-    public void setExam(Exam selectedExam) {
-        this.exam = selectedExam;
-    }
 
     private static class CountdownValue {
         int value;
@@ -57,22 +61,81 @@ public class StudentStartExamController implements Initializable {
         void decrement() {
             this.value--;
         }
+
+        int getValue() {
+            return value;
+        }
     }
+    @FXML
+    Label currQuestionNumberLabel;
+    Label optionALabel;
+    RadioButton radioButtonA;
+    CheckBox checkBoxA;
+    HBox optionAHBox;
+    Label optionBLabel;
+    RadioButton radioButtonB;
+    CheckBox checkBoxB;
+    HBox optionBHBox;
+    Label optionCLabel;
+    RadioButton radioButtonC;
+    CheckBox checkBoxC;
+    HBox optionCHBox;
+    Label optionDLabel;
+    RadioButton radioButtonD;
+    CheckBox checkBoxD;
+    HBox optionDHBox;
+    Label trueLabel;
+    RadioButton trueRadioButton;
+    HBox trueHBox;
+    Label falseLabel;
+    RadioButton falseRadioButton;
+    HBox falseHBox;
+    TextField questionField;
+    TextField shortQuestionAnswerField;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        questionList = exam.getQuestionIds();
-        //TODO: questionTable cells should be question string. How to get questions by ID
+        System.out.println("Start initializing start exam");
+        examNameLbl.setText("Exam Name");
+        totalQuestionLbl.setText("Total Question: ");
+        currQuestionNumber = 0;
+    }
 
+    public void setSubmission(Submission submission) {
+        this.submission = submission;
+
+        examNameLbl.setText(submission.getExam().getCourseId()+"-"+submission.getExam().getName());
+        questionList = submission.getExam().getQuestionIds();
+        totalQuestionLbl.setText("Total Question: " + questionList.size());
+        ObservableList<String> questionObservableList = FXCollections.observableArrayList();
+        currQuestionNumber = 0;
+        for (Long questionId : questionList) {
+            Question question = QuestionDatabase.getInstance().queryByKey(questionId.toString());
+            questionObservableList.add(question.getQuestion());
+        }
 
         questionColumn.setCellValueFactory(new PropertyValueFactory<>("question"));
 
-        CountdownValue countdownFrom = new CountdownValue(exam.getTime());
+        questionColumn.setCellFactory(tc -> {
+            TableCell<String, String> cell = new TableCell<>();
+            cell.setOnMouseClicked(event -> {
+                if (!cell.isEmpty()) {
+                    currQuestionNumber = questionTable.getItems().indexOf(cell.getItem());
+                    switchToQuestion(currQuestionNumber);
+                }
+            });
+            return cell;
+        });
+        questionTable.setItems(questionObservableList);
+        switchToQuestion(0);
+
+        CountdownValue countdownFrom = new CountdownValue(submission.getExam().getTime());
 
         countdownTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if (countdownFrom.value > 0) {
                 countdownFrom.decrement();
-                remainTimeLbl.setText(String.valueOf(countdownFrom));
+                remainTimeLbl.setText("Remain Time: " + countdownFrom.getValue());
             } else {
                 countdownTimer.stop(); // Stop the timer when countdown reaches 0
                 handleTimeUp();
@@ -80,30 +143,23 @@ public class StudentStartExamController implements Initializable {
         }));
         countdownTimer.setCycleCount(Timeline.INDEFINITE);
         countdownTimer.play();
-
     }
 
-    //TODO: get saved answer
-    public void switchToQuestion(Question question) {
-        //TODO: switch to get question By id and get question number by id
-        /*
-        if (questionList == null || questionId == null) {
+    public void switchToQuestion(int destQuestionNumber) {
 
-            question = null;
+        if (questionList == null || destQuestionNumber < 0 || destQuestionNumber > questionList.size() ) {
+            return;
         }
 
-        for (int i = 0; i < list.size(); i++) {
-            if (target.equals(list.get(i))) {
-                return i; // Return the index if the target value is found
-            }
-        }
-        return -1;
-        */
-        saveAnswer(currentQuestion);
+        saveAnswer();
+
+        currQuestionNumberLabel.setText("Question " + (destQuestionNumber+1));
+
+
         questionVBox.getChildren().clear(); // Clear existing content
 
-        int questionNumber = 1; //TODO: questionNumber not found yet!!!
-        if (questionNumber == 1) {
+
+        if (destQuestionNumber == 1) {
             previousBtn.setDisable(true);
             previousBtn.setVisible(false);
             nextBtn.setDisable(false);
@@ -111,7 +167,7 @@ public class StudentStartExamController implements Initializable {
             submitBtn.setDisable(true);
             submitBtn.setVisible(false);
 
-        } else if (questionNumber == questionList.size()) {
+        } else if (destQuestionNumber == questionList.size()) {
             previousBtn.setDisable(false);
             previousBtn.setVisible(true);
             nextBtn.setDisable(true);
@@ -127,95 +183,220 @@ public class StudentStartExamController implements Initializable {
             submitBtn.setVisible(false);
         }
 
-        QuestionType questionType = question.getType();
-        String questionTxt = question.getQuestion();
+        Question destQuestion = QuestionDatabase.getInstance().queryByKey(questionList.get(destQuestionNumber).toString());
+
+        QuestionType questionType = destQuestion.getType();
+        String questionTxt = destQuestion.getQuestion();
+        questionField = new TextField(questionTxt);
+        questionVBox.getChildren().add(questionField);
 
         if (questionType == QuestionType.SINGLE) {
             toggleGroup = new ToggleGroup();
-            Label optionALabel = new Label("A. " + question.getOptionA());
-            RadioButton radioButtonA = new RadioButton();
-            radioButtonA.setToggleGroup(toggleGroup);
-            HBox optionAHBox = new HBox(10);
-            optionAHBox.getChildren().addAll(radioButtonA, optionALabel);
-            Label optionBLabel = new Label("B. " + question.getOptionB());
-            RadioButton radioButtonB = new RadioButton();
-            radioButtonB.setToggleGroup(toggleGroup);
-            HBox optionBHBox = new HBox(10);
-            optionBHBox.getChildren().addAll(radioButtonB, optionBLabel);
-            Label optionCLabel = new Label("C. " + question.getOptionC());
-            RadioButton radioButtonC = new RadioButton();
-            radioButtonC.setToggleGroup(toggleGroup);
-            HBox optionCHBox = new HBox(10);
-            optionCHBox.getChildren().addAll(radioButtonC, optionCLabel);
-            Label optionDLabel = new Label("C. " + question.getOptionC());
-            RadioButton radioButtonD = new RadioButton();
-            radioButtonD.setToggleGroup(toggleGroup);
-            HBox optionDHBox = new HBox(10);
-            optionDHBox.getChildren().addAll(radioButtonD, optionDLabel);
-            questionVBox.getChildren().addAll(optionAHBox, optionBHBox, optionCHBox, optionDHBox);
+            if (!destQuestion.getOptionA().isEmpty()) {
+                optionALabel = new Label("A. " + destQuestion.getOptionA());
+                radioButtonA = new RadioButton();
+                radioButtonA.setId("A");
+                radioButtonA.setToggleGroup(toggleGroup);
+                optionAHBox = new HBox(10);
+                optionAHBox.getChildren().addAll(radioButtonA, optionALabel);
+                questionVBox.getChildren().add(optionAHBox);
+            }
+            if (!destQuestion.getOptionB().isEmpty()) {
+                optionBLabel = new Label("B. " + destQuestion.getOptionB());
+                radioButtonB = new RadioButton();
+                radioButtonB.setId("B");
+                radioButtonB.setToggleGroup(toggleGroup);
+                optionBHBox = new HBox(10);
+                optionBHBox.getChildren().addAll(radioButtonB, optionBLabel);
+                questionVBox.getChildren().add(optionBHBox);
+            }
+            if (!destQuestion.getOptionC().isEmpty()) {
+                optionCLabel = new Label("C. " + destQuestion.getOptionC());
+                radioButtonC = new RadioButton();
+                radioButtonC.setId("C");
+                radioButtonC.setToggleGroup(toggleGroup);
+                optionCHBox = new HBox(10);
+                optionCHBox.getChildren().addAll(radioButtonC, optionCLabel);
+                questionVBox.getChildren().add(optionCHBox);
+            }
+            if (!destQuestion.getOptionD().isEmpty()) {
+                optionDLabel = new Label("D. " + destQuestion.getOptionC());
+                radioButtonD = new RadioButton();
+                radioButtonD.setId("D");
+                radioButtonD.setToggleGroup(toggleGroup);
+                optionDHBox = new HBox(10);
+                optionDHBox.getChildren().addAll(radioButtonD, optionDLabel);
+                questionVBox.getChildren().add(optionDHBox);
+            }
+
+            if (submission.getAnswer() != null) {
+                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
+                        radioButtonA.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
+                        radioButtonB.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
+                        radioButtonC.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
+                        radioButtonD.setSelected(true);
+                    }
+                }
+            }
 
         } else if (questionType == QuestionType.MULTIPLE) {
-            Label optionALabel = new Label("A. " + question.getOptionA());
-            CheckBox checkBoxA = new CheckBox();
-            HBox optionAHBox = new HBox(10);
-            optionAHBox.getChildren().addAll(checkBoxA, optionALabel);
-            Label optionBLabel = new Label("B. " + question.getOptionB());
-            CheckBox checkBoxB = new CheckBox();
-            HBox optionBHBox = new HBox(10);
-            optionBHBox.getChildren().addAll(checkBoxB, optionBLabel);
-            Label optionCLabel = new Label("C. " + question.getOptionC());
-            CheckBox checkBoxC = new CheckBox();
-            HBox optionCHBox = new HBox(10);
-            optionCHBox.getChildren().addAll(checkBoxC, optionCLabel);
-            Label optionDLabel = new Label("C. " + question.getOptionC());
-            CheckBox checkBoxD = new CheckBox();
-            HBox optionDHBox = new HBox(10);
-            optionDHBox.getChildren().addAll(checkBoxD, optionDLabel);
-            questionVBox.getChildren().addAll(optionAHBox, optionBHBox, optionCHBox, optionDHBox);
+            if (!destQuestion.getOptionA().isEmpty()) {
+                optionALabel = new Label("A. " + destQuestion.getOptionA());
+                checkBoxA = new CheckBox();
+                optionAHBox = new HBox(10);
+                optionAHBox.getChildren().addAll(checkBoxA, optionALabel);
+                questionVBox.getChildren().add(optionAHBox);
+            }
+            if (!destQuestion.getOptionB().isEmpty()) {
+                optionBLabel = new Label("B. " + destQuestion.getOptionB());
+                checkBoxB = new CheckBox();
+                optionBHBox = new HBox(10);
+                optionBHBox.getChildren().addAll(checkBoxB, optionBLabel);
+                questionVBox.getChildren().add(optionBHBox);
+            }
+            if (!destQuestion.getOptionC().isEmpty()) {
+                optionCLabel = new Label("C. " + destQuestion.getOptionC());
+                checkBoxC = new CheckBox();
+                optionCHBox = new HBox(10);
+                optionCHBox.getChildren().addAll(checkBoxC, optionCLabel);
+                questionVBox.getChildren().add(optionCHBox);
+            }
+            if (!destQuestion.getOptionD().isEmpty()) {
+                optionDLabel = new Label("D. " + destQuestion.getOptionC());
+                checkBoxD = new CheckBox();
+                optionDHBox = new HBox(10);
+                optionDHBox.getChildren().addAll(checkBoxD, optionDLabel);
+                questionVBox.getChildren().add(optionDHBox);
+            }
+
+            if(submission.getAnswer() != null) {
+                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
+                        checkBoxA.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
+                        checkBoxB.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
+                        checkBoxC.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
+                        checkBoxD.setSelected(true);
+                    }
+                }
+            }
 
         } else if (questionType == QuestionType.TRUE_FALSE) {
             toggleGroup = new ToggleGroup();
-            Label trueLabel = new Label("True");
-            RadioButton trueRadioButton = new RadioButton();
+            trueLabel = new Label("True");
+            trueRadioButton = new RadioButton();
+            trueRadioButton.setId("T");
             trueRadioButton.setToggleGroup(toggleGroup);
-            HBox trueHBox = new HBox(10);
+            trueHBox = new HBox(10);
             trueHBox.getChildren().addAll(trueLabel, trueRadioButton);
-            Label falseLabel = new Label("C. " + question.getOptionC());
-            RadioButton falseRadioButton = new RadioButton();
+            falseLabel = new Label("False");
+            falseRadioButton = new RadioButton();
+            falseRadioButton.setId("F");
             falseRadioButton.setToggleGroup(toggleGroup);
-            HBox falseHBox = new HBox(10);
+            falseHBox = new HBox(10);
             falseHBox.getChildren().addAll(falseRadioButton, falseLabel);
-            questionVBox.getChildren().addAll(trueHBox, falseHBox);
+            questionVBox.getChildren().addAll(questionField, trueHBox, falseHBox);
+
+            if(submission.getAnswer() != null) {
+                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswer().get(destQuestionNumber).contains("T")) {
+                        trueRadioButton.setSelected(true);
+                    } else if (submission.getAnswer().get(destQuestionNumber).contains("F")) {
+                        falseRadioButton.setSelected(true);
+                    }
+                }
+            }
 
         } else {
-            TextField questionField = new TextField(questionTxt);
-            TextField textField = new TextField();
-            questionVBox.getChildren().addAll(questionField, textField);
+            shortQuestionAnswerField = new TextField();
+            questionVBox.getChildren().addAll(questionField, shortQuestionAnswerField);
+
+            if(submission.getAnswer() != null) {
+                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+                    shortQuestionAnswerField.setText(submission.getAnswer().get(destQuestionNumber));
+                }
+            }
         }
     }
 
-    //TODO: save answer
-    private void saveAnswer(Question currentQuestion) {
+    //Save answer: will be used by question label cell and previous and next button
+    private void saveAnswer() {
+        QuestionType currQuestionType = QuestionDatabase.getInstance().queryByKey(questionList.get(currQuestionNumber).toString()).getType();
+        currQuestionAnswer = null;
+        if (currQuestionType == QuestionType.SINGLE || currQuestionType == QuestionType.TRUE_FALSE) {
+            if (toggleGroup != null) {
+                RadioButton selectedRadioButton = (RadioButton) toggleGroup.getSelectedToggle();
+                if (selectedRadioButton != null) {
+                    currQuestionAnswer = selectedRadioButton.getId();
+                }
+            }
+        } else if (currQuestionType == QuestionType.MULTIPLE) {
+            StringBuilder selectedOptions = new StringBuilder();
+            if (checkBoxA.isSelected()) {
+                selectedOptions.append("A");
+            }
+            if (checkBoxB.isSelected()) {
+                selectedOptions.append("B");
+            }
+            if (checkBoxC.isSelected()) {
+                selectedOptions.append("C");
+            }
+            if (checkBoxD.isSelected()) {
+                selectedOptions.append("D");
+            }
+            currQuestionAnswer = selectedOptions.toString().trim();
 
+        } else { //currQuestionType == QuestionType.SHORT_Q
+            currQuestionAnswer = shortQuestionAnswerField.getText();
+        }
+        if (currQuestionAnswer != null) submission.saveAnswer(currQuestionNumber, currQuestionAnswer);
     }
 
 
     @FXML
     public void previous() {
-        //TODO: use currentQuestion
+        saveAnswer();
+        switchToQuestion(currQuestionNumber-1);
     }
 
     @FXML
     public void next() {
-        //TODO: use currentQuestion
+        saveAnswer();
+        switchToQuestion(currQuestionNumber+1);
+
     }
 
     @FXML
-    public void submit() {
-        //TODO: use currentQuestion
+    public void submit(ActionEvent e) {
+        saveAnswer();
+        submission.calculateScore();
+        try {
+            SubmissionDatabase.getInstance().addSubmission(submission);
+            MsgSender.showConfirm("Hint", "Student Register successful.", () -> close(e));
+        } catch (Exception e1) {
+            MsgSender.showConfirm("Submit Error", e1.getMessage(), () -> {});
+        }
+    }
+
+    public void close(ActionEvent e) {
+        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 
     public void handleTimeUp() {
         //TODO
+        ActionEvent dummyEvent = new ActionEvent();
+        try {
+            MsgSender.showConfirm("Time's up", "Time's up!\nAll answer saved will be submitted automatically.", () -> submit(dummyEvent));
+        } catch (Exception e1) {
+            MsgSender.showConfirm("Submit Error", e1.getMessage(), () -> {
+            });
+        }
+
     }
 }
