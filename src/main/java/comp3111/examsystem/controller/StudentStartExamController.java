@@ -1,18 +1,30 @@
 package comp3111.examsystem.controller;
 
+import comp3111.examsystem.Main;
+import comp3111.examsystem.entity.Exam.Exam;
+import comp3111.examsystem.entity.Exam.ExamDatabase;
 import comp3111.examsystem.entity.Exam.Submission;
 import comp3111.examsystem.entity.Exam.SubmissionDatabase;
+import comp3111.examsystem.entity.Personnel.Student;
+import comp3111.examsystem.entity.Personnel.StudentDatabase;
 import comp3111.examsystem.entity.Questions.QuestionDatabase;
 import comp3111.examsystem.entity.Questions.QuestionType;
 import comp3111.examsystem.entity.Questions.Question;
 import comp3111.examsystem.tools.MsgSender;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -20,7 +32,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -42,6 +56,9 @@ public class StudentStartExamController implements Initializable {
     private Button previousBtn, nextBtn, submitBtn;
 
     private Submission submission;
+    private Student student;
+    private Exam exam;
+
     private int currQuestionNumber;
     private String currQuestionAnswer;
 
@@ -50,6 +67,7 @@ public class StudentStartExamController implements Initializable {
     private List<Long> questionList;
 
     private Timeline countdownTimer;
+    private CountdownValue countdownFrom;
 
     private static class CountdownValue {
         int value;
@@ -66,6 +84,7 @@ public class StudentStartExamController implements Initializable {
             return value;
         }
     }
+
     @FXML
     Label currQuestionNumberLabel;
     Label optionALabel;
@@ -92,6 +111,7 @@ public class StudentStartExamController implements Initializable {
     HBox falseHBox;
     TextField questionField;
     TextField shortQuestionAnswerField;
+    List<String> questionStringList;
 
 
     @Override
@@ -104,90 +124,116 @@ public class StudentStartExamController implements Initializable {
 
     public void setSubmission(Submission submission) {
         this.submission = submission;
+        exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
+        student = StudentDatabase.getInstance().queryByKey(submission.getStudentId().toString());
 
-        examNameLbl.setText(submission.getExam().getCourseId()+"-"+submission.getExam().getName());
-        questionList = submission.getExam().getQuestionIds();
+        // Set the exam name and total questions
+        examNameLbl.setText(exam.getCourseId() + "-" + exam.getName());
+        questionList = exam.getQuestionIds();
         totalQuestionLbl.setText("Total Question: " + questionList.size());
-        ObservableList<String> questionObservableList = FXCollections.observableArrayList();
         currQuestionNumber = 0;
-        for (Long questionId : questionList) {
-            Question question = QuestionDatabase.getInstance().queryByKey(questionId.toString());
-            questionObservableList.add(question.getQuestion());
+
+        // Populate questionStringList with questions from the database
+        questionStringList = new ArrayList<>();
+        for (Question question : QuestionDatabase.getInstance().queryByKeys(questionList.stream().map(Object::toString).toList())) {
+            questionStringList.add(question.getQuestion());
         }
 
-        questionColumn.setCellValueFactory(new PropertyValueFactory<>("question"));
+        // Debugging output
+        System.out.println("Question String List: " + questionStringList);
 
+        // Set up the TableColumn to display questions
+        questionColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue()));
+
+        // Set items for questionTable
+        ObservableList<String> observableQuestions = FXCollections.observableList(questionStringList);
+        questionTable.setItems(observableQuestions);
+
+        // Set up cell click event
         questionColumn.setCellFactory(tc -> {
-            TableCell<String, String> cell = new TableCell<>();
+            TableCell<String, String> cell = new TableCell<>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(item);
+                    }
+                }
+            };
+
+            // Add mouse click event to the cell
             cell.setOnMouseClicked(event -> {
                 if (!cell.isEmpty()) {
-                    currQuestionNumber = questionTable.getItems().indexOf(cell.getItem());
-                    switchToQuestion(currQuestionNumber);
+                    saveAnswer();
+                    int rowIndex = cell.getIndex(); // Get the row index
+                    switchToQuestion(rowIndex); // Call switchToQuestion with the row index
                 }
             });
+
             return cell;
         });
-        questionTable.setItems(questionObservableList);
+
+        // Additional configuration for the TableView
+        questionTable.setEditable(false);
+        questionTable.setPlaceholder(new Label("No question record."));
+        questionTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        // Switch to the first question
         switchToQuestion(0);
 
-        CountdownValue countdownFrom = new CountdownValue(submission.getExam().getTime());
+        // Start the countdown timer
+        CountdownValue countdownFrom = new CountdownValue(exam.getTime());
+        startCountdownTimer(countdownFrom);
+    }
 
-        countdownTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            if (countdownFrom.value > 0) {
-                countdownFrom.decrement();
-                remainTimeLbl.setText("Remain Time: " + countdownFrom.getValue());
-            } else {
-                countdownTimer.stop(); // Stop the timer when countdown reaches 0
-                handleTimeUp();
-            }
-        }));
-        countdownTimer.setCycleCount(Timeline.INDEFINITE);
-        countdownTimer.play();
+    private void startCountdownTimer(CountdownValue countdownFrom) {
+        this.countdownFrom = countdownFrom; // Store the value
+        if (countdownTimer == null) {
+            countdownTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                if (countdownFrom.value > 0) {
+                    countdownFrom.decrement();
+                    remainTimeLbl.setText("Remain Time: " + countdownFrom.getValue());
+                } else {
+                    countdownTimer.stop(); // Stop the timer when countdown reaches 0
+                    handleTimeUp();
+                }
+            }));
+            countdownTimer.setCycleCount(Timeline.INDEFINITE);
+            countdownTimer.play();
+        }
     }
 
     public void switchToQuestion(int destQuestionNumber) {
 
-        if (questionList == null || destQuestionNumber < 0 || destQuestionNumber > questionList.size() ) {
+        if (questionList == null || destQuestionNumber < 0 || destQuestionNumber >= questionList.size()) {
+            System.out.println("Invalid destQuestionNumber");
             return;
         }
 
-        saveAnswer();
-
-        currQuestionNumberLabel.setText("Question " + (destQuestionNumber+1));
+        currQuestionNumberLabel.setText("Question " + (destQuestionNumber + 1));
 
 
         questionVBox.getChildren().clear(); // Clear existing content
 
 
-        if (destQuestionNumber == 1) {
-            previousBtn.setDisable(true);
-            previousBtn.setVisible(false);
-            nextBtn.setDisable(false);
-            nextBtn.setVisible(true);
-            submitBtn.setDisable(true);
-            submitBtn.setVisible(false);
+        previousBtn.setVisible(destQuestionNumber > 0);
+        previousBtn.setDisable(destQuestionNumber == 0);
 
-        } else if (destQuestionNumber == questionList.size()) {
-            previousBtn.setDisable(false);
-            previousBtn.setVisible(true);
-            nextBtn.setDisable(true);
-            nextBtn.setVisible(false);
-            submitBtn.setDisable(false);
-            submitBtn.setVisible(true);
-        } else {
-            previousBtn.setDisable(false);
-            previousBtn.setVisible(true);
-            nextBtn.setDisable(false);
-            nextBtn.setVisible(true);
-            submitBtn.setDisable(true);
-            submitBtn.setVisible(false);
-        }
+        nextBtn.setVisible(destQuestionNumber < questionList.size() - 1);
+        nextBtn.setDisable(destQuestionNumber >= questionList.size() - 1);
+
+        submitBtn.setVisible(destQuestionNumber == questionList.size() - 1);
+        submitBtn.setDisable(destQuestionNumber < questionList.size() - 1);
 
         Question destQuestion = QuestionDatabase.getInstance().queryByKey(questionList.get(destQuestionNumber).toString());
 
         QuestionType questionType = destQuestion.getType();
         String questionTxt = destQuestion.getQuestion();
         questionField = new TextField(questionTxt);
+        questionField.setEditable(false);
         questionVBox.getChildren().add(questionField);
 
         if (questionType == QuestionType.SINGLE) {
@@ -220,7 +266,7 @@ public class StudentStartExamController implements Initializable {
                 questionVBox.getChildren().add(optionCHBox);
             }
             if (!destQuestion.getOptionD().isEmpty()) {
-                optionDLabel = new Label("D. " + destQuestion.getOptionC());
+                optionDLabel = new Label("D. " + destQuestion.getOptionD());
                 radioButtonD = new RadioButton();
                 radioButtonD.setId("D");
                 radioButtonD.setToggleGroup(toggleGroup);
@@ -230,7 +276,7 @@ public class StudentStartExamController implements Initializable {
             }
 
             if (submission.getAnswer() != null) {
-                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
                     if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
                         radioButtonA.setSelected(true);
                     } else if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
@@ -266,22 +312,25 @@ public class StudentStartExamController implements Initializable {
                 questionVBox.getChildren().add(optionCHBox);
             }
             if (!destQuestion.getOptionD().isEmpty()) {
-                optionDLabel = new Label("D. " + destQuestion.getOptionC());
+                optionDLabel = new Label("D. " + destQuestion.getOptionD());
                 checkBoxD = new CheckBox();
                 optionDHBox = new HBox(10);
                 optionDHBox.getChildren().addAll(checkBoxD, optionDLabel);
                 questionVBox.getChildren().add(optionDHBox);
             }
 
-            if(submission.getAnswer() != null) {
-                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+            if (submission.getAnswer() != null) {
+                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
                     if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
                         checkBoxA.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
+                    }
+                    if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
                         checkBoxB.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
+                    }
+                    if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
                         checkBoxC.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
+                    }
+                    if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
                         checkBoxD.setSelected(true);
                     }
                 }
@@ -294,17 +343,18 @@ public class StudentStartExamController implements Initializable {
             trueRadioButton.setId("T");
             trueRadioButton.setToggleGroup(toggleGroup);
             trueHBox = new HBox(10);
-            trueHBox.getChildren().addAll(trueLabel, trueRadioButton);
+            trueHBox.getChildren().addAll(trueRadioButton, trueLabel);
             falseLabel = new Label("False");
             falseRadioButton = new RadioButton();
             falseRadioButton.setId("F");
             falseRadioButton.setToggleGroup(toggleGroup);
             falseHBox = new HBox(10);
             falseHBox.getChildren().addAll(falseRadioButton, falseLabel);
-            questionVBox.getChildren().addAll(questionField, trueHBox, falseHBox);
+            questionVBox.getChildren().add(trueHBox);
+            questionVBox.getChildren().add(falseHBox);
 
-            if(submission.getAnswer() != null) {
-                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+            if (submission.getAnswer() != null) {
+                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
                     if (submission.getAnswer().get(destQuestionNumber).contains("T")) {
                         trueRadioButton.setSelected(true);
                     } else if (submission.getAnswer().get(destQuestionNumber).contains("F")) {
@@ -315,18 +365,21 @@ public class StudentStartExamController implements Initializable {
 
         } else {
             shortQuestionAnswerField = new TextField();
-            questionVBox.getChildren().addAll(questionField, shortQuestionAnswerField);
+            VBox.setMargin(shortQuestionAnswerField, new Insets(10.0));
+            questionVBox.getChildren().add(shortQuestionAnswerField);
 
-            if(submission.getAnswer() != null) {
-                if (!submission.getAnswer().get(destQuestionNumber).isEmpty()) {
+            if (submission.getAnswer() != null) {
+                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
                     shortQuestionAnswerField.setText(submission.getAnswer().get(destQuestionNumber));
                 }
             }
         }
+        currQuestionNumber = destQuestionNumber;
     }
 
     //Save answer: will be used by question label cell and previous and next button
     private void saveAnswer() {
+        System.out.println("At saveAnswer, currQuestionNumber: " + currQuestionNumber);
         QuestionType currQuestionType = QuestionDatabase.getInstance().queryByKey(questionList.get(currQuestionNumber).toString()).getType();
         currQuestionAnswer = null;
         if (currQuestionType == QuestionType.SINGLE || currQuestionType == QuestionType.TRUE_FALSE) {
@@ -355,48 +408,90 @@ public class StudentStartExamController implements Initializable {
         } else { //currQuestionType == QuestionType.SHORT_Q
             currQuestionAnswer = shortQuestionAnswerField.getText();
         }
-        if (currQuestionAnswer != null) submission.saveAnswer(currQuestionNumber, currQuestionAnswer);
+        System.out.println("After saveAnswer, currQuestionNumber: " + currQuestionNumber + " currQuestionAnswer: " + currQuestionAnswer);
+        if (currQuestionAnswer != null && !currQuestionAnswer.isEmpty())
+            submission.saveAnswer(currQuestionNumber, currQuestionAnswer);
     }
 
 
     @FXML
     public void previous() {
-        saveAnswer();
-        switchToQuestion(currQuestionNumber-1);
+        System.out.println("Previous button clicked. Current question number: " + currQuestionNumber);
+        if (currQuestionNumber > 0) {
+            saveAnswer();
+            switchToQuestion(currQuestionNumber - 1);
+        }
     }
 
     @FXML
     public void next() {
-        saveAnswer();
-        switchToQuestion(currQuestionNumber+1);
-
+        System.out.println("Next button clicked. Current question number: " + currQuestionNumber);
+        if (currQuestionNumber < (questionList.size() - 1)) {
+            saveAnswer();
+            switchToQuestion(currQuestionNumber + 1);
+        }
     }
 
     @FXML
     public void submit(ActionEvent e) {
         saveAnswer();
         submission.calculateScore();
+
+        // Access the countdown value
+        countdownTimer.stop();
+        int remainingTime = countdownFrom.getValue();
+        System.out.println("Remaining time at submission: " + remainingTime);
+        submission.setTimeSpend(exam.getTime() - remainingTime);
+
         try {
             SubmissionDatabase.getInstance().addSubmission(submission);
-            MsgSender.showConfirm("Hint", "Student Register successful.", () -> close(e));
+            MsgSender.showConfirm("Hint", "Student submit exam successful.", () -> close(e));
+            MsgSender.showConfirm("Your Exam Score", submission.getNumberOfCorrect() + "/" + exam.getQuestionIds().size() +" Correct, the precision is "
+                    + (int) (((double) submission.getScore()/exam.getFullScore()) * 100) + "%, the score is " + submission.getScore() + "/" + exam.getFullScore(), () -> { });
         } catch (Exception e1) {
-            MsgSender.showConfirm("Submit Error", e1.getMessage(), () -> {});
+            MsgSender.showConfirm("Submit Error", e1.getMessage(), () -> {
+            });
+            //e1.printStackTrace();
+        }
+
+        try {
+            // Load the FXML file first
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentMainUI.fxml"));
+            Parent root = fxmlLoader.load(); // Load the root
+
+            // Get the controller and set the student
+            StudentMainController studentMainController = fxmlLoader.getController();
+            studentMainController.setStudent(StudentDatabase.getInstance().queryByKey(submission.getStudentId().toString()));
+
+            // Create the new stage and set the scene
+            Stage stage = new Stage();
+            stage.setTitle("Hi " + StudentDatabase.getInstance().queryByKey(submission.getStudentId().toString()).getUsername() + ", Welcome to HKUST Examination System");
+            stage.setScene(new Scene(root)); // Use the loaded root
+
+            // Close the current login window
+            ((Stage) questionVBox.getScene().getWindow()).close();
+            stage.show();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
     }
 
     public void close(ActionEvent e) {
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+        Stage stage = (Stage)  questionVBox.getScene().getWindow();
+        stage.close();
     }
 
     public void handleTimeUp() {
-        //TODO
-        ActionEvent dummyEvent = new ActionEvent();
-        try {
-            MsgSender.showConfirm("Time's up", "Time's up!\nAll answer saved will be submitted automatically.", () -> submit(dummyEvent));
-        } catch (Exception e1) {
-            MsgSender.showConfirm("Submit Error", e1.getMessage(), () -> {
-            });
-        }
-
+        // Use Platform.runLater to ensure that the dialog is shown after current processing
+        Platform.runLater(() -> {
+            ActionEvent dummyEvent = new ActionEvent();
+            try {
+                MsgSender.showConfirm("Time's up", "Your time to finish your exam is up! \nAll answers saved will be submitted automatically.", () -> submit(dummyEvent));
+            } catch (Exception e1) {
+                MsgSender.showConfirm("Handle Time Up Error", e1.getMessage(), () -> {
+                });
+                //e1.printStackTrace();
+            }
+        });
     }
 }

@@ -1,0 +1,1 @@
+{"position":"PROFESSOR","username":"t1","name":"Teacher1","age":40,"gender":"MALE","department":"CSE","password":"Teacher1!","id":1731881277359}
