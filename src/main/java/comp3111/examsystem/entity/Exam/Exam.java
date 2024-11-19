@@ -1,6 +1,8 @@
 package comp3111.examsystem.entity.Exam;
 
 import com.google.gson.Gson;
+import comp3111.examsystem.entity.Course.Course;
+import comp3111.examsystem.entity.Course.CourseDatabase;
 import comp3111.examsystem.entity.Entity;
 import comp3111.examsystem.entity.Questions.Question;
 import comp3111.examsystem.entity.Questions.QuestionDatabase;
@@ -13,7 +15,7 @@ import java.util.Objects;
 public class Exam extends Entity {
     private String name;
     private int time;
-    private String courseId;
+    private long longIdOfCourse;
     private boolean published;
     private List<Long> questionIds;
 
@@ -29,8 +31,8 @@ public class Exam extends Entity {
         return time;
     }
 
-    public String getCourseId() {
-        return courseId;
+    public long getLongIdOfCourse() {
+        return longIdOfCourse;
     }
 
     public boolean isPublished() {
@@ -104,9 +106,29 @@ public class Exam extends Entity {
         this.published = published;
     }
 
-    public void setCourseId(String courseId) {
-        // TODO: validate courseID exist
-        this.courseId = courseId.trim();
+    public Course getCourse() {
+        List<Course> c = CourseDatabase.getInstance().queryByField("id", longIdOfCourse + "");
+        return c.isEmpty() ? null : c.getFirst();
+    }
+
+    public String getCourseId() {
+        Course c = getCourse();
+        return c == null ? null : c.getCourseID();
+    }
+
+    public void setCourseId(String c) throws Exception {
+        if (c == null || c.trim().isEmpty()) {
+            throw new Exception("Course ID does not exist.");
+        }
+
+        c = c.trim();
+        List<Course> list = CourseDatabase.getInstance().queryByField("courseID", c);
+
+        if (list.isEmpty()) {
+            throw new Exception("Course ID " + c + " does not exist.");
+        }
+
+        longIdOfCourse = list.getFirst().getId();
     }
 
     public void setTime(int time) throws Exception {
@@ -151,12 +173,12 @@ public class Exam extends Entity {
         return time == exam.time &&
                 published == exam.published &&
                 Objects.equals(name, exam.name) &&
-                Objects.equals(courseId, exam.courseId) &&
+                Objects.equals(longIdOfCourse, exam.longIdOfCourse) &&
                 Objects.equals(questionIds, exam.questionIds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, time, courseId, published, questionIds);
+        return Objects.hash(name, time, longIdOfCourse, published, questionIds);
     }
 }

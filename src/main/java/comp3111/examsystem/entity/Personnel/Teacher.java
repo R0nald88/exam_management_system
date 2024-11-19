@@ -2,6 +2,8 @@ package comp3111.examsystem.entity.Personnel;
 
 import comp3111.examsystem.tools.Database;
 
+import java.util.List;
+
 public class Teacher extends Personnel {
     private Position position;
 
@@ -16,7 +18,8 @@ public class Teacher extends Personnel {
             throw new RuntimeException("Username should not contain any blank space.");
         }
         // Check if username exist
-        if (TeacherDatabase.getInstance().existUsername(username)) {
+        List<Teacher> curr = TeacherDatabase.getInstance().queryByField("username", username);
+        if (!curr.isEmpty() && !curr.getFirst().id.equals(getId())) {
             throw new RuntimeException("Username occupied.");
         }
         super.setUsername(username);
