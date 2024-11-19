@@ -100,8 +100,24 @@ public class TeacherQuestionBankController implements Initializable {
 
     public void delete(ActionEvent actionEvent) {
         try {
-            QuestionDatabase.getInstance().deleteQuestion(questionTable.getSelectionModel().getSelectedItem());
+            deleteQuestion(false);
+        } catch (RuntimeException e) {
+            MsgSender.showConfirm(
+                "Question Deletion Warning",
+                e.getMessage() +
+                "\nPress \"OK\" to continue deleting this question and the exam(s) containing only this question.",
+                () -> {
+                    deleteQuestion(true);
+                });
+        }
+    }
+
+    private void deleteQuestion(boolean deleteExam) {
+        try {
+            QuestionDatabase.getInstance().deleteQuestion(questionTable.getSelectionModel().getSelectedItem(), deleteExam);
             MsgSender.showConfirm("Successful Question Deletion", "Question deleted successfully.", this::refreshQuestionTable);
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             MsgSender.showConfirm("Question Deletion Error", e.getMessage(), () -> {});
         }

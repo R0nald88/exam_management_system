@@ -65,6 +65,8 @@ public class TeacherExamManagementController implements Initializable {
     @FXML private TableColumn<Question, Integer> questionScoreCol;
     @FXML private Button deleteQuestionBtn;
     @FXML private Button addQuestionBtn;
+    @FXML private Button deleteAllQuestionBtn;
+    @FXML private Button addAllQuestionBtn;
 
     // exam form
     @FXML private TextField examNameTxt;
@@ -175,7 +177,7 @@ public class TeacherExamManagementController implements Initializable {
 
     public void addQuestion(ActionEvent actionEvent) {
         selectedQuestion.addAll(questionTable.getSelectionModel().getSelectedItems());
-        System.out.println(selectedQuestion.toString());
+        // System.out.println(selectedQuestion.toString());
         refreshQuestionTable();
     }
 
@@ -266,6 +268,7 @@ public class TeacherExamManagementController implements Initializable {
                 questionList.removeAll(selectedQuestion);
             }
             questionTable.getItems().setAll(FXCollections.observableList(questionList));
+            addAllQuestionBtn.setDisable(questionList.isEmpty());
         } catch (Exception e) {
             MsgSender.showMsg(e.getMessage());
         }
@@ -274,8 +277,9 @@ public class TeacherExamManagementController implements Initializable {
     }
 
     private void refreshExamQuestionTable() {
-        System.out.println(selectedQuestion);
+        // System.out.println(selectedQuestion);
         examQuestionTable.setItems(FXCollections.observableList(selectedQuestion));
+        deleteAllQuestionBtn.setDisable(selectedQuestion.isEmpty());
         clearSelectedExamQuestion();
     }
 
@@ -328,5 +332,15 @@ public class TeacherExamManagementController implements Initializable {
     private void clearSelectedQuestion() {
         questionTable.getSelectionModel().clearSelection();
         addQuestionBtn.setDisable(true);
+    }
+
+    public void addAllQuestion(ActionEvent actionEvent) {
+        selectedQuestion.addAll(questionTable.getItems());
+        refreshQuestionTable();
+    }
+
+    public void deleteAllQuestion(ActionEvent actionEvent) {
+        selectedQuestion.clear();
+        refreshQuestionTable();
     }
 }
