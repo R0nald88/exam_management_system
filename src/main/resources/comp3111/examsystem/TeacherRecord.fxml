@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.ManagerStudentController">
+<BorderPane prefHeight="800.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.ManagerTeacherController">
     <top>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="800.0" BorderPane.alignment="CENTER">
             <children>
@@ -62,14 +62,15 @@
         </HBox>
     </top>
     <center>
-        <VBox prefHeight="600.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="600.0" prefWidth="1050.0" BorderPane.alignment="CENTER">
             <children>
-                <TableView fx:id="recordTable" prefHeight="700.0" prefWidth="900.0">
+                <TableView fx:id="recordTable" prefHeight="700.0" prefWidth="1050.0">
                     <columns>
                         <TableColumn fx:id="usernameColumn" prefWidth="150.0" text="Username" />
                         <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Name" />
                         <TableColumn fx:id="ageColumn" prefWidth="150.0" text="Age" />
                         <TableColumn fx:id="genderColumn" prefWidth="150.0" text="Gender" />
+                        <TableColumn fx:id="positionColumn" prefWidth="150.0" text="Position" />
                         <TableColumn fx:id="departmentColumn" prefWidth="150.0" text="Department" />
                         <TableColumn fx:id="passwordColumn" prefWidth="150.0" text="Password" />
                     </columns>
@@ -100,6 +101,12 @@
                 </TextField>
                 <Label text="Gender" />
                 <ChoiceBox fx:id="genderCombox" maxWidth="150.0">
+                    <VBox.margin>
+                        <Insets bottom="10.0" />
+                    </VBox.margin>
+                </ChoiceBox>
+                <Label text="Position" />
+                <ChoiceBox fx:id="positionCombox" maxWidth="150.0">
                     <VBox.margin>
                         <Insets bottom="10.0" />
                     </VBox.margin>

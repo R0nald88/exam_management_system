@@ -117,7 +117,7 @@
                         <Insets right="10.0"/>
                     </HBox.margin>
                 </Label>
-                <TextField prefWidth="310.0" promptText="Please enter the password" fx:id="pwdTxt"/>
+                <PasswordField prefWidth="310.0" promptText="Please enter the password" fx:id="pwdTxt"/>
             </HBox>
 
             <HBox prefWidth="400" alignment="CENTER">
@@ -129,7 +129,7 @@
                         <Insets right="10.0"/>
                     </HBox.margin>
                 </Label>
-                <TextField prefWidth="270.0" promptText="Please enter the password again" fx:id="confirmedPwdTxt"/>
+                <PasswordField prefWidth="270.0" promptText="Please enter the password again" fx:id="confirmedPwdTxt"/>
             </HBox>
 
             <Label fx:id="hintLabel" prefWidth="365" alignment="CENTER">

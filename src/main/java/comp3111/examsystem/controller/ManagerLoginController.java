@@ -27,12 +27,12 @@ public class ManagerLoginController implements Initializable {
     private Boolean Testing = true;
 
     public void initialize(URL location, ResourceBundle resources) {
-        //createRecord("velvet", "12345678");
+        //createRecord("admin", "12345678");
     }
 
     public void createRecord(String username, String password){
         try{
-            FileWriter myWriter = new FileWriter("src/main/resources/database/ManagerCredentials.txt",true);
+            FileWriter myWriter = new FileWriter("src/main/resources/database/manager.txt",true);
             myWriter.write(username + " " + password + "\n");
             myWriter.close();
         } catch (IOException e1){
@@ -45,7 +45,7 @@ public class ManagerLoginController implements Initializable {
         String username = usernameTxt.getText();
         String password = passwordTxt.getText();
         try{
-            File myObj = new File("src/main/resources/database/ManagerCredentials.txt");
+            File myObj = new File("src/main/resources/database/manager.txt");
             Scanner myReader = new Scanner(myObj);
             while(!Testing){
                 String data = myReader.nextLine();

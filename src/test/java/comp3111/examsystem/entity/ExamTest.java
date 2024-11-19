@@ -23,7 +23,7 @@ public class ExamTest {
             exam.setTime(inputTime);
             exam.setPublished(inputPublished);
             exam.setName(inputName);
-            exam.setCourseId(inputCourseId);
+            // exam.setLongIdOfCourse(inputCourseId);
             exam.setQuestionIds(questionIds);
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -9,10 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -26,8 +23,8 @@ public class TeacherRegisterUIController implements Initializable {
     @FXML private TextField ageTxt;
     @FXML private ChoiceBox<String> positionCombox;
     @FXML private TextField deptTxt;
-    @FXML private TextField pwdTxt;
-    @FXML private TextField confirmedPwdTxt;
+    @FXML private PasswordField pwdTxt;
+    @FXML private PasswordField confirmedPwdTxt;
     @FXML private Label hintLabel;
 
     public void close(ActionEvent e) {
