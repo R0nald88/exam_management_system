@@ -448,7 +448,7 @@ public class StudentStartExamController implements Initializable {
             SubmissionDatabase.getInstance().addSubmission(submission);
             MsgSender.showConfirm("Hint", "Student submit exam successful.", () -> close(e));
             MsgSender.showConfirm("Your Exam Score", submission.getNumberOfCorrect() + "/" + exam.getQuestionIds().size() +" Correct, the precision is "
-                    + (int) (((double) submission.getScore()/exam.getFullScore()) * 100) + "%, the score is " + submission.getScore() + "/" + exam.getFullScore(), () -> { });
+                    + (int) (((double) submission.getScore()/submission.getFullScore()) * 100) + "%, the score is " + submission.getScore() + "/" + submission.getFullScore(), () -> { });
         } catch (Exception e1) {
             MsgSender.showConfirm("Submit Error", e1.getMessage(), () -> {
             });
