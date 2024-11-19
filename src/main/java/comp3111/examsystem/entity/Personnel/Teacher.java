@@ -25,6 +25,14 @@ public class Teacher extends Personnel {
         super.setUsername(username);
     }
 
+    public void forceSetUsername(String username) {
+        Database.validateTextLength(TeacherDatabase.TEACHER_USERNAME_LENGTH_LIMIT, username, "username");
+        if (username.contains(" ")) {
+            throw new RuntimeException("Username should not contain any blank space.");
+        }
+        super.setUsername(username);
+    }
+
     @Override
     public void setAge(int age) {
         Database.validateNumberRange(

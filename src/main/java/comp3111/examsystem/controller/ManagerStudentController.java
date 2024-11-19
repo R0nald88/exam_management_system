@@ -140,7 +140,10 @@ public class ManagerStudentController implements Initializable{
     public void update(){
         try{
             Student selectedStudent = recordTable.getSelectionModel().getSelectedItem();
-            selectedStudent.setUsername(formUsernameTxt.getText());
+            if(selectedStudent.getUsername().equals(formUsernameTxt.getText()))
+                selectedStudent.forceSetUsername(formUsernameTxt.getText());
+            else
+                selectedStudent.setUsername(formUsernameTxt.getText());
             selectedStudent.setName(formNameTxt.getText());
             selectedStudent.setAge(formAgeTxt.getText());
             selectedStudent.setDepartment(formDepartmentTxt.getText());

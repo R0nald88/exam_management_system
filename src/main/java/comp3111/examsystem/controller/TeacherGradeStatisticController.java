@@ -88,12 +88,12 @@ public class TeacherGradeStatisticController implements Initializable {
         ObservableList<Submission> submissionRecords = FXCollections.observableArrayList(submissions);
         gradeTable.setItems(submissionRecords);
 
-        studentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getStudent().getUsername()));
-        courseColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getExam().getCourseId()));
-        examColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getExam().getName()));
+        studentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getStudentId()).asString());
+        courseColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getCourseId()));
+        examColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getExamId()).asString());
         scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getScore()).asString());
-        fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getExam().getFullScore()).asString());
-        timeSpendColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getTimeSpent()));
+        fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getFullScore()).asString());
+        timeSpendColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getTimeSpend()).asString());
 
         List<Course> courses = CourseDatabase.getInstance().getAll();
         for(Course course : courses){
@@ -128,7 +128,6 @@ public class TeacherGradeStatisticController implements Initializable {
     public void refresh() {
         reset();
         filter();
-        loadChart();
     }
 
     private void loadChart() {
@@ -164,5 +163,6 @@ public class TeacherGradeStatisticController implements Initializable {
 
     @FXML
     public void filter() {
+        loadChart();
     }
 }

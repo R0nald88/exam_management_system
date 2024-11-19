@@ -135,7 +135,10 @@ public class ManagerCourseController implements Initializable{
     public void update(){
         try{
             Course selectedCourse = recordTable.getSelectionModel().getSelectedItem();
-            selectedCourse.setCourseID(formCourseIDTxt.getText());
+            if(selectedCourse.getCourseID().equals(formCourseIDTxt.getText()))
+                selectedCourse.forceSetCourseID(formCourseIDTxt.getText());
+            else
+                selectedCourse.setCourseID(formCourseIDTxt.getText());
             selectedCourse.setCourseName(formCourseNameTxt.getText());
             selectedCourse.setDepartment(formDepartmentTxt.getText());
             CourseDatabase.getInstance().update(selectedCourse);

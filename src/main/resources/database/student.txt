@@ -1,1 +1,3 @@
 {"username":"chlibs","name":"Li Ching Ho","age":21,"gender":"MALE","department":"CSE","password":"Chlibs1!","id":1731794189259}
+{"username":"velvet","name":"underground","age":20,"gender":"MALE","department":"CPEG","password":"12345678!aZ","id":1732036611068}
+{"username":"led","name":"zeppelin","age":35,"gender":"MALE","department":"ROCK","password":"12345678!aZ","id":1732038393081}
