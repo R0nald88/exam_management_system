@@ -34,6 +34,8 @@ public class ManagerTeacherController implements Initializable{
     @FXML
     private ChoiceBox<String> genderCombox;
     @FXML
+    private ChoiceBox<String> positionCombox;
+    @FXML
     private TextField formDepartmentTxt;
     @FXML
     private TextField formPasswordTxt;
@@ -48,6 +50,8 @@ public class ManagerTeacherController implements Initializable{
     @FXML
     private TableColumn<Teacher, String> genderColumn;
     @FXML
+    private TableColumn<Teacher, String> positionColumn;
+    @FXML
     private TableColumn<Teacher, String> departmentColumn;
     @FXML
     private TableColumn<Teacher, String> passwordColumn;
@@ -61,9 +65,11 @@ public class ManagerTeacherController implements Initializable{
         nameColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getName()));
         ageColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getAge()).asString());
         genderColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getGender()).asString());
+        positionColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getPosition()).asString());
         departmentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getDepartment()));
         passwordColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getPassword()));
         genderCombox.setItems(FXCollections.observableList(Arrays.stream(Gender.values()).map(Gender::getName).toList()));
+        positionCombox.setItems(FXCollections.observableList(Arrays.stream(Position.values()).map(Position::getName).toList()));
     }
 
     public void reset(){
@@ -114,6 +120,7 @@ public class ManagerTeacherController implements Initializable{
         formDepartmentTxt.setText("");
         formPasswordTxt.setText("");
         genderCombox.getSelectionModel().selectFirst();
+        positionCombox.getSelectionModel().selectFirst();
 
         reset();
         filter();
@@ -128,6 +135,7 @@ public class ManagerTeacherController implements Initializable{
             teacher.setDepartment(formDepartmentTxt.getText());
             teacher.setPassword(formPasswordTxt.getText());
             teacher.setGender(genderCombox.getValue());
+            teacher.setPosition(positionCombox.getValue());
             TeacherDatabase.getInstance().add(teacher);
             MsgSender.showConfirm("Successful", "A new teacher record has been created.", this::refresh);
         } catch(Exception e){
@@ -144,6 +152,7 @@ public class ManagerTeacherController implements Initializable{
             selectedTeacher.setDepartment(formDepartmentTxt.getText());
             selectedTeacher.setPassword(formPasswordTxt.getText());
             selectedTeacher.setGender(genderCombox.getValue());
+            selectedTeacher.setPosition(positionCombox.getValue());
             TeacherDatabase.getInstance().update(selectedTeacher);
             MsgSender.showConfirm("Successful", "The teacher record has been updated.", this::refresh);
         } catch(Exception e){

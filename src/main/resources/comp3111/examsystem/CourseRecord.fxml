@@ -1,14 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="comp3111.examsystem.controller.ManagerCourseController"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.ManagerCourseController">
+    <top>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label text="Course ID">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </Label>
+                <TextField fx:id="courseIDTxt" prefWidth="150.0">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </TextField>
 
-</AnchorPane>
+                <Label text="Course Name">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </Label>
+                <TextField fx:id="courseNameTxt" prefWidth="150.0">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </TextField>
+
+                <Label text="Department">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </Label>
+                <TextField fx:id="departmentTxt" prefWidth="150.0">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </TextField>
+
+                <Button fx:id="resetBtn" mnemonicParsing="false" onAction="#reset" text="Reset">
+                    <HBox.margin>
+                        <Insets left="20.0" />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="filterBtn" mnemonicParsing="false" onAction="#filter" text="Filter">
+                    <HBox.margin>
+                        <Insets left="20.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <VBox prefHeight="600.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+            <children>
+                <TableView fx:id="recordTable" prefHeight="700.0" prefWidth="900.0">
+                    <columns>
+                        <TableColumn fx:id="courseIDColumn" prefWidth="300.0" text="Course ID" />
+                        <TableColumn fx:id="courseNameColumn" prefWidth="300.0" text="Course Name" />
+                        <TableColumn fx:id="departmentColumn" prefWidth="300.0" text="Department" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </center>
+    <right>
+        <VBox alignment="TOP_CENTER" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label text="Course ID" />
+                <TextField fx:id="formCourseIDTxt" maxWidth="150.0">
+                    <VBox.margin>
+                        <Insets bottom="10.0"/>
+                    </VBox.margin>
+                </TextField>
+                <Label text="Course Name" />
+                <TextField fx:id="formCourseNameTxt" maxWidth="150.0">
+                    <VBox.margin>
+                        <Insets bottom="10.0"/>
+                    </VBox.margin>
+                </TextField>
+                <Label text="Department" />
+                <TextField fx:id="formDepartmentTxt" maxWidth="150.0">
+                    <VBox.margin>
+                        <Insets bottom="10.0"/>
+                    </VBox.margin>
+                </TextField>
+            </children>
+        </VBox>
+    </right>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#delete" text="Delete">
+                    <HBox.margin>
+                        <Insets right="20.0" />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#refresh" text="Refresh">
+                    <HBox.margin>
+                        <Insets right="50.0" />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#add" text="Add">
+                    <HBox.margin>
+                        <Insets right="20.0" />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="updateBtn" mnemonicParsing="false" onAction="#update" text="Update">
+                    <HBox.margin>
+                        <Insets right="50.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>
