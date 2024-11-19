@@ -1,5 +1,7 @@
 package comp3111.examsystem.entity.Questions;
 
+import comp3111.examsystem.entity.Exam.Exam;
+import comp3111.examsystem.entity.Exam.ExamDatabase;
 import comp3111.examsystem.tools.Database;
 
 import java.util.List;
@@ -87,7 +89,7 @@ public class QuestionDatabase extends Database<Question> {
         update(question);
     }
 
-    public void deleteQuestion(Question question) throws Exception {
+    public void deleteQuestion(Question question, boolean deleteExam) throws Exception {
         if (question == null) {
             throw new Exception("Question does not exist.");
         }
@@ -96,16 +98,25 @@ public class QuestionDatabase extends Database<Question> {
             throw new Exception("Question \"" + question.getQuestion() + "\" does not exist.");
         }
 
+        List<Exam> affectedExam = ExamDatabase.getInstance().queryByQuestion(question.getId());
+
+        if (!deleteExam && !affectedExam.isEmpty()) {
+            throw new RuntimeException("Some exam contains the selected question(s). Deleting which may affect the exam(s).");
+        } else if (!affectedExam.isEmpty()) {
+            affectedExam.removeIf(e -> e.getQuestionIds().size() == 1 && e.getQuestionIds().contains(question.getId()));
+            ExamDatabase.getInstance().deleteExams(affectedExam);
+        }
+
         delByKey(question.getId().toString());
     }
 
-    public void deleteQuestions(List<Question> questions) throws Exception {
+    public void deleteQuestions(List<Question> questions, boolean deleteExam) throws Exception {
         for (Question q : questions) {
-            deleteQuestion(q);
+            deleteQuestion(q, deleteExam);
         }
     }
 
     public void deleteAll() throws Exception {
-        deleteQuestions(getAll());
+        deleteQuestions(getAll(), true);
     }
 }
