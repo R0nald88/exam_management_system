@@ -23,8 +23,8 @@ public class Submission extends Entity{
     private int multipleMCScore = 0;
     private int tfScore = 0;
     private int sqScore = 0;
-    private List<String> sqQuestionList;
-    private List<String> sqAnswerList;
+    private List<String> sqQuestionList = new ArrayList<>();;
+    private List<String> sqAnswerList = new ArrayList<>();;
     private int timeSpend;
 
     public Submission() {
@@ -96,6 +96,14 @@ public class Submission extends Entity{
 
     public List<String> getAnswerList() {
         return answerList;
+    }
+
+    public List<String> getSqQuestionList() {
+        return sqQuestionList;
+    }
+
+    public List<String> getSqAnswerList() {
+        return sqAnswerList;
     }
 
     public void saveAnswer(int questionNumber, String answer) {
