@@ -38,8 +38,9 @@ public class StudentMainController implements Initializable {
 
     public void setStudent(Student student) {
         this.student = student;
-        List<Submission> studentSubmissionList = SubmissionDatabase.getInstance().filter(student.getId().toString(),null, null);
+        List<Submission> studentSubmissionList = SubmissionDatabase.getInstance().filter(student.getUsername(),null, null);
         if (!studentSubmissionList.isEmpty()) {
+            System.out.println(studentSubmissionList);
             examCombox.getItems().clear();
             System.out.println("After clear in setStudent in student main, examList: " + examCombox.getItems());
             examList = ExamDatabase.getInstance().filter(null, null, "true");
