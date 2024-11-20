@@ -58,7 +58,7 @@ public class TeacherGradeShortQuestionController implements Initializable {
         submissions = SubmissionDatabase.getInstance().getAll();
         ObservableList<Submission> submissionRecords = FXCollections.observableArrayList();
         for(Submission submission : submissions){
-            if(true){ //!submission.getSqQuestionList().isEmpty()
+            if(!submission.getSqQuestionList().isEmpty()){
                 submissionRecords.add(submission);
             }
         }

@@ -127,14 +127,6 @@ public class Submission extends Entity{
         }
     }
 
-    public List<String> getSqQuestionList(){
-        return sqQuestionList;
-    }
-
-    public List<String> getSqAnswerList(){
-        return sqAnswerList;
-    }
-
     public int getTimeSpend() {
         return timeSpend;
     }
