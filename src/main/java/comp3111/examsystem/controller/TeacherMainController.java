@@ -62,6 +62,19 @@ public class TeacherMainController implements Initializable {
     }
 
     @FXML
+    public void openGradeShortQuestion() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherGradeShortQuestion.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Grade Short Questions");
+            stage.setScene(new Scene(fxmlLoader.load()));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     public void exit() {
         System.exit(0);
     }

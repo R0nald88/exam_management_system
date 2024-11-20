@@ -35,6 +35,11 @@
                         <Font size="20.0" />
                     </font>
                 </Button>
+                <Button layoutX="438.0" layoutY="209.0" mnemonicParsing="false" onAction="#openGradeShortQuestion" prefHeight="23.0" prefWidth="268.0" text="Grade Short Questions">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+                </Button>
             </children>
         </VBox>
     </children>

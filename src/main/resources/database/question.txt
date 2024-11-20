@@ -1,2 +1,2 @@
-{"question":"MC1","answer":"A","score":5,"type":"SINGLE","optionA":"1","optionB":"2","optionC":"3","optionD":"4","id":1732103958233}
-{"question":"MC2","answer":"A","score":5,"type":"SINGLE","optionA":"1","optionB":"2","optionC":"3","optionD":"4","id":1732103961505}
+{"question":"MC","answer":"A","score":5,"type":"SINGLE","optionA":"1","optionB":"2","optionC":"3","optionD":"4","id":1732120225838}
+{"question":"Which color do you like?","answer":"Red","score":5,"type":"SHORT_Q","optionA":"","optionB":"","optionC":"","optionD":"","id":1732120250099}
