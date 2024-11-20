@@ -19,10 +19,10 @@ public class Submission extends Entity{
     private int score = 0;
     private int fullScore;
     private int numberOfCorrect = 0;
-    private int singleMCScore;
-    private int multipleMCScore;
-    private int tfScore;
-    private int sqScore;
+    private int singleMCScore = 0;
+    private int multipleMCScore = 0;
+    private int tfScore = 0;
+    private int sqScore = 0;
     private List<String> sqQuestionList;
     private List<String> sqAnswerList;
     private int timeSpend;
@@ -48,6 +48,19 @@ public class Submission extends Entity{
     public void updateScore(int questionNumber, int score) {
         int originalScore = scoreList.get(questionNumber);
         scoreList.set(questionNumber, score);
+        Question question = QuestionDatabase.getInstance().queryByKey(ExamDatabase.getInstance().queryByKey(examId.toString()).getQuestionIds().get(questionNumber).toString());
+        if (question.getType() == QuestionType.SINGLE) {
+            singleMCScore = singleMCScore - originalScore + score;
+        }
+        else if (question.getType() == QuestionType.MULTIPLE) {
+            multipleMCScore = multipleMCScore - originalScore + score;
+        }
+        else if (question.getType() == QuestionType.TRUE_FALSE) {
+            tfScore = tfScore - originalScore + score;
+        }
+        else if (question.getType() == QuestionType.SHORT_Q) {
+            sqScore = sqScore - originalScore + score;
+        }
         this.score = this.score-originalScore+score;
     }
 
@@ -130,6 +143,22 @@ public class Submission extends Entity{
                     if (answerList.get(i) != null && answerList.get(i).equals(question.getAnswer())) {
                         scoreList.add(i, question.getScore());
                         score += question.getScore();
+                        if (question.getType() == QuestionType.SINGLE) {
+                            singleMCScore += question.getScore();
+                        }
+                        else if (question.getType() == QuestionType.MULTIPLE) {
+                            multipleMCScore += question.getScore();
+                        }
+                        else if (question.getType() == QuestionType.TRUE_FALSE) {
+                            tfScore += question.getScore();
+                        }
+                        else if (question.getType() == QuestionType.SHORT_Q) {
+                            sqScore += question.getScore();
+                            if (sqQuestionList == null) sqQuestionList = new ArrayList<>();
+                            sqQuestionList.add(question.getQuestion());
+                            if (sqAnswerList == null) sqAnswerList = new ArrayList<>();
+                            sqAnswerList.add(answerList.get(i));
+                        }
                         numberOfCorrect++;
                     }
                 }
