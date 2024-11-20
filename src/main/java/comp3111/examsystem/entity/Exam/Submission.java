@@ -23,6 +23,7 @@ public class Submission extends Entity{
     private int multipleMCScore;
     private int tfScore;
     private int sqScore;
+    private List<String> sqQuestionList;
     private List<String> sqAnswerList;
     private int timeSpend;
 
