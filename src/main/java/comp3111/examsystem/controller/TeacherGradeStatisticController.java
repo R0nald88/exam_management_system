@@ -96,6 +96,9 @@ public class TeacherGradeStatisticController implements Initializable {
         ObservableList<Submission> submissionRecords = FXCollections.observableArrayList(currentSubmissionList);
         gradeTable.setItems(submissionRecords);
 
+        if(submissionRecords.isEmpty())
+            return;
+
         studentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getStudentUsername()).asString());
         courseColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getCourseId()));
         examColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(

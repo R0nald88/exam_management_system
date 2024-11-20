@@ -1,8 +1,2 @@
-{"studentUsername":"amy","examId":1732103973418,"courseId":"COMP1100","answerList":["A","B"],"score":5,"fullScore":10,"numberOfCorrect":1,"timeSpend":3,"id":1732104016298}
-{"studentUsername":"amy","examId":1732103979345,"courseId":"COMP1100","answerList":["A","B"],"score":5,"fullScore":10,"numberOfCorrect":1,"timeSpend":3,"id":1732104022731}
-{"studentUsername":"amy","examId":1732103988969,"courseId":"MATH1000","answerList":["B",null],"score":0,"fullScore":10,"numberOfCorrect":0,"timeSpend":2,"id":1732104029124}
-{"studentUsername":"amy","examId":1732103999238,"courseId":"MATH1000","answerList":["A","A"],"score":10,"fullScore":10,"numberOfCorrect":2,"timeSpend":4,"id":1732104051903}
-{"studentUsername":"jack","examId":1732103973418,"courseId":"COMP1100","answerList":["A",null],"score":5,"fullScore":10,"numberOfCorrect":1,"timeSpend":3,"id":1732104140119}
-{"studentUsername":"jack","examId":1732103988969,"courseId":"MATH1000","answerList":["A","C"],"score":5,"fullScore":10,"numberOfCorrect":1,"timeSpend":4,"id":1732104147119}
-{"studentUsername":"jack","examId":1732103979345,"courseId":"COMP1100","answerList":["B","B"],"score":0,"fullScore":10,"numberOfCorrect":0,"timeSpend":3,"id":1732104153443}
-{"studentUsername":"jack","examId":1732103999238,"courseId":"MATH1000","answerList":["B","A"],"score":5,"fullScore":10,"numberOfCorrect":1,"timeSpend":3,"id":1732104159315}
+{"studentUsername":"amy","examId":1732120265124,"courseId":"COMP1111","answerList":["A","123"],"scoreList":[5],"score":5,"fullScore":10,"numberOfCorrect":1,"singleMCScore":0,"multipleMCScore":0,"tfScore":0,"sqScore":0,"timeSpend":3,"id":1732120291626}
+{"studentUsername":"amy","examId":1732120275447,"courseId":"COMP1111","answerList":["A"],"scoreList":[5],"score":5,"fullScore":5,"numberOfCorrect":1,"singleMCScore":0,"multipleMCScore":0,"tfScore":0,"sqScore":0,"timeSpend":1,"id":1732120299633}

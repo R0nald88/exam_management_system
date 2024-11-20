@@ -1,4 +1,2 @@
-{"name":"Midterm","time":60,"longIdOfCourse":1732103920962,"published":true,"questionIds":[1732103958233,1732103961505],"id":1732103973418}
-{"name":"Final","time":60,"longIdOfCourse":1732103920962,"published":true,"questionIds":[1732103958233,1732103961505],"id":1732103979345}
-{"name":"Midterm","time":60,"longIdOfCourse":1732103933673,"published":true,"questionIds":[1732103958233,1732103961505],"id":1732103988969}
-{"name":"Final","time":60,"longIdOfCourse":1732103933673,"published":true,"questionIds":[1732103958233,1732103961505],"id":1732103999238}
+{"name":"HasShort","time":120,"longIdOfCourse":1732120208142,"published":true,"questionIds":[1732120225838,1732120250099],"id":1732120265124}
+{"name":"NoShort","time":120,"longIdOfCourse":1732120208142,"published":true,"questionIds":[1732120225838],"id":1732120275447}

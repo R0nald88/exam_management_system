@@ -1,2 +1,1 @@
-{"courseID":"COMP1100","courseName":"Intro to CS","department":"CSE","id":1732103920962}
-{"courseID":"MATH1000","courseName":"Calculus","department":"MATH","id":1732103933673}
+{"courseID":"COMP1111","courseName":"Intro","department":"CSE","id":1732120208142}
