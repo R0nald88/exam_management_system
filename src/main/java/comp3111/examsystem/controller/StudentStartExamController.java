@@ -443,7 +443,7 @@ public class StudentStartExamController implements Initializable {
             currQuestionAnswer = shortQuestionAnswerField.getText();
         }
         System.out.println("After saveAnswer, currQuestionNumber: " + currQuestionNumber + " currQuestionAnswer: " + currQuestionAnswer);
-        if (currQuestionAnswer != null && !currQuestionAnswer.isEmpty())
+        if (currQuestionAnswer != null)
             submission.saveAnswer(currQuestionNumber, currQuestionAnswer);
     }
 

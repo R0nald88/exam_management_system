@@ -98,14 +98,6 @@ public class Submission extends Entity{
         return answerList;
     }
 
-    public List<String> getSqQuestionList() {
-        return sqQuestionList;
-    }
-
-    public List<String> getSqAnswerList() {
-        return sqAnswerList;
-    }
-
     public void saveAnswer(int questionNumber, String answer) {
         Exam exam = ExamDatabase.getInstance().queryByKey(examId.toString());
         if (exam != null) {
@@ -153,12 +145,16 @@ public class Submission extends Entity{
         if (exam != null) {
             if (scoreList == null) {
                 scoreList = new ArrayList<>(exam.getQuestionIds().size());
+                for (int i = 0; i < exam.getQuestionIds().size(); i++) {
+                    scoreList.add(0); // Initialize with default score of 0
+                }
             }
             if (answerList != null) {
                 for (int i = 0; i < exam.getQuestionIds().size(); i++) {
                     Question question = QuestionDatabase.getInstance().queryByKey(exam.getQuestionIds().get(i).toString());
                     if (answerList.get(i) != null && answerList.get(i).equals(question.getAnswer())) {
-                        scoreList.add(i, question.getScore());
+                        System.out.println(i);
+                        scoreList.set(i, question.getScore());
                         score += question.getScore();
                         if (question.getType() == QuestionType.SINGLE) {
                             singleMCScore += question.getScore();
@@ -178,6 +174,7 @@ public class Submission extends Entity{
                         }
                         numberOfCorrect++;
                     }
+                    System.out.println("By now answerList: " + answerList);
                 }
             }
         }

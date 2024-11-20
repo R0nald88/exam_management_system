@@ -92,7 +92,7 @@ public class StudentGradeStatisticController implements Initializable {
         gradeList.clear();
         courseCombox.getItems().clear();
 
-        studentGradeTableList = SubmissionDatabase.getInstance().filter(student.getId().toString(), null, null);
+        studentGradeTableList = SubmissionDatabase.getInstance().filter(student.getUsername(), null, null);
         if (!studentGradeTableList.isEmpty()) {
             for (Submission submission : studentGradeTableList) {
                 Exam exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
@@ -110,7 +110,7 @@ public class StudentGradeStatisticController implements Initializable {
             }
         }
 
-        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getId().toString(), null, null);
+        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getUsername(), null, null);
         if (!studentGradeBarChartList.isEmpty()) {
             for (Submission submission : studentGradeBarChartList) {
                 GradeDetailClass gradeDetail = new GradeDetailClass();
@@ -182,12 +182,12 @@ public class StudentGradeStatisticController implements Initializable {
     @FXML
     public void reset() {
         courseCombox.setValue(null); // Clear the selected item
-        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getId().toString(),null,null);
+        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getUsername(),null,null);
     }
 
     @FXML
     public void query() {
-        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getId().toString(),courseCombox.getValue(),null);
+        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getUsername(), courseCombox.getValue(),null);
         loadChart();
     }
 }
