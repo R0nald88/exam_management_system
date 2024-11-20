@@ -39,6 +39,14 @@ public class Submission extends Entity{
         this.examId = examId;
         Exam exam = ExamDatabase.getInstance().queryByKey(examId.toString());
         this.courseId = exam.getCourseId();
+        answerList = new ArrayList<>(exam.getQuestionIds().size());
+        scoreList =  new ArrayList<>(exam.getQuestionIds().size());
+        System.out.println(exam.getQuestionIds().size());
+        for (int i = 0; i < exam.getQuestionIds().size(); i++) {
+            answerList.add(null);
+            scoreList.add(0);
+            }
+
     }
 
     public void setTimeSpend(int timeSpend) {
@@ -135,12 +143,6 @@ public class Submission extends Entity{
     public void calculateInitialScore() {
         Exam exam = ExamDatabase.getInstance().queryByKey(examId.toString());
         if (exam != null) {
-            if (scoreList == null) {
-                scoreList = new ArrayList<>(exam.getQuestionIds().size());
-                for (int i = 0; i < exam.getQuestionIds().size(); i++) {
-                    scoreList.add(0); // Initialize with default score of 0
-                }
-            }
             if (answerList != null) {
                 for (int i = 0; i < exam.getQuestionIds().size(); i++) {
                     Question question = QuestionDatabase.getInstance().queryByKey(exam.getQuestionIds().get(i).toString());
@@ -165,6 +167,13 @@ public class Submission extends Entity{
                             sqAnswerList.add(answerList.get(i));
                         }
                         numberOfCorrect++;
+                    } else {
+                        if (question.getType() == QuestionType.SHORT_Q) {
+                            if (sqQuestionList == null) sqQuestionList = new ArrayList<>();
+                            sqQuestionList.add(question.getQuestion());
+                            if (sqAnswerList == null) sqAnswerList = new ArrayList<>();
+                            sqAnswerList.add(answerList.get(i));
+                        }
                     }
                     System.out.println("By now answerList: " + answerList);
                 }
