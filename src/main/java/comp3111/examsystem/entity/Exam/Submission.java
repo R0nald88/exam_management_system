@@ -4,10 +4,11 @@ import com.google.gson.Gson;
 import comp3111.examsystem.entity.Entity;
 import comp3111.examsystem.entity.Questions.Question;
 import comp3111.examsystem.entity.Questions.QuestionDatabase;
+import comp3111.examsystem.entity.Questions.QuestionType;
 
 import java.util.ArrayList;
 import java.util.List;
-// import comp3111.examsystem.entity.Exam;
+import comp3111.examsystem.entity.Exam.Exam;
 
 public class Submission extends Entity{
     private String studentUsername;
@@ -18,6 +19,11 @@ public class Submission extends Entity{
     private int score = 0;
     private int fullScore;
     private int numberOfCorrect = 0;
+    private int singleMCScore;
+    private int multipleMCScore;
+    private int tfScore;
+    private int sqScore;
+    private List<String> sqAnswerList;
     private int timeSpend;
 
     public Submission() {
