@@ -1,3 +1,5 @@
 {"courseID":"comp2316","courseName":"sd","department":"asd","id":1732028164680}
 {"courseID":"elec1010","courseName":"sfd","department":"sdaf","id":1732028177040}
 {"courseID":"rock1001","courseName":"intro to hard rock","department":"ROCK","id":1732039004892}
+{"courseID":"ABCD","courseName":"1234","department":"CHEM","id":1732043275975}
+{"courseID":"rock1001","courseName":"intro to hard rock","department":"ROCK","id":1732039004892}

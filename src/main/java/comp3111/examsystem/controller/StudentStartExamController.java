@@ -29,6 +29,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -37,6 +38,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static javafx.geometry.Pos.CENTER;
+import static javafx.geometry.Pos.TOP_CENTER;
 
 public class StudentStartExamController implements Initializable {
 
@@ -238,6 +242,8 @@ public class StudentStartExamController implements Initializable {
         }
 
         currQuestionNumberLabel.setText("Question " + (destQuestionNumber + 1));
+        currQuestionNumberLabel.setAlignment(CENTER);
+        currQuestionNumberLabel.setFont(Font.font(14.0));
 
 
         questionVBox.getChildren().clear(); // Clear existing content
