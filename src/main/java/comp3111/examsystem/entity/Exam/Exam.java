@@ -91,6 +91,15 @@ public class Exam extends Entity {
         questionIds.add(id);
     }
 
+    public int searchQuestionIdInExam(Long qId) {
+        for (int i = 0; i < questionIds.size(); i++) {
+            if (Objects.equals(questionIds.get(i), qId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void deleteQuestion(Question question) throws Exception {
         if (question == null) {
             throw new Exception("Question does not exist.");

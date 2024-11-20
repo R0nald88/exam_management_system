@@ -465,7 +465,7 @@ public class StudentStartExamController implements Initializable {
     @FXML
     public void submit(ActionEvent e) {
         saveAnswer();
-        submission.calculateScore();
+        submission.calculateInitialScore();
 
         // Access the countdown value
         countdownTimer.stop();

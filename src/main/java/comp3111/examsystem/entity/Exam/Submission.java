@@ -5,11 +5,8 @@ import comp3111.examsystem.entity.Entity;
 import comp3111.examsystem.entity.Questions.Question;
 import comp3111.examsystem.entity.Questions.QuestionDatabase;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-
-import comp3111.examsystem.entity.Personnel.Student;
 // import comp3111.examsystem.entity.Exam;
 
 public class Submission extends Entity{
@@ -17,6 +14,7 @@ public class Submission extends Entity{
     private Long examId;
     private String courseId;
     private List<String> answerList;
+    private List<Integer> scoreList;
     private int score = 0;
     private int fullScore;
     private int numberOfCorrect = 0;
@@ -40,8 +38,10 @@ public class Submission extends Entity{
         this.timeSpend = timeSpend;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void updateScore(int questionNumber, int score) {
+        int originalScore = scoreList.get(questionNumber);
+        scoreList.set(questionNumber, score);
+        this.score = this.score-originalScore+score;
     }
 
     public void setFullScore(int fullScore) {
@@ -111,13 +111,17 @@ public class Submission extends Entity{
         return new Gson().toJson(this);
     }
 
-    public void calculateScore() {
+    public void calculateInitialScore() {
         Exam exam = ExamDatabase.getInstance().queryByKey(examId.toString());
         if (exam != null) {
+            if (scoreList == null) {
+                scoreList = new ArrayList<>(exam.getQuestionIds().size());
+            }
             if (answerList != null) {
                 for (int i = 0; i < exam.getQuestionIds().size(); i++) {
                     Question question = QuestionDatabase.getInstance().queryByKey(exam.getQuestionIds().get(i).toString());
                     if (answerList.get(i) != null && answerList.get(i).equals(question.getAnswer())) {
+                        scoreList.add(i, question.getScore());
                         score += question.getScore();
                         numberOfCorrect++;
                     }
