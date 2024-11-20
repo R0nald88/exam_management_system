@@ -90,10 +90,10 @@ public class StudentGradeStatisticController implements Initializable {
     public void setStudent(Student student) {
         this.student = student;
         gradeList.clear();
+        courseCombox.getItems().clear();
 
         studentGradeTableList = SubmissionDatabase.getInstance().filter(student.getId().toString(), null, null);
         if (!studentGradeTableList.isEmpty()) {
-            courseList = new ArrayList<>();
             for (Submission submission : studentGradeTableList) {
                 Exam exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
                 //System.out.println("Exam submitted:" + exam);
@@ -138,6 +138,7 @@ public class StudentGradeStatisticController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gradeList.clear();
+        courseList = new ArrayList<>();
 
         barChart.setLegendVisible(false);
         barChart.setAnimated(false);

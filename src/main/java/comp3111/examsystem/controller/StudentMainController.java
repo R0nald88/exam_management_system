@@ -41,14 +41,14 @@ public class StudentMainController implements Initializable {
         List<Submission> studentSubmissionList = SubmissionDatabase.getInstance().filter(student.getId().toString(),null, null);
         if (!studentSubmissionList.isEmpty()) {
             examCombox.getItems().clear();
-            //System.out.println("After clear in setStudent in student main, examList: " + examCombox.getItems());
+            System.out.println("After clear in setStudent in student main, examList: " + examCombox.getItems());
             examList = ExamDatabase.getInstance().filter(null, null, "true");
 
             if (!examList.isEmpty()) {
                 List<Exam> removedExam = new ArrayList<>();
                 for (Exam e : examList) {
                     for (Submission s : studentSubmissionList) {
-                        //System.out.println("Comparing " + e.getId() + " and " + s.getExamId() + "... Decision: " + !Objects.equals(e.getId(), s.getExamId()));
+                        System.out.println("Comparing " + e.getId() + " and " + s.getExamId() + "... Decision: " + !Objects.equals(e.getId(), s.getExamId()));
                         if (Objects.equals(e.getId(), s.getExamId())) {
                             removedExam.add(e);
                         }
@@ -67,7 +67,7 @@ public class StudentMainController implements Initializable {
                     //System.out.println("Selected index: " + selectedExamIndex + "selectedExamName: " + selectedExamName + " selectedExamCourseId: " + selectedExamCourseId);
                 });
 
-            } //else System.out.println("ExamList have no exam");
+            } else System.out.println("ExamList have no exam");
         }
     }
 
@@ -154,6 +154,13 @@ public class StudentMainController implements Initializable {
                 } catch (IOException e1) {
                     MsgSender.showConfirm("Main Open Exam UI Error", e1.getMessage(), () -> {});
                 }
+            }
+        }
+        else { // examCombox.getValue() == null
+            try {
+                throw new RuntimeException("No Exam selected in Exam choice box");
+            } catch (RuntimeException ex) {
+                MsgSender.showConfirm("No exam selected", ex.getMessage(), () -> {});
             }
         }
     }
