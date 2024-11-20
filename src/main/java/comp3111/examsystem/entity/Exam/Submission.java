@@ -45,10 +45,12 @@ public class Submission extends Entity{
         this.timeSpend = timeSpend;
     }
 
-    public void updateScore(int questionNumber, int score) {
+    public void updateScore(int questionNumber, int score) throws Exception{
         int originalScore = scoreList.get(questionNumber);
         scoreList.set(questionNumber, score);
         Question question = QuestionDatabase.getInstance().queryByKey(ExamDatabase.getInstance().queryByKey(examId.toString()).getQuestionIds().get(questionNumber).toString());
+        int maxScore = question.getScore();
+        if (score < 0 || score > maxScore) throw new Exception("Update score should be in between 0 and max score of this question.");
         if (question.getType() == QuestionType.SINGLE) {
             singleMCScore = singleMCScore - originalScore + score;
         }
