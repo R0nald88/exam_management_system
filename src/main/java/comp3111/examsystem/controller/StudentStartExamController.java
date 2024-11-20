@@ -114,6 +114,29 @@ public class StudentStartExamController implements Initializable {
     List<String> questionStringList;
 
 
+    private static StudentStartExamController instance;
+
+    public static void setInstance(StudentStartExamController studentStartExamController) {
+        instance = studentStartExamController;
+    }
+    public static StudentStartExamController getInstance() {
+        return instance;
+    }
+
+    private Parent root;
+
+    public void setRoot(Parent root) {
+        this.root = root;
+    }
+
+    public Parent getRoot() {
+        return root;
+    }
+
+    public Exam getExam() {
+        return exam;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Start initializing start exam");
@@ -125,7 +148,6 @@ public class StudentStartExamController implements Initializable {
     public void setSubmission(Submission submission) {
         this.submission = submission;
         exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
-        this.submission.setFullScore(exam.getFullScore());
         student = StudentDatabase.getInstance().queryByKey(submission.getStudentId().toString());
 
         // Set the exam name and total questions
@@ -188,6 +210,7 @@ public class StudentStartExamController implements Initializable {
         // Start the countdown timer
         CountdownValue countdownFrom = new CountdownValue(exam.getTime());
         startCountdownTimer(countdownFrom);
+        System.out.println("Now attempting: " + exam.getCourseId() + "-" + exam.getName());
     }
 
     private void startCountdownTimer(CountdownValue countdownFrom) {
@@ -446,6 +469,7 @@ public class StudentStartExamController implements Initializable {
 
         try {
             SubmissionDatabase.getInstance().addSubmission(submission);
+            instance = null;
             MsgSender.showConfirm("Hint", "Student submit exam successful.", () -> close(e));
             MsgSender.showConfirm("Your Exam Score", submission.getNumberOfCorrect() + "/" + exam.getQuestionIds().size() +" Correct, the precision is "
                     + (int) (((double) submission.getScore()/submission.getFullScore()) * 100) + "%, the score is " + submission.getScore() + "/" + submission.getFullScore(), () -> { });
@@ -468,12 +492,15 @@ public class StudentStartExamController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Hi " + StudentDatabase.getInstance().queryByKey(submission.getStudentId().toString()).getUsername() + ", Welcome to HKUST Examination System");
             stage.setScene(new Scene(root)); // Use the loaded root
+            studentMainController.setStage(stage);
 
             // Close the current login window
             ((Stage) questionVBox.getScene().getWindow()).close();
             stage.show();
         } catch (IOException e1) {
-            e1.printStackTrace();
+            MsgSender.showConfirm("Submit back to Student Main Error", e1.getMessage(), () -> {
+            });
+            //e1.printStackTrace();
         }
     }
 

@@ -63,12 +63,14 @@ public class ExamDatabase extends Database<Exam> {
         List<Exam> courseList;
 
         if (courseId == null || courseId.trim().isEmpty()) {
+            System.out.println("courseId is null");
             courseList = getAll();
         } else if (!CourseDatabase.getInstance().existCourseID(courseId.trim())) {
+            System.out.println("courseId is cannot be found in course database");
             return new ArrayList<>();
         } else {
-            long cId = CourseDatabase.getInstance().queryByField("courseID", courseId.trim()).getFirst().getId();
-            courseList = queryByField("longIdOfCourse", courseId.trim());
+            Long cId = CourseDatabase.getInstance().queryByField("courseID", courseId.trim()).getFirst().getId();
+            courseList = queryByField("longIdOfCourse", cId.toString());
         }
 
         List<Exam> nameList = (name == null || name.trim().isEmpty()) ?
