@@ -1,6 +1,7 @@
 package comp3111.examsystem.controller;
 
 import comp3111.examsystem.Main;
+import comp3111.examsystem.tools.MsgSender;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,7 +28,7 @@ public class ManagerMainController implements Initializable {
             stage.setScene(new Scene(fxmlLoader.load()));
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
     }
 
@@ -40,7 +41,7 @@ public class ManagerMainController implements Initializable {
             stage.setScene(new Scene(fxmlLoader.load()));
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
     }
 
@@ -53,7 +54,7 @@ public class ManagerMainController implements Initializable {
             stage.setScene(new Scene(fxmlLoader.load()));
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
     }
 

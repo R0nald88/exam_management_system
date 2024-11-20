@@ -1,6 +1,7 @@
 package comp3111.examsystem.controller;
 
 import comp3111.examsystem.Main;
+import comp3111.examsystem.tools.MsgSender;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +25,7 @@ public class ManagerLoginController implements Initializable {
     @FXML
     private PasswordField passwordTxt;
 
-    private Boolean Testing = true;
+    private Boolean testing = true;
 
     public void initialize(URL location, ResourceBundle resources) {
         //createRecord("admin", "12345678");
@@ -35,8 +36,8 @@ public class ManagerLoginController implements Initializable {
             FileWriter myWriter = new FileWriter("src/main/resources/database/manager.txt",true);
             myWriter.write(username + " " + password + "\n");
             myWriter.close();
-        } catch (IOException e1){
-            e1.printStackTrace();
+        } catch (Exception e1){
+            MsgSender.showConfirm("Error", e1.getMessage(), ()->{});
         }
     }
 
@@ -47,7 +48,7 @@ public class ManagerLoginController implements Initializable {
         try{
             File myObj = new File("src/main/resources/database/manager.txt");
             Scanner myReader = new Scanner(myObj);
-            while(!Testing){
+            while(!testing){
                 String data = myReader.nextLine();
                 StringTokenizer st = new StringTokenizer(data);
                 if(username.equals(st.nextToken()) && password.equals(st.nextToken())){
@@ -62,8 +63,8 @@ public class ManagerLoginController implements Initializable {
                     return;
                 }
             }
-        } catch (FileNotFoundException e2){
-            e2.printStackTrace();
+        } catch (Exception e2){
+            MsgSender.showConfirm("Error", e2.getMessage(), ()->{});
         }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Welcome!");
@@ -76,8 +77,8 @@ public class ManagerLoginController implements Initializable {
                 stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
                 try {
                     stage.setScene(new Scene(fxmlLoader.load()));
-                } catch (IOException e3) {
-                    e3.printStackTrace();
+                } catch (Exception e3) {
+                    MsgSender.showConfirm("Error", e3.getMessage(), ()->{});
                 }
                 stage.show();
                 ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();

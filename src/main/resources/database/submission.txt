@@ -1,6 +1,8 @@
-{"studentUsername":chlibs,"examId":1732066010359,"courseId":"comp2316","answerList":[null,"T","A","T","F","CD"],"score":1319,"fullScore":2165,"numberOfCorrect":4,"timeSpend":56,"id":1732095891317}
-{"studentUsername":chlibs,"examId":1732066037639,"courseId":"ABCD","answerList":["CD",null,null,null,null,null,null,null,null,"CD"],"score":50,"fullScore":3257,"numberOfCorrect":1,"timeSpend":11,"id":1732095969525}
-{"studentUsername":chlibs,"examId":1732066095929,"courseId":"rock1001","answerList":["F","F","CD"],"score":897,"fullScore":897,"numberOfCorrect":3,"timeSpend":11,"id":1732095993039}
-{"studentUsername":led,"examId":1732066095929,"courseId":"rock1001","answerList":["T","F","CD"],"score":474,"fullScore":897,"numberOfCorrect":2,"timeSpend":8,"id":1732096056216}
-{"studentUsername":led,"examId":1732066037639,"courseId":"ABCD","answerList":["AC",null,null,"T",null,null,null,null,null,null],"score":0,"fullScore":3257,"numberOfCorrect":0,"timeSpend":22,"id":1732096083997}
-{"studentUsername":led,"examId":1732066010359,"courseId":"comp2316","answerList":[null,null,null,null,null,"CD"],"score":50,"fullScore":2165,"numberOfCorrect":1,"timeSpend":5,"id":1732096098768}
+{"studentUsername":"amy","examId":1732103973418,"courseId":"COMP1100","answerList":["A","B"],"score":5,"fullScore":10,"numberOfCorrect":1,"timeSpend":3,"id":1732104016298}
+{"studentUsername":"amy","examId":1732103979345,"courseId":"COMP1100","answerList":["A","B"],"score":5,"fullScore":10,"numberOfCorrect":1,"timeSpend":3,"id":1732104022731}
+{"studentUsername":"amy","examId":1732103988969,"courseId":"MATH1000","answerList":["B",null],"score":0,"fullScore":10,"numberOfCorrect":0,"timeSpend":2,"id":1732104029124}
+{"studentUsername":"amy","examId":1732103999238,"courseId":"MATH1000","answerList":["A","A"],"score":10,"fullScore":10,"numberOfCorrect":2,"timeSpend":4,"id":1732104051903}
+{"studentUsername":"jack","examId":1732103973418,"courseId":"COMP1100","answerList":["A",null],"score":5,"fullScore":10,"numberOfCorrect":1,"timeSpend":3,"id":1732104140119}
+{"studentUsername":"jack","examId":1732103988969,"courseId":"MATH1000","answerList":["A","C"],"score":5,"fullScore":10,"numberOfCorrect":1,"timeSpend":4,"id":1732104147119}
+{"studentUsername":"jack","examId":1732103979345,"courseId":"COMP1100","answerList":["B","B"],"score":0,"fullScore":10,"numberOfCorrect":0,"timeSpend":3,"id":1732104153443}
+{"studentUsername":"jack","examId":1732103999238,"courseId":"MATH1000","answerList":["B","A"],"score":5,"fullScore":10,"numberOfCorrect":1,"timeSpend":3,"id":1732104159315}
