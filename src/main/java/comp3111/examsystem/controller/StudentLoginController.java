@@ -48,6 +48,7 @@ public class StudentLoginController implements Initializable {
                     Stage stage = new Stage();
                     stage.setTitle("Hi " + usernameTxt.getText() + ", Welcome to HKUST Examination System");
                     stage.setScene(new Scene(root)); // Use the loaded root
+                    studentMainController.setStage(stage);
 
                     // Close the current login window
                     ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
@@ -57,8 +58,7 @@ public class StudentLoginController implements Initializable {
                 }
             });
         } catch (Exception e1) {
-            MsgSender.showConfirm("Login Error", e1.getMessage(), () -> {
-            });
+            MsgSender.showConfirm("Login Error", e1.getMessage(), () -> {});
         }
     }
 

@@ -67,7 +67,7 @@ public class StudentGradeStatisticController implements Initializable {
     private TableView<GradeDetailClass> gradeTable;
     @FXML
     private TableColumn<GradeDetailClass, String> courseColumn;
-    private ObservableList<String> courseList;
+    private List<String> courseList;
     @FXML
     private TableColumn<GradeDetailClass, String> examColumn;
     @FXML
@@ -84,25 +84,35 @@ public class StudentGradeStatisticController implements Initializable {
     NumberAxis numberAxisBar;
 
     private Student student;
-    private List<Submission> studentGradeList;
+    private List<Submission> studentGradeTableList;
+    private List<Submission> studentGradeBarChartList;
 
     public void setStudent(Student student) {
         this.student = student;
+        gradeList.clear();
 
-        studentGradeList = SubmissionDatabase.getInstance().filter(student.getId().toString(), null, null);
-        if (!studentGradeList.isEmpty()) {
-            for (Submission submission : studentGradeList) {
+        studentGradeTableList = SubmissionDatabase.getInstance().filter(student.getId().toString(), null, null);
+        if (!studentGradeTableList.isEmpty()) {
+            courseList = new ArrayList<>();
+            for (Submission submission : studentGradeTableList) {
                 Exam exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
+                //System.out.println("Exam submitted:" + exam);
                 if (exam != null) {
-                    if (courseList != null && !courseList.isEmpty() && courseList.contains(exam.getCourseId())) {
+                    //System.out.println(exam.getCourseId());
+                    if (!courseList.contains(exam.getCourseId())) {
                         courseList.add(exam.getCourseId());
                     }
+                    //System.out.println(courseList);
                 }
             }
-            courseCombox.getItems().addAll(courseList);
+            if (courseList != null) {
+                courseCombox.getItems().addAll(courseList);
+            }
+        }
 
-
-            for (Submission submission : studentGradeList) {
+        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getId().toString(), null, null);
+        if (!studentGradeBarChartList.isEmpty()) {
+            for (Submission submission : studentGradeBarChartList) {
                 GradeDetailClass gradeDetail = new GradeDetailClass();
                 Exam exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
                 if (exam != null) {
@@ -116,11 +126,11 @@ public class StudentGradeStatisticController implements Initializable {
                     gradeList.add(gradeDetail);
                 }
             }
+            gradeTable.setItems(gradeList);
 
-
-            refresh();
-            loadChart();
         }
+        reset();
+        loadChart();
     }
 
     private final ObservableList<GradeDetailClass> gradeList = FXCollections.observableArrayList();
@@ -130,22 +140,23 @@ public class StudentGradeStatisticController implements Initializable {
         gradeList.clear();
 
         barChart.setLegendVisible(false);
+        barChart.setAnimated(false);
         categoryAxisBar.setLabel("Exam");
+        categoryAxisBar.setAnimated(false);
         numberAxisBar.setLabel("Score");
 
-        gradeList.add(new GradeDetailClass());
-        gradeTable.setItems(gradeList);
         courseColumn.setCellValueFactory(new PropertyValueFactory<>("courseNum"));
         examColumn.setCellValueFactory(new PropertyValueFactory<>("examName"));
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
         fullScoreColumn.setCellValueFactory(new PropertyValueFactory<>("fullScore"));
         timeSpendColumn.setCellValueFactory(new PropertyValueFactory<>("timeSpend"));
 
-        refresh();
     }
 
     @FXML
     public void refresh() {
+        //System.out.println("gradeTable: " + gradeTable.getColumns());
+        setStudent(student);
         reset();
         loadChart();
     }
@@ -154,8 +165,8 @@ public class StudentGradeStatisticController implements Initializable {
         XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
         seriesBar.getData().clear();
         barChart.getData().clear();
-        if (studentGradeList != null && !studentGradeList.isEmpty()) {
-            for (Submission submission : studentGradeList) {
+        if (studentGradeBarChartList != null && !studentGradeBarChartList.isEmpty()) {
+            for (Submission submission : studentGradeBarChartList) {
                 Exam exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
                 if (exam != null) {
                     seriesBar.getData().add(new XYChart.Data<>(exam.getCourseId() + "-" + exam.getName(),
@@ -170,10 +181,12 @@ public class StudentGradeStatisticController implements Initializable {
     @FXML
     public void reset() {
         courseCombox.setValue(null); // Clear the selected item
+        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getId().toString(),null,null);
     }
 
     @FXML
     public void query() {
+        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getId().toString(),courseCombox.getValue(),null);
         loadChart();
     }
 }

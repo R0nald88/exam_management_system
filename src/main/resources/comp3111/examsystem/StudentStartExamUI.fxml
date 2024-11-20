@@ -37,7 +37,7 @@
             <children>
                 <TableView fx:id="questionTable" prefHeight="300.0" prefWidth="200.0">
                     <columns>
-                        <TableColumn fx:id="questionColumn" prefWidth="200.0"/>
+                        <TableColumn fx:id="questionColumn" text="Questions" prefWidth="200.0"/>
                     </columns>
                 </TableView>
                 <VBox alignment="CENTER_RIGHT" prefHeight="300.0" prefWidth="500.0" BorderPane.alignment="CENTER">

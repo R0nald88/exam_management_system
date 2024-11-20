@@ -42,7 +42,7 @@ public class SubmissionDatabase extends Database<Submission> {
             System.out.println("submission entity is null");
             throw new Exception("Submission does not exist.");
         }
-        System.out.println(entity.getStudentId().toString() + " " + entity.getExamId().toString());
+        System.out.println("SubmissionDatabase.addSubmission, entity.getStudentId().toString() and entity.getExamId().toString():" + entity.getStudentId().toString() + " " + entity.getExamId().toString());
         // if id exist, assign a new id
         if (exist(entity)) {
             entity.setId(System.currentTimeMillis());
@@ -67,5 +67,26 @@ public class SubmissionDatabase extends Database<Submission> {
         update(entity);
     }
 
+    public void deleteSubmission(Submission entity) throws Exception {
+        if (entity == null) {
+            throw new Exception("Submission does not exist.");
+        }
+        // if id not exist, throw exception
+        if (!exist(entity)) {
+            throw new Exception("Submission from student: " + entity.getStudentId() + ", course: " + entity.getCourseId() + ", exam: " + entity.getExamId() + " does not exist.");
+        }
+
+        delByKey(entity.getId() + "");
+    }
+
+    public void deleteSubmissions(List<Submission> submissions) throws Exception {
+        for (Submission s : submissions) {
+            deleteSubmission(s);
+        }
+    }
+
+    public void deleteAll() throws Exception {
+        deleteSubmissions(getAll());
+    }
 
 }

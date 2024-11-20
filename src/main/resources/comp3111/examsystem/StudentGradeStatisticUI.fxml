@@ -52,13 +52,13 @@
    <left>
       <VBox prefHeight="379.0" prefWidth="460.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView fx:id="gradeTable" prefHeight="312.0" prefWidth="460.0">
+            <TableView fx:id="gradeTable" prefHeight="312.0" prefWidth="450.0">
               <columns>
-                <TableColumn fx:id="courseColumn" prefWidth="75.0" text="Course" />
-                <TableColumn fx:id="examColumn" prefWidth="77.0" text="Exam" />
-                <TableColumn fx:id="scoreColumn" prefWidth="77.0" text="Score" />
-                <TableColumn fx:id="fullScoreColumn" prefWidth="77.0" text="Full Score" />
-                <TableColumn fx:id="timeSpendColumn" prefWidth="77.0" text="Time Spend" />
+                <TableColumn fx:id="courseColumn" prefWidth="91.0" text="Course" />
+                <TableColumn fx:id="examColumn" prefWidth="92.0" text="Exam" />
+                <TableColumn fx:id="scoreColumn" prefWidth="91.0" text="Score" />
+                <TableColumn fx:id="fullScoreColumn" prefWidth="91.0" text="Full Score" />
+                <TableColumn fx:id="timeSpendColumn" prefWidth="91.0" text="Time Spend" />
               </columns>
             </TableView>
          </children>
