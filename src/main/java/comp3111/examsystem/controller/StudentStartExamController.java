@@ -152,7 +152,8 @@ public class StudentStartExamController implements Initializable {
     public void setSubmission(Submission submission) {
         this.submission = submission;
         exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
-        student = StudentDatabase.getInstance().queryByKey(submission.getStudentUsername());
+        student = StudentDatabase.getInstance().queryByField("username",submission.getStudentUsername()).getFirst();
+        System.out.println("In setSubmission, student:" + student);
 
         // Set the exam name and total questions
         examNameLbl.setText(exam.getCourseId() + "-" + exam.getName());
@@ -257,6 +258,9 @@ public class StudentStartExamController implements Initializable {
 
         submitBtn.setVisible(destQuestionNumber == questionList.size() - 1);
         submitBtn.setDisable(destQuestionNumber < questionList.size() - 1);
+
+        System.out.println("questionList: " + questionList);
+        System.out.println("destQuestionNumber:" + destQuestionNumber);
 
         Question destQuestion = QuestionDatabase.getInstance().queryByKey(questionList.get(destQuestionNumber).toString());
 
