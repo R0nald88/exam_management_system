@@ -173,6 +173,7 @@ public class StudentMainController implements Initializable {
 
             Parent root = fxmlLoader.load();
             StudentGradeStatisticController studentGradeStatisticController = fxmlLoader.getController();
+            System.out.println(student.getUsername());
             studentGradeStatisticController.setStudent(student);
 
             Stage stage = new Stage();
