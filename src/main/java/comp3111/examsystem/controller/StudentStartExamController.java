@@ -492,7 +492,7 @@ public class StudentStartExamController implements Initializable {
 
             // Get the controller and set the student
             StudentMainController studentMainController = fxmlLoader.getController();
-            studentMainController.setStudent(StudentDatabase.getInstance().queryByKey(submission.getStudentUsername()));
+            studentMainController.setStudent(student);
 
             // Create the new stage and set the scene
             Stage stage = new Stage();
