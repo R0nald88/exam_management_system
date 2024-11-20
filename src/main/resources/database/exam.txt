@@ -1,2 +1,4 @@
-{"name":"Quiz","time":60,"longIdOfCourse":1732028164680,"published":true,"questionIds":[1731674145966,1731674173027,1731675592205,1731676037730,1731676081889,1732062606493],"id":1732066010359}
-{"name":"Quiz","time":30,"longIdOfCourse":1732039004892,"published":true,"questionIds":[1731676081889,1731676237413,1732062606493],"id":1732066095929}
+{"name":"Midterm","time":60,"longIdOfCourse":1732103920962,"published":true,"questionIds":[1732103958233,1732103961505],"id":1732103973418}
+{"name":"Final","time":60,"longIdOfCourse":1732103920962,"published":true,"questionIds":[1732103958233,1732103961505],"id":1732103979345}
+{"name":"Midterm","time":60,"longIdOfCourse":1732103933673,"published":true,"questionIds":[1732103958233,1732103961505],"id":1732103988969}
+{"name":"Final","time":60,"longIdOfCourse":1732103933673,"published":true,"questionIds":[1732103958233,1732103961505],"id":1732103999238}

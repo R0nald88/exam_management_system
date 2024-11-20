@@ -1,3 +1,2 @@
-{"username":"chlibs","name":"Li Ching Ho","age":21,"gender":"MALE","department":"CSE","password":"Chlibs1!","id":1731794189259}
-{"username":"velvet","name":"underground","age":20,"gender":"MALE","department":"CPEG","password":"12345678!aZ","id":1732036611068}
-{"username":"led","name":"zeppelin","age":35,"gender":"MALE","department":"ROCK","password":"12345678!aZ","id":1732038393081}
+{"username":"amy","name":"Amy","age":18,"gender":"FEMALE","department":"MATH","password":"123456!Az","id":1732103845144}
+{"username":"jack","name":"Jack","age":25,"gender":"MALE","department":"MATH","password":"123456!Az","id":1732103862265}

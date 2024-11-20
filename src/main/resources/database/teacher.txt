@@ -1,4 +1,1 @@
-{"position":"PROFESSOR","username":"user1","name":"33","age":21,"gender":"FEMALE","department":"comp","password":"1@#$qwerT","id":1731744299288}
-{"position":"INSTRUCTOR","username":"user2","name":"User2","age":23,"gender":"MALE","department":"erw","password":"123!@#Qwe","id":1731744563988}
-{"position":"ASSISTANT_PROFESSOR","username":"User3","name":"u3","age":53,"gender":"MALE","department":"dsd","password":"123Qwe!@#","id":1731744706596}
-{"position":"PROFESSOR","username":"velvet","name":"underground","age":20,"gender":"MALE","department":"HARD","password":"12345678!aZ","id":1732036522952}
+{"position":"PROFESSOR","username":"desmond","name":"Desmond","age":40,"gender":"MALE","department":"CSE","password":"123456!Az","id":1732103897575}
