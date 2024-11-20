@@ -39,6 +39,13 @@ public class Course extends Entity {
         this.courseID = courseID;
     }
 
+    public void forceSetCourseID(String courseID){
+        Database.validateTextLength(CourseDatabase.COURSE_ID_LENGTH_LIMIT, courseID, "courseID");
+        if(courseID.contains(" "))
+            throw new RuntimeException("Course ID should not contain any blank spaces.");
+        this.courseID = courseID;
+    }
+
     public void setCourseName(String courseName){
         Database.validateTextLength(CourseDatabase.COURSE_NAME_LENGTH_LIMIT, courseName, "courseName");
         this.courseName = courseName;

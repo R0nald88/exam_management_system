@@ -1,5 +1,14 @@
 package comp3111.examsystem.controller;
 
+import comp3111.examsystem.entity.Course.Course;
+import comp3111.examsystem.entity.Course.CourseDatabase;
+import comp3111.examsystem.entity.Exam.Exam;
+import comp3111.examsystem.entity.Exam.ExamDatabase;
+import comp3111.examsystem.entity.Exam.Submission;
+import comp3111.examsystem.entity.Exam.SubmissionDatabase;
+import comp3111.examsystem.entity.Personnel.Student;
+import comp3111.examsystem.entity.Personnel.StudentDatabase;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -45,19 +54,19 @@ public class TeacherGradeStatisticController implements Initializable {
     @FXML
     private ChoiceBox<String> studentCombox;
     @FXML
-    private TableView<GradeExampleClass> gradeTable;
+    private TableView<Submission> gradeTable;
     @FXML
-    private TableColumn<GradeExampleClass, String> studentColumn;
+    private TableColumn<Submission, String> studentColumn;
     @FXML
-    private TableColumn<GradeExampleClass, String> courseColumn;
+    private TableColumn<Submission, String> courseColumn;
     @FXML
-    private TableColumn<GradeExampleClass, String> examColumn;
+    private TableColumn<Submission, String> examColumn;
     @FXML
-    private TableColumn<GradeExampleClass, String> scoreColumn;
+    private TableColumn<Submission, String> scoreColumn;
     @FXML
-    private TableColumn<GradeExampleClass, String> fullScoreColumn;
+    private TableColumn<Submission, String> fullScoreColumn;
     @FXML
-    private TableColumn<GradeExampleClass, String> timeSpendColumn;
+    private TableColumn<Submission, String> timeSpendColumn;
     @FXML
     BarChart<String, Number> barChart;
     @FXML
@@ -73,10 +82,35 @@ public class TeacherGradeStatisticController implements Initializable {
     @FXML
     PieChart pieChart;
 
-    private final ObservableList<GradeExampleClass> gradeList = FXCollections.observableArrayList();
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        List<Submission> submissions = SubmissionDatabase.getInstance().getAll();
+        ObservableList<Submission> submissionRecords = FXCollections.observableArrayList(submissions);
+        gradeTable.setItems(submissionRecords);
+
+        studentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getStudentId()).asString());
+        courseColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getCourseId()));
+        examColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getExamId()).asString());
+        scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getScore()).asString());
+        fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getFullScore()).asString());
+        timeSpendColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getTimeSpend()).asString());
+
+        List<Course> courses = CourseDatabase.getInstance().getAll();
+        for(Course course : courses){
+            courseCombox.getItems().add(course.getCourseID());
+        }
+
+        List<Exam> exams = ExamDatabase.getInstance().getAll();
+        for(Exam exam : exams){
+            examCombox.getItems().add(exam.getId().toString());
+        }
+
+        List<Student> students = StudentDatabase.getInstance().getAll();
+        for(Student student : students){
+            studentCombox.getItems().add(student.getUsername());
+        }
+
+
         barChart.setLegendVisible(false);
         categoryAxisBar.setLabel("Course");
         numberAxisBar.setLabel("Avg. Score");
@@ -86,21 +120,14 @@ public class TeacherGradeStatisticController implements Initializable {
         categoryAxisLine.setLabel("Exam");
         numberAxisLine.setLabel("Avg. Score");
 
-        gradeList.add(new GradeExampleClass());
-        gradeTable.setItems(gradeList);
-        studentColumn.setCellValueFactory(new PropertyValueFactory<>("studentName"));
-        courseColumn.setCellValueFactory(new PropertyValueFactory<>("courseNum"));
-        examColumn.setCellValueFactory(new PropertyValueFactory<>("examName"));
-        scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
-        fullScoreColumn.setCellValueFactory(new PropertyValueFactory<>("fullScore"));
-        timeSpendColumn.setCellValueFactory(new PropertyValueFactory<>("timeSpend"));
-
         refresh();
         loadChart();
     }
 
     @FXML
     public void refresh() {
+        reset();
+        filter();
     }
 
     private void loadChart() {
@@ -129,9 +156,13 @@ public class TeacherGradeStatisticController implements Initializable {
 
     @FXML
     public void reset() {
+        courseCombox.getSelectionModel().selectFirst();
+        examCombox.getSelectionModel().selectFirst();
+        studentCombox.getSelectionModel().selectFirst();
     }
 
     @FXML
-    public void query() {
+    public void filter() {
+        loadChart();
     }
 }
