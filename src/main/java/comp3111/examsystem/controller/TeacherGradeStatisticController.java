@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 
 public class TeacherGradeStatisticController implements Initializable {
     public static class GradeExampleClass {
-        public String getStudentName() {
+        public String getStudentUsername() {
             return "student";
         }
         public String getCourseNum() {
@@ -88,7 +88,7 @@ public class TeacherGradeStatisticController implements Initializable {
         ObservableList<Submission> submissionRecords = FXCollections.observableArrayList(submissions);
         gradeTable.setItems(submissionRecords);
 
-        studentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getStudentId()).asString());
+        studentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getStudentUsername()).asString());
         courseColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getCourseId()));
         examColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getExamId()).asString());
         scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getScore()).asString());
