@@ -164,10 +164,12 @@ public class TeacherGradeStatisticController implements Initializable {
                     total += submission.getScore();
                 }
             }
-            long average = total / count;
-            seriesBar.getData().add(new XYChart.Data<>(course.getCourseID(), average));
-            seriesLine.getData().add(new XYChart.Data<>(course.getCourseID(), average));
-            pieChart.getData().add(new PieChart.Data(course.getCourseID(), average));
+            if(count != 0){
+                long average = total / count;
+                seriesBar.getData().add(new XYChart.Data<>(course.getCourseID(), average));
+                seriesLine.getData().add(new XYChart.Data<>(course.getCourseID(), average));
+                pieChart.getData().add(new PieChart.Data(course.getCourseID(), average));
+            }
         }
         barChart.getData().add(seriesBar);
         lineChart.getData().add(seriesLine);
