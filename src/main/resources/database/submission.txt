@@ -1,6 +1,6 @@
-{"studentId":1731794189259,"examId":1732066010359,"courseId":"comp2316","answerList":[null,"T","A","T","F","CD"],"score":1319,"fullScore":2165,"numberOfCorrect":4,"timeSpend":56,"id":1732095891317}
-{"studentId":1731794189259,"examId":1732066037639,"courseId":"ABCD","answerList":["CD",null,null,null,null,null,null,null,null,"CD"],"score":50,"fullScore":3257,"numberOfCorrect":1,"timeSpend":11,"id":1732095969525}
-{"studentId":1731794189259,"examId":1732066095929,"courseId":"rock1001","answerList":["F","F","CD"],"score":897,"fullScore":897,"numberOfCorrect":3,"timeSpend":11,"id":1732095993039}
-{"studentId":1732038393081,"examId":1732066095929,"courseId":"rock1001","answerList":["T","F","CD"],"score":474,"fullScore":897,"numberOfCorrect":2,"timeSpend":8,"id":1732096056216}
-{"studentId":1732038393081,"examId":1732066037639,"courseId":"ABCD","answerList":["AC",null,null,"T",null,null,null,null,null,null],"score":0,"fullScore":3257,"numberOfCorrect":0,"timeSpend":22,"id":1732096083997}
-{"studentId":1732038393081,"examId":1732066010359,"courseId":"comp2316","answerList":[null,null,null,null,null,"CD"],"score":50,"fullScore":2165,"numberOfCorrect":1,"timeSpend":5,"id":1732096098768}
+{"studentUsername":chlibs,"examId":1732066010359,"courseId":"comp2316","answerList":[null,"T","A","T","F","CD"],"score":1319,"fullScore":2165,"numberOfCorrect":4,"timeSpend":56,"id":1732095891317}
+{"studentUsername":chlibs,"examId":1732066037639,"courseId":"ABCD","answerList":["CD",null,null,null,null,null,null,null,null,"CD"],"score":50,"fullScore":3257,"numberOfCorrect":1,"timeSpend":11,"id":1732095969525}
+{"studentUsername":chlibs,"examId":1732066095929,"courseId":"rock1001","answerList":["F","F","CD"],"score":897,"fullScore":897,"numberOfCorrect":3,"timeSpend":11,"id":1732095993039}
+{"studentUsername":led,"examId":1732066095929,"courseId":"rock1001","answerList":["T","F","CD"],"score":474,"fullScore":897,"numberOfCorrect":2,"timeSpend":8,"id":1732096056216}
+{"studentUsername":led,"examId":1732066037639,"courseId":"ABCD","answerList":["AC",null,null,"T",null,null,null,null,null,null],"score":0,"fullScore":3257,"numberOfCorrect":0,"timeSpend":22,"id":1732096083997}
+{"studentUsername":led,"examId":1732066010359,"courseId":"comp2316","answerList":[null,null,null,null,null,"CD"],"score":50,"fullScore":2165,"numberOfCorrect":1,"timeSpend":5,"id":1732096098768}

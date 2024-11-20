@@ -51,7 +51,10 @@ public class Exam extends Entity {
         int fullScore = 0;
         if (!questionIds.isEmpty()) {
             for (Long id : questionIds) {
-                fullScore += QuestionDatabase.getInstance().queryByKey(id.toString()).getScore();
+                Question question = QuestionDatabase.getInstance().queryByKey(id.toString());
+                if (question != null) {
+                    fullScore += question.getScore();
+                }
             }
             return fullScore;
         }

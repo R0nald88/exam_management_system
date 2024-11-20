@@ -117,7 +117,7 @@ public class StudentMainController implements Initializable {
             //System.out.println(ExamDatabase.getInstance().filter(selectedExamName, selectedExamCourseId, "true"));
             Exam selectedExam = ExamDatabase.getInstance().filter(selectedExamName, selectedExamCourseId, "true").getFirst();
             Submission submission = new Submission();
-            submission.setStudentId(student.getId());
+            submission.setStudentUsername(student.getUsername());
             submission.setExamId(selectedExam.getId());
             submission.setFullScore(selectedExam.getFullScore());
 

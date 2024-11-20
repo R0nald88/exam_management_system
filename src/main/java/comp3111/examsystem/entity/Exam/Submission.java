@@ -13,7 +13,7 @@ import comp3111.examsystem.entity.Personnel.Student;
 // import comp3111.examsystem.entity.Exam;
 
 public class Submission extends Entity{
-    private Long studentId;
+    private String studentUsername;
     private Long examId;
     private String courseId;
     private List<String> answerList;
@@ -26,8 +26,8 @@ public class Submission extends Entity{
         super(System.currentTimeMillis());
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setStudentUsername(String studentUsername) {
+        this.studentUsername = studentUsername;
     }
 
     public void setExamId(Long examId) {
@@ -48,8 +48,8 @@ public class Submission extends Entity{
         this.fullScore = fullScore;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public String getStudentUsername() {
+        return studentUsername;
     }
 
     public Long getExamId() {

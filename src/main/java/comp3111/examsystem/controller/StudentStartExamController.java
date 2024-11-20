@@ -152,7 +152,7 @@ public class StudentStartExamController implements Initializable {
     public void setSubmission(Submission submission) {
         this.submission = submission;
         exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
-        student = StudentDatabase.getInstance().queryByKey(submission.getStudentId().toString());
+        student = StudentDatabase.getInstance().queryByKey(submission.getStudentUsername());
 
         // Set the exam name and total questions
         examNameLbl.setText(exam.getCourseId() + "-" + exam.getName());
@@ -492,11 +492,11 @@ public class StudentStartExamController implements Initializable {
 
             // Get the controller and set the student
             StudentMainController studentMainController = fxmlLoader.getController();
-            studentMainController.setStudent(StudentDatabase.getInstance().queryByKey(submission.getStudentId().toString()));
+            studentMainController.setStudent(StudentDatabase.getInstance().queryByKey(submission.getStudentUsername()));
 
             // Create the new stage and set the scene
             Stage stage = new Stage();
-            stage.setTitle("Hi " + StudentDatabase.getInstance().queryByKey(submission.getStudentId().toString()).getUsername() + ", Welcome to HKUST Examination System");
+            stage.setTitle("Hi " + submission.getStudentUsername() + ", Welcome to HKUST Examination System");
             stage.setScene(new Scene(root)); // Use the loaded root
             studentMainController.setStage(stage);
 
