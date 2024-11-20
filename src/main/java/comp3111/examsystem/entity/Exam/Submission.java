@@ -26,7 +26,6 @@ public class Submission extends Entity{
         super(System.currentTimeMillis());
     }
 
-
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
     }

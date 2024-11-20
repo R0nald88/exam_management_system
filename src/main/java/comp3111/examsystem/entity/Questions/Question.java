@@ -34,8 +34,7 @@ public class Question extends Entity {
 
     public void setAnswer(String answer) throws Exception {
         answer = answer.trim();
-        getTypeFactory().validateAnswer(answer);
-        this.answer = answer;
+        this.answer = getTypeFactory().validateAnswer(answer);;
     }
 
     public QuestionType getType() {

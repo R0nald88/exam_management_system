@@ -8,7 +8,7 @@ import static comp3111.examsystem.entity.Questions.QuestionDatabase.OPTION_LENGT
 
 public sealed abstract class QuestionTypeFactory
         permits ShortQuestionType, SingleQuestionType, MultipleQuestionType, TrueFalseQuestionType {
-    public abstract void validateAnswer(String answer) throws Exception;
+    public abstract String validateAnswer(String answer) throws Exception;
 
     public void initialize(TextField[] options, Question question) throws Exception {
         question.setOptionA(options[0].getText());

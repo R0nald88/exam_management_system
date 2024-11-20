@@ -18,8 +18,9 @@ public final class ShortQuestionType extends QuestionTypeFactory {
         return instance;
     }
     @Override
-    public void validateAnswer(String answer) throws Exception {
+    public String validateAnswer(String answer) throws Exception {
         Database.validateTextLength(ANSWER_LENGTH_LIMIT, answer, "answer");
+        return answer;
     }
 
     @Override

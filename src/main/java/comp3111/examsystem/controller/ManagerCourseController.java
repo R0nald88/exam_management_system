@@ -4,6 +4,7 @@ import comp3111.examsystem.entity.Course.Course;
 import comp3111.examsystem.entity.Course.CourseDatabase;
 import comp3111.examsystem.entity.Exam.Exam;
 import comp3111.examsystem.entity.Exam.ExamDatabase;
+import comp3111.examsystem.entity.Exam.SubmissionDatabase;
 import comp3111.examsystem.tools.MsgSender;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -95,11 +96,16 @@ public class ManagerCourseController implements Initializable{
 
             if (!affectedExam.isEmpty() && !deleteExam) {
                 MsgSender.showConfirm("Warning",
-                        "Selected course has associated exam(s).\nClick \"OK\" to continue deleting the course and associated exam(s).",
+                        "Selected course has associated exam(s) and submission(s). \nClick \"OK\" to continue deleting the course and associated exam(s) and submission(s).",
                         () -> deleteCourse(true)
                 );
                 return;
             } else if (!affectedExam.isEmpty()) {
+                SubmissionDatabase db = SubmissionDatabase.getInstance();
+                for (Exam e : affectedExam) {
+                    db.deleteSubmissions(db.queryByField("examId", e.getId().toString()));
+                }
+
                 ExamDatabase.getInstance().deleteExams(affectedExam);
             }
 

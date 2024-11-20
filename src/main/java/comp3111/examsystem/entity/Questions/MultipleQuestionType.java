@@ -1,5 +1,10 @@
 package comp3111.examsystem.entity.Questions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public final class MultipleQuestionType extends QuestionTypeFactory {
     private static MultipleQuestionType instance = null;
 
@@ -11,7 +16,7 @@ public final class MultipleQuestionType extends QuestionTypeFactory {
     }
 
     @Override
-    public void validateAnswer(String answer) throws Exception {
+    public String validateAnswer(String answer) throws Exception {
         if (answer.length() <= 1 || answer.length() > 4) {
             throw new Exception("The answer of Multiple Question should be 2 to 4 letters from A to D");
         }
@@ -27,5 +32,13 @@ public final class MultipleQuestionType extends QuestionTypeFactory {
                 throw new Exception("The answer of Multiple Question should be 2 to 4 letters from A to D");
             }
         }
+
+        char[] ans = answer.toCharArray();
+        Arrays.sort(ans);
+        String a = "";
+        for (char c : ans) {
+            a += c;
+        }
+        return a;
     }
 }

@@ -16,13 +16,14 @@ public final class TrueFalseQuestionType extends QuestionTypeFactory {
     }
 
     @Override
-    public void validateAnswer(String answer) throws Exception {
+    public String validateAnswer(String answer) throws Exception {
         if (answer.isEmpty()) {
             throw new Exception("Answer should not be empty.");
         }
         if (!answer.equals("T") && !answer.equals("F")) {
             throw new Exception("Answer should be either \"T\" or \"F\"");
         }
+        return answer;
     }
 
     @Override
