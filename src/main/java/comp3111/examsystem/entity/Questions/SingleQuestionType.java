@@ -11,9 +11,11 @@ public final class SingleQuestionType extends QuestionTypeFactory {
     }
 
     @Override
-    public void validateAnswer(String answer) throws Exception {
+    public String validateAnswer(String answer) throws Exception {
         if (answer.length() != 1 || !"ABCD".contains(answer)) {
             throw new Exception("The answer of Single Question should be 1 letter from A to D");
         }
+
+        return answer;
     }
 }
