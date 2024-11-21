@@ -39,8 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static javafx.geometry.Pos.CENTER;
-import static javafx.geometry.Pos.TOP_CENTER;
+import static javafx.geometry.Pos.*;
 
 public class StudentStartExamController implements Initializable {
 
@@ -114,7 +113,9 @@ public class StudentStartExamController implements Initializable {
     RadioButton falseRadioButton;
     HBox falseHBox;
     TextField questionField;
+    Label shortQuestionAnswerLabel;
     TextField shortQuestionAnswerField;
+    HBox shortQuestionAnswerHBox;
     List<String> questionStringList;
 
 
@@ -398,9 +399,17 @@ public class StudentStartExamController implements Initializable {
             }
 
         } else {
+            shortQuestionAnswerLabel = new Label("Your Answer:");
+            shortQuestionAnswerLabel.setPrefSize(90.0, 125.0);
+            shortQuestionAnswerLabel.setAlignment(TOP_CENTER);
             shortQuestionAnswerField = new TextField();
+            shortQuestionAnswerField.setPrefSize(360.0, 125.0);
+            shortQuestionAnswerField.setAlignment(TOP_LEFT);
             VBox.setMargin(shortQuestionAnswerField, new Insets(10.0));
-            questionVBox.getChildren().add(shortQuestionAnswerField);
+            shortQuestionAnswerHBox = new HBox(10);
+            shortQuestionAnswerHBox.setPrefSize(450.0,125.0);
+            shortQuestionAnswerHBox.getChildren().addAll(shortQuestionAnswerLabel, shortQuestionAnswerField);
+            questionVBox.getChildren().add(shortQuestionAnswerHBox);
 
             if (submission.getAnswer() != null) {
                 if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
