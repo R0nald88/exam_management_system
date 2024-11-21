@@ -135,13 +135,15 @@ public class TeacherGradeStatisticController implements Initializable {
 
 
         barChart.setLegendVisible(false);
-        categoryAxisBar.setLabel("Course");
-        numberAxisBar.setLabel("Avg. Score");
+        categoryAxisBar.setLabel("Exams");
+        categoryAxisBar.setAnimated(false);
+        numberAxisBar.setLabel("Avg. Score (%)");
         pieChart.setLegendVisible(false);
-        pieChart.setTitle("Student Scores");
+        pieChart.setTitle("Avg. Score (%)");
         lineChart.setLegendVisible(false);
-        categoryAxisLine.setLabel("Exam");
-        numberAxisLine.setLabel("Avg. Score");
+        categoryAxisLine.setLabel("Exams");
+        categoryAxisLine.setAnimated(false);
+        numberAxisLine.setLabel("Avg. Score (%)");
 
         refresh();
         loadChart();
@@ -166,25 +168,34 @@ public class TeacherGradeStatisticController implements Initializable {
 
         for(Exam exam : exams){
             int count = 0;
-            long total = 0;
+            int total = 0;
+            int full = 0;
             for(Submission submission : currentSubmissionList){
                 if(exam.getId().equals(submission.getExamId())){
                     count++;
-                    if(questionCombox.getValue().equals("All"))
+                    if(questionCombox.getValue().equals("All")){
                         total += submission.getScore();
-                    else if(questionCombox.getValue().equals("MC"))
+                        full = submission.getFullScore();
+                    }
+                    else if(questionCombox.getValue().equals("MC")){
                         total += submission.getMcScore();
-                    else if(questionCombox.getValue().equals("T/F"))
+                        full = submission.getMcFullScore();
+                    }
+                    else if(questionCombox.getValue().equals("T/F")){
                         total += submission.getTfScore();
-                    else if(questionCombox.getValue().equals("Short Questions"))
+                        full = submission.getTfFullScore();
+                    }
+                    else if(questionCombox.getValue().equals("Short Questions")){
                         total += submission.getSqScore();
+                        full = submission.getSqFullScore();
+                    }
                 }
             }
-            if(count != 0){
-                long average = total / count;
-                seriesBar.getData().add(new XYChart.Data<>(exam.getCourseId()+"-"+exam.getName(), average));
-                seriesLine.getData().add(new XYChart.Data<>(exam.getCourseId()+"-"+exam.getName(), average));
-                pieChart.getData().add(new PieChart.Data(exam.getCourseId()+"-"+exam.getName(), average));
+            if(count != 0 && full != 0){
+                float percentage = (float) (total / count) / full * 100;
+                seriesBar.getData().add(new XYChart.Data<>(exam.getCourseId()+"-"+exam.getName(), percentage));
+                seriesLine.getData().add(new XYChart.Data<>(exam.getCourseId()+"-"+exam.getName(), percentage));
+                pieChart.getData().add(new PieChart.Data(exam.getCourseId()+"-"+exam.getName(), percentage));
             }
         }
         barChart.getData().add(seriesBar);
