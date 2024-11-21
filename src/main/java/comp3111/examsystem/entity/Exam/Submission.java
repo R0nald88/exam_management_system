@@ -23,11 +23,12 @@ public class Submission extends Entity{
     private int numberOfCorrect = 0;
     private int timeSpend;
 
-    private int singleMCScore = 0;
-    private int multipleMCScore = 0;
+    private int mcScore = 0;
+    private int mcFullScore = 0;
     private int tfScore = 0;
+    private int tfFullScore = 0;
     private int sqScore = 0;
-    private int sqFullScore;
+    private int sqFullScore = 0;
     private List<String> sqQuestionList = new ArrayList<>();
     private List<String> sqAnswerList = new ArrayList<>();
     private List<Integer> sqFullScoreList = new ArrayList<>();
@@ -105,16 +106,20 @@ public class Submission extends Entity{
         return numberOfCorrect;
     }
 
-    public int getSingleMCScore(){
-        return singleMCScore;
+    public int getMcScore(){
+        return mcScore;
     }
 
-    public int getMultipleMCScore(){
-        return multipleMCScore;
+    public int getMcFullScore(){
+        return mcFullScore;
     }
 
     public int getTfScore(){
         return tfScore;
+    }
+
+    public int getTfFullScore(){
+        return tfFullScore;
     }
 
     public int getSqScore(){
@@ -159,29 +164,36 @@ public class Submission extends Entity{
                     System.out.println(i);
                     scoreList.set(i, questionObjectList.get(i).getScore());
                     score += questionObjectList.get(i).getScore();
-                    if (questionObjectList.get(i).getType() == QuestionType.SINGLE) {
-                        singleMCScore += questionObjectList.get(i).getScore();
-                    }
-                    else if (questionObjectList.get(i).getType() == QuestionType.MULTIPLE) {
-                        multipleMCScore += questionObjectList.get(i).getScore();
+                    if (questionObjectList.get(i).getType() == QuestionType.SINGLE || questionObjectList.get(i).getType() == QuestionType.MULTIPLE) {
+                        mcScore += questionObjectList.get(i).getScore();
+                        mcFullScore += questionObjectList.get(i).getScore();
                     }
                     else if (questionObjectList.get(i).getType() == QuestionType.TRUE_FALSE) {
                         tfScore += questionObjectList.get(i).getScore();
+                        tfFullScore += questionObjectList.get(i).getScore();
                     }
                     else if (questionObjectList.get(i).getType() == QuestionType.SHORT_Q) {
                         sqScore += questionObjectList.get(i).getScore();
+                        sqFullScore += questionObjectList.get(i).getScore();
+
                         sqQuestionList.add(questionObjectList.get(i).getQuestion());
                         sqAnswerList.add(answerList.get(i));
                         sqFullScoreList.add(questionObjectList.get(i).getScore());
-                        sqFullScore += questionObjectList.get(i).getScore();
                     }
                     numberOfCorrect++;
                 } else {
-                    if (questionObjectList.get(i).getType() == QuestionType.SHORT_Q) {
+                    if (questionObjectList.get(i).getType() == QuestionType.SINGLE || questionObjectList.get(i).getType() == QuestionType.MULTIPLE) {
+                        mcFullScore += questionObjectList.get(i).getScore();
+                    }
+                    else if (questionObjectList.get(i).getType() == QuestionType.TRUE_FALSE) {
+                        tfFullScore += questionObjectList.get(i).getScore();
+                    }
+                    else if (questionObjectList.get(i).getType() == QuestionType.SHORT_Q) {
+                        sqFullScore += questionObjectList.get(i).getScore();
+
                         sqQuestionList.add(questionObjectList.get(i).getQuestion());
                         sqAnswerList.add(answerList.get(i));
                         sqFullScoreList.add(questionObjectList.get(i).getScore());
-                        sqFullScore += questionObjectList.get(i).getScore();
                     }
                 }
                 System.out.println("By now answerList: " + answerList);
@@ -195,11 +207,8 @@ public class Submission extends Entity{
         Question question = QuestionDatabase.getInstance().queryByKey(ExamDatabase.getInstance().queryByKey(examId.toString()).getQuestionIds().get(questionNumber).toString());
         int maxScore = question.getScore();
         if (score < 0 || score > maxScore) throw new Exception("Update score should be in between 0 and max score of this question.");
-        if (questionObjectList.get(questionNumber).getType() == QuestionType.SINGLE) {
-            singleMCScore = singleMCScore - originalScore + score;
-        }
-        else if (questionObjectList.get(questionNumber).getType() == QuestionType.MULTIPLE) {
-            multipleMCScore = multipleMCScore - originalScore + score;
+        if (questionObjectList.get(questionNumber).getType() == QuestionType.SINGLE || questionObjectList.get(questionNumber).getType() == QuestionType.MULTIPLE) {
+            mcScore = mcScore - originalScore + score;
         }
         else if (questionObjectList.get(questionNumber).getType() == QuestionType.TRUE_FALSE) {
             tfScore = tfScore - originalScore + score;
@@ -212,7 +221,7 @@ public class Submission extends Entity{
 
     public void updateSqScore(int newSqScore) throws Exception{
         if (newSqScore < 0 || newSqScore > sqFullScore)
-            throw new Exception("Score should be non-negative and no larger than the maximum score");
+            throw new Exception("Score should be non-negative and no larger than the maximum score.");
         score += newSqScore - sqScore;
         sqScore = newSqScore;
         graded = true;

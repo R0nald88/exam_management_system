@@ -8,6 +8,7 @@ import comp3111.examsystem.entity.Exam.Submission;
 import comp3111.examsystem.entity.Exam.SubmissionDatabase;
 import comp3111.examsystem.entity.Personnel.Student;
 import comp3111.examsystem.entity.Personnel.StudentDatabase;
+import comp3111.examsystem.entity.Questions.QuestionType;
 import comp3111.examsystem.tools.MsgSender;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -51,6 +52,8 @@ public class TeacherGradeStatisticController implements Initializable {
     private ChoiceBox<String> examCombox;
     @FXML
     private ChoiceBox<String> studentCombox;
+    @FXML
+    private ChoiceBox<String> questionCombox;
     @FXML
     private TableView<Submission> gradeTable;
     @FXML
@@ -125,6 +128,11 @@ public class TeacherGradeStatisticController implements Initializable {
             studentCombox.getItems().add(student.getUsername());
         }
 
+        questionCombox.getItems().add("All");
+        questionCombox.getItems().add("MC");
+        questionCombox.getItems().add("T/F");
+        questionCombox.getItems().add("Short Questions");
+
 
         barChart.setLegendVisible(false);
         categoryAxisBar.setLabel("Course");
@@ -156,20 +164,27 @@ public class TeacherGradeStatisticController implements Initializable {
 
         pieChart.getData().clear();
 
-        for(Course course : courses){
+        for(Exam exam : exams){
             int count = 0;
             long total = 0;
             for(Submission submission : currentSubmissionList){
-                if(course.getCourseID().equals(submission.getCourseId())){
+                if(exam.getId().equals(submission.getExamId())){
                     count++;
-                    total += submission.getScore();
+                    if(questionCombox.getValue().equals("All"))
+                        total += submission.getScore();
+                    else if(questionCombox.getValue().equals("MC"))
+                        total += submission.getMcScore();
+                    else if(questionCombox.getValue().equals("T/F"))
+                        total += submission.getTfScore();
+                    else if(questionCombox.getValue().equals("Short Questions"))
+                        total += submission.getSqScore();
                 }
             }
             if(count != 0){
                 long average = total / count;
-                seriesBar.getData().add(new XYChart.Data<>(course.getCourseID(), average));
-                seriesLine.getData().add(new XYChart.Data<>(course.getCourseID(), average));
-                pieChart.getData().add(new PieChart.Data(course.getCourseID(), average));
+                seriesBar.getData().add(new XYChart.Data<>(exam.getCourseId()+"-"+exam.getName(), average));
+                seriesLine.getData().add(new XYChart.Data<>(exam.getCourseId()+"-"+exam.getName(), average));
+                pieChart.getData().add(new PieChart.Data(exam.getCourseId()+"-"+exam.getName(), average));
             }
         }
         barChart.getData().add(seriesBar);
@@ -182,6 +197,7 @@ public class TeacherGradeStatisticController implements Initializable {
         courseCombox.getSelectionModel().selectFirst();
         examCombox.getSelectionModel().selectFirst();
         studentCombox.getSelectionModel().selectFirst();
+        questionCombox.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -204,6 +220,23 @@ public class TeacherGradeStatisticController implements Initializable {
                 studentFilterSubmissions = SubmissionDatabase.getInstance().queryByField("studentUsername", studentCombox.getValue());
             currentSubmissionList = SubmissionDatabase.getInstance().join(SubmissionDatabase.getInstance().join(courseFilterSubmissions, examFilterSubmissions), studentFilterSubmissions);
             gradeTable.getItems().setAll(currentSubmissionList);
+
+            if(questionCombox.getValue().equals("All")){
+                scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getScore()).asString());
+                fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getFullScore()).asString());
+            }
+            else if(questionCombox.getValue().equals("MC")){
+                scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getMcScore()).asString());
+                fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getMcFullScore()).asString());
+            }
+            else if(questionCombox.getValue().equals("T/F")){
+                scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getTfScore()).asString());
+                fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getTfFullScore()).asString());
+            }
+            else if(questionCombox.getValue().equals("Short Questions")){
+                scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getSqScore()).asString());
+                fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getSqFullScore()).asString());
+            }
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
