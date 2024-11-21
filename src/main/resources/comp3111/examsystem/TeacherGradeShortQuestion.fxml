@@ -44,8 +44,12 @@
                         <Insets right="200.0" />
                     </HBox.margin>
                 </Button>
-                <Label text="Score" />
-                <TextField fx:id="sqScoreTxt" maxWidth="150.0">
+                <Label text="Score">
+                    <HBox.margin>
+                        <Insets right="20.0" />
+                    </HBox.margin>
+                </Label>
+                <TextField fx:id="sqScoreTxt" prefWidth="100.0">
                     <HBox.margin>
                         <Insets right="20.0"/>
                     </HBox.margin>
