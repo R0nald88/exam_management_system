@@ -116,9 +116,9 @@ public class TeacherGradeStatisticController implements Initializable {
 
         examCombox.getItems().add("All");
         for(Exam exam : exams){
-            String courseName = CourseDatabase.getInstance().queryByField("courseID", exam.getCourseId()).getFirst().getCourseName();
+            String courseID = CourseDatabase.getInstance().queryByField("courseID", exam.getCourseId()).getFirst().getCourseID();
             String examName = exam.getName();
-            String examOption = courseName + "-" + examName;
+            String examOption = courseID + "-" + examName;
             examNameToIdDict.put(examOption, exam.getId().toString());
             examCombox.getItems().add(examOption);
         }
@@ -229,25 +229,47 @@ public class TeacherGradeStatisticController implements Initializable {
                 studentFilterSubmissions = SubmissionDatabase.getInstance().getAll();
             else
                 studentFilterSubmissions = SubmissionDatabase.getInstance().queryByField("studentUsername", studentCombox.getValue());
-            currentSubmissionList = SubmissionDatabase.getInstance().join(SubmissionDatabase.getInstance().join(courseFilterSubmissions, examFilterSubmissions), studentFilterSubmissions);
-            gradeTable.getItems().setAll(currentSubmissionList);
+            List<Submission> filteredSubmissions = SubmissionDatabase.getInstance().join(SubmissionDatabase.getInstance().join(courseFilterSubmissions, examFilterSubmissions), studentFilterSubmissions);
+            List<Submission> submissionRecords = new ArrayList<>();
 
             if(questionCombox.getValue().equals("All")){
                 scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getScore()).asString());
                 fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getFullScore()).asString());
+                for(Submission submission : filteredSubmissions){
+                    if(submission.getFullScore() > 0){
+                        submissionRecords.add(submission);
+                    }
+                }
             }
             else if(questionCombox.getValue().equals("MC")){
                 scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getMcScore()).asString());
                 fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getMcFullScore()).asString());
+                for(Submission submission : filteredSubmissions){
+                    if(submission.getMcFullScore() > 0){
+                        submissionRecords.add(submission);
+                    }
+                }
             }
             else if(questionCombox.getValue().equals("T/F")){
                 scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getTfScore()).asString());
                 fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getTfFullScore()).asString());
+                for(Submission submission : filteredSubmissions){
+                    if(submission.getTfFullScore() > 0){
+                        submissionRecords.add(submission);
+                    }
+                }
             }
             else if(questionCombox.getValue().equals("Short Questions")){
                 scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getSqScore()).asString());
                 fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getSqFullScore()).asString());
+                for(Submission submission : filteredSubmissions){
+                    if(submission.getSqFullScore() > 0){
+                        submissionRecords.add(submission);
+                    }
+                }
             }
+            currentSubmissionList = submissionRecords;
+            gradeTable.getItems().setAll(currentSubmissionList);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
