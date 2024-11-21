@@ -40,9 +40,9 @@
                         <TableColumn fx:id="questionColumn" text="Questions" prefWidth="200.0"/>
                     </columns>
                 </TableView>
-                <VBox alignment="CENTER_RIGHT" prefHeight="300.0" prefWidth="450.0" BorderPane.alignment="TOP_CENTER">
+                <VBox alignment="TOP_LEFT" prefHeight="300.0" prefWidth="450.0" BorderPane.alignment="TOP_CENTER">
                     <children>
-                        <Label fx:id="currQuestionNumberLabel" text="Question Number" alignment="CENTER" prefHeight="50.0" prefWidth="450.0">
+                        <Label fx:id="currQuestionNumberLabel" text="Question Number" alignment="CENTER" prefHeight="30.0" prefWidth="450.0">
                             <VBox.margin>
                                 <Insets bottom="25.0"/>
                             </VBox.margin>
@@ -50,7 +50,7 @@
                                 <Font size="12.0"/>
                             </font>
                         </Label>
-                        <VBox fx:id="questionVBox" alignment="TOP_CENTER" prefHeight="125.0" prefWidth="450.0" BorderPane.alignment="CENTER"> </VBox>
+                        <VBox fx:id="questionVBox" alignment="TOP_CENTER" prefHeight="145.0" prefWidth="450.0" BorderPane.alignment="CENTER"> </VBox>
                         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="450.0" BorderPane.alignment="BOTTOM_CENTER">
                             <children>
                                 <Button fx:id="previousBtn" mnemonicParsing="false" onAction="#previous" text="Previous">

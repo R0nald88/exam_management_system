@@ -90,6 +90,10 @@ public class Submission extends Entity{
         return answerList;
     }
 
+    public List<Question> getQuestionObjectList() {
+        return questionObjectList;
+    }
+
     public int getScore() {
         return score;
     }
