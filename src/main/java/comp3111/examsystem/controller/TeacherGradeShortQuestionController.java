@@ -75,9 +75,9 @@ public class TeacherGradeShortQuestionController implements Initializable {
 
         examCombox.getItems().add("All");
         for(Exam exam : exams){
-            String courseName = CourseDatabase.getInstance().queryByField("courseID", exam.getCourseId()).getFirst().getCourseName();
+            String courseID = CourseDatabase.getInstance().queryByField("courseID", exam.getCourseId()).getFirst().getCourseID();
             String examName = exam.getName();
-            String examOption = courseName + "-" + examName;
+            String examOption = courseID + "-" + examName;
             examNameToIdDict.put(examOption, exam.getId().toString());
             examCombox.getItems().add(examOption);
         }
