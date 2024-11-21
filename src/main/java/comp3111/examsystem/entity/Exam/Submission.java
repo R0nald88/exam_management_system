@@ -8,7 +8,6 @@ import comp3111.examsystem.entity.Questions.QuestionType;
 
 import java.util.ArrayList;
 import java.util.List;
-import comp3111.examsystem.entity.Exam.Exam;
 
 public class Submission extends Entity{
     private String studentUsername;
@@ -146,6 +145,10 @@ public class Submission extends Entity{
         return sqFullScoreList;
     }
 
+    public List<Integer> getScoreList(){
+        return scoreList;
+    }
+
     public boolean isGraded(){
         return graded;
     }
@@ -205,12 +208,19 @@ public class Submission extends Entity{
         }
     }
 
+    public int getQuestionNumberByQuestionId(long id) {
+        for (int i = 0; i < questionObjectList.size(); i++) {
+            if (questionObjectList.get(i).getId() == id) return i;
+        }
+        return -1;
+    }
+
     public void updateScore(int questionNumber, int score) throws Exception{
         int originalScore = scoreList.get(questionNumber);
-        scoreList.set(questionNumber, score);
         Question question = QuestionDatabase.getInstance().queryByKey(ExamDatabase.getInstance().queryByKey(examId.toString()).getQuestionIds().get(questionNumber).toString());
         int maxScore = question.getScore();
         if (score < 0 || score > maxScore) throw new Exception("Update score should be in between 0 and max score of this question.");
+        scoreList.set(questionNumber, score);
         if (questionObjectList.get(questionNumber).getType() == QuestionType.SINGLE || questionObjectList.get(questionNumber).getType() == QuestionType.MULTIPLE) {
             mcScore = mcScore - originalScore + score;
         }
@@ -221,6 +231,7 @@ public class Submission extends Entity{
             sqScore = sqScore - originalScore + score;
         }
         this.score = this.score-originalScore+score;
+        graded = true;
     }
 
     public void updateSqScore(int newSqScore) throws Exception{
