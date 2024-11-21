@@ -164,7 +164,7 @@ public class StudentStartExamController implements Initializable {
 
         // Populate questionStringList with questions from the database
         questionStringList = new ArrayList<>();
-        for (Question question : QuestionDatabase.getInstance().queryByKeys(questionList.stream().map(Object::toString).toList())) {
+        for (Question question : submission.getQuestionObjectList()) {
             questionStringList.add(question.getQuestion());
         }
 
@@ -263,12 +263,14 @@ public class StudentStartExamController implements Initializable {
         System.out.println("questionList: " + questionList);
         System.out.println("destQuestionNumber:" + destQuestionNumber);
 
-        Question destQuestion = QuestionDatabase.getInstance().queryByKey(questionList.get(destQuestionNumber).toString());
+        Question destQuestion = submission.getQuestionObjectList().get(destQuestionNumber);
 
         QuestionType questionType = destQuestion.getType();
         String questionTxt = destQuestion.getQuestion();
         questionField = new TextField(questionTxt);
         questionField.setEditable(false);
+        questionField.setAlignment(TOP_LEFT);
+        questionField.setMinHeight(50.0);
         questionVBox.getChildren().add(questionField);
 
         if (questionType == QuestionType.SINGLE) {
