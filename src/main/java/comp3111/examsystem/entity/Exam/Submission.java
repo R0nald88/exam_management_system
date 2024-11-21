@@ -133,6 +133,10 @@ public class Submission extends Entity{
         return sqAnswerList;
     }
 
+    public List<Integer> getSqFullScoreList(){
+        return sqFullScoreList;
+    }
+
     public boolean isGraded(){
         return graded;
     }
@@ -208,7 +212,7 @@ public class Submission extends Entity{
 
     public void updateSqScore(int newSqScore) throws Exception{
         if (newSqScore < 0 || newSqScore > sqFullScore)
-            throw new Exception("Score should be non-negative and no larger than the maximum score of all short questions.");
+            throw new Exception("Score should be non-negative and no larger than the maximum score");
         score += newSqScore - sqScore;
         sqScore = newSqScore;
         graded = true;
