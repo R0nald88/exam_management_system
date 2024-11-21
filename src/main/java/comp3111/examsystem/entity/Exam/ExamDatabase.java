@@ -175,6 +175,9 @@ public class ExamDatabase extends Database<Exam> {
         if (!exist(entity)) {
             throw new Exception("Exam " + entity.getCourseId() + " " + entity.getName() + " does not exist.");
         }
+        List<Submission> submissions = SubmissionDatabase.getInstance().filter(null, null, entity.getId().toString());
+        SubmissionDatabase.getInstance().deleteSubmissions(submissions);
+
 
         delByKey(entity.getId() + "");
     }
