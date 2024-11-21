@@ -45,6 +45,16 @@
                   <Insets left="5.0" />
                </HBox.margin>
             </ChoiceBox>
+             <Label text="Question">
+                 <HBox.margin>
+                     <Insets left="10.0" />
+                 </HBox.margin>
+             </Label>
+             <ChoiceBox fx:id="questionCombox" prefWidth="150.0">
+                 <HBox.margin>
+                     <Insets left="5.0" />
+                 </HBox.margin>
+             </ChoiceBox>
             <Button fx:id="resetBtn" mnemonicParsing="false" onAction="#reset" text="Reset">
                <HBox.margin>
                   <Insets left="10.0" />
