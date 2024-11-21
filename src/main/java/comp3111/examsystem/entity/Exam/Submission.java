@@ -16,6 +16,7 @@ public class Submission extends Entity{
     private String courseId;
     private List<String> answerList;
     private List<Integer> scoreList;
+    private List <Question> questionObjectList;
     private int score = 0;
     private int fullScore;
     private int numberOfCorrect = 0;
@@ -41,6 +42,12 @@ public class Submission extends Entity{
         this.courseId = exam.getCourseId();
         answerList = new ArrayList<>(exam.getQuestionIds().size());
         scoreList =  new ArrayList<>(exam.getQuestionIds().size());
+        
+        questionObjectList =  new ArrayList<>(exam.getQuestionIds().size());
+        for (Long qId : exam.getQuestionIds()) {
+            Question q = QuestionDatabase.getInstance().queryByKey(qId.toString());
+            questionObjectList.add(q);
+        }
         System.out.println(exam.getQuestionIds().size());
         for (int i = 0; i < exam.getQuestionIds().size(); i++) {
             answerList.add(null);
@@ -59,16 +66,16 @@ public class Submission extends Entity{
         Question question = QuestionDatabase.getInstance().queryByKey(ExamDatabase.getInstance().queryByKey(examId.toString()).getQuestionIds().get(questionNumber).toString());
         int maxScore = question.getScore();
         if (score < 0 || score > maxScore) throw new Exception("Update score should be in between 0 and max score of this question.");
-        if (question.getType() == QuestionType.SINGLE) {
+        if (questionObjectList.get(questionNumber).getType() == QuestionType.SINGLE) {
             singleMCScore = singleMCScore - originalScore + score;
         }
-        else if (question.getType() == QuestionType.MULTIPLE) {
+        else if (questionObjectList.get(questionNumber).getType() == QuestionType.MULTIPLE) {
             multipleMCScore = multipleMCScore - originalScore + score;
         }
-        else if (question.getType() == QuestionType.TRUE_FALSE) {
+        else if (questionObjectList.get(questionNumber).getType() == QuestionType.TRUE_FALSE) {
             tfScore = tfScore - originalScore + score;
         }
-        else if (question.getType() == QuestionType.SHORT_Q) {
+        else if (questionObjectList.get(questionNumber).getType() == QuestionType.SHORT_Q) {
             sqScore = sqScore - originalScore + score;
         }
         this.score = this.score-originalScore+score;
@@ -106,24 +113,13 @@ public class Submission extends Entity{
         return answerList;
     }
 
+    public List<Question> getQuestionObjectList() {
+        return questionObjectList;
+    }
+
     public void saveAnswer(int questionNumber, String answer) {
-        Exam exam = ExamDatabase.getInstance().queryByKey(examId.toString());
-        if (exam != null) {
-            if (answerList == null) {
-
-                answerList = new ArrayList<>(exam.getQuestionIds().size());
-                // Initialize the list with nulls or default values
-                for (int i = 0; i < exam.getQuestionIds().size(); i++) {
-                    answerList.add(null); // or any default value
-                }
-                System.out.println("getExam().getQuestionIds().size(): " + exam.getQuestionIds().size());
-            }
-
-
-            // Now it's safe to set the answer
-            if (questionNumber >= 0 && questionNumber < exam.getQuestionIds().size() && answer != null) {
-                answerList.set(questionNumber, answer);
-            }
+        if (questionNumber >= 0 && questionNumber < questionObjectList.size() && answer != null) {
+            answerList.set(questionNumber, answer);
         }
     }
 
@@ -149,42 +145,38 @@ public class Submission extends Entity{
     }
 
     public void calculateInitialScore() {
-        Exam exam = ExamDatabase.getInstance().queryByKey(examId.toString());
-        if (exam != null) {
-            if (answerList != null) {
-                for (int i = 0; i < exam.getQuestionIds().size(); i++) {
-                    Question question = QuestionDatabase.getInstance().queryByKey(exam.getQuestionIds().get(i).toString());
-                    if (answerList.get(i) != null && answerList.get(i).equals(question.getAnswer())) {
-                        System.out.println(i);
-                        scoreList.set(i, question.getScore());
-                        score += question.getScore();
-                        if (question.getType() == QuestionType.SINGLE) {
-                            singleMCScore += question.getScore();
-                        }
-                        else if (question.getType() == QuestionType.MULTIPLE) {
-                            multipleMCScore += question.getScore();
-                        }
-                        else if (question.getType() == QuestionType.TRUE_FALSE) {
-                            tfScore += question.getScore();
-                        }
-                        else if (question.getType() == QuestionType.SHORT_Q) {
-                            sqScore += question.getScore();
-                            if (sqQuestionList == null) sqQuestionList = new ArrayList<>();
-                            sqQuestionList.add(question.getQuestion());
-                            if (sqAnswerList == null) sqAnswerList = new ArrayList<>();
-                            sqAnswerList.add(answerList.get(i));
-                        }
-                        numberOfCorrect++;
-                    } else {
-                        if (question.getType() == QuestionType.SHORT_Q) {
-                            if (sqQuestionList == null) sqQuestionList = new ArrayList<>();
-                            sqQuestionList.add(question.getQuestion());
-                            if (sqAnswerList == null) sqAnswerList = new ArrayList<>();
-                            sqAnswerList.add(answerList.get(i));
-                        }
+        if (answerList != null) {
+            for (int i = 0; i < questionObjectList.size(); i++) {
+                if (answerList.get(i) != null && answerList.get(i).equals(questionObjectList.get(i).getAnswer())) {
+                    System.out.println(i);
+                    scoreList.set(i, questionObjectList.get(i).getScore());
+                    score += questionObjectList.get(i).getScore();
+                    if (questionObjectList.get(i).getType() == QuestionType.SINGLE) {
+                        singleMCScore += questionObjectList.get(i).getScore();
                     }
-                    System.out.println("By now answerList: " + answerList);
+                    else if (questionObjectList.get(i).getType() == QuestionType.MULTIPLE) {
+                        multipleMCScore += questionObjectList.get(i).getScore();
+                    }
+                    else if (questionObjectList.get(i).getType() == QuestionType.TRUE_FALSE) {
+                        tfScore += questionObjectList.get(i).getScore();
+                    }
+                    else if (questionObjectList.get(i).getType() == QuestionType.SHORT_Q) {
+                        sqScore += questionObjectList.get(i).getScore();
+                        if (sqQuestionList == null) sqQuestionList = new ArrayList<>();
+                        sqQuestionList.add(questionObjectList.get(i).getQuestion());
+                        if (sqAnswerList == null) sqAnswerList = new ArrayList<>();
+                        sqAnswerList.add(answerList.get(i));
+                    }
+                    numberOfCorrect++;
+                } else {
+                    if (questionObjectList.get(i).getType() == QuestionType.SHORT_Q) {
+                        if (sqQuestionList == null) sqQuestionList = new ArrayList<>();
+                        sqQuestionList.add(questionObjectList.get(i).getQuestion());
+                        if (sqAnswerList == null) sqAnswerList = new ArrayList<>();
+                        sqAnswerList.add(answerList.get(i));
+                    }
                 }
+                System.out.println("By now answerList: " + answerList);
             }
         }
     }
