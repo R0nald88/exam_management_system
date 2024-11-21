@@ -101,9 +101,7 @@ public class TeacherGradeStatisticController implements Initializable {
 
         studentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getStudentUsername()).asString());
         courseColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getCourseId()));
-        examColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(
-                ExamDatabase.getInstance().queryByKey(tableRow.getValue().getExamId().toString()).getName()
-        ));
+        examColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getExamName()));
         scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getScore()).asString());
         fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getFullScore()).asString());
         timeSpendColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getTimeSpend()).asString());
@@ -117,7 +115,7 @@ public class TeacherGradeStatisticController implements Initializable {
         for(Exam exam : exams){
             String courseName = CourseDatabase.getInstance().queryByField("courseID", exam.getCourseId()).getFirst().getCourseName();
             String examName = exam.getName();
-            String examOption = courseName + " " + examName;
+            String examOption = courseName + "-" + examName;
             examNameToIdDict.put(examOption, exam.getId().toString());
             examCombox.getItems().add(examOption);
         }

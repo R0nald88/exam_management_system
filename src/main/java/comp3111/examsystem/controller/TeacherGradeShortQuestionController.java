@@ -13,10 +13,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import org.w3c.dom.Text;
 
 import java.net.URL;
 import java.util.*;
@@ -31,12 +29,6 @@ public class TeacherGradeShortQuestionController implements Initializable {
     private TableColumn<Submission, String> courseColumn;
     @FXML
     private TableColumn<Submission, String> examColumn;
-    @FXML
-    private TableColumn<Submission, String> scoreColumn;
-    @FXML
-    private TableColumn<Submission, String> fullScoreColumn;
-    @FXML
-    private TableColumn<Submission, String> timeSpendColumn;
 
     @FXML
     private TableView<String[]> questionTable;
@@ -44,11 +36,17 @@ public class TeacherGradeShortQuestionController implements Initializable {
     private TableColumn<String[], String> questionColumn;
     @FXML
     private TableColumn<String[], String> answerColumn;
+    @FXML
+    private TableColumn<String[], String> maxScoreColumn;
 
     @FXML
     private ChoiceBox<String> examCombox;
+    @FXML
+    private TextField sqScoreTxt;
 
     private List<Submission> submissions = new ArrayList<>();
+
+    private Submission selectedSubmission;
 
     private List<Exam> exams = ExamDatabase.getInstance().getAll();
 
@@ -58,7 +56,7 @@ public class TeacherGradeShortQuestionController implements Initializable {
         submissions = SubmissionDatabase.getInstance().getAll();
         ObservableList<Submission> submissionRecords = FXCollections.observableArrayList();
         for(Submission submission : submissions){
-            if(true){ //!submission.getSqQuestionList().isEmpty()
+            if(!submission.getSqQuestionList().isEmpty() && !submission.isGraded()){
                 submissionRecords.add(submission);
             }
         }
@@ -69,24 +67,21 @@ public class TeacherGradeShortQuestionController implements Initializable {
 
         studentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getStudentUsername()).asString());
         courseColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getCourseId()));
-        examColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(
-                ExamDatabase.getInstance().queryByKey(tableRow.getValue().getExamId().toString()).getName()
-        ));
-        scoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getScore()).asString());
-        fullScoreColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getFullScore()).asString());
-        timeSpendColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getTimeSpend()).asString());
+        examColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getExamName()));
 
         questionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()[0]));
         answerColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()[1]));
+        maxScoreColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()[2]));
 
         examCombox.getItems().add("All");
         for(Exam exam : exams){
             String courseName = CourseDatabase.getInstance().queryByField("courseID", exam.getCourseId()).getFirst().getCourseName();
             String examName = exam.getName();
-            String examOption = courseName + " " + examName;
+            String examOption = courseName + "-" + examName;
             examNameToIdDict.put(examOption, exam.getId().toString());
             examCombox.getItems().add(examOption);
         }
+        examCombox.getSelectionModel().selectFirst();
     }
 
     public void filter(){
@@ -96,7 +91,14 @@ public class TeacherGradeShortQuestionController implements Initializable {
                 examFilterSubmissions = SubmissionDatabase.getInstance().getAll();
             else
                 examFilterSubmissions = SubmissionDatabase.getInstance().queryByField("examId", examNameToIdDict.get(examCombox.getValue()));
-            gradeTable.getItems().setAll(examFilterSubmissions);
+
+            ObservableList<Submission> submissionRecords = FXCollections.observableArrayList();
+            for(Submission submission : examFilterSubmissions){
+                if(!submission.getSqQuestionList().isEmpty() && !submission.isGraded()){
+                    submissionRecords.add(submission);
+                }
+            }
+            gradeTable.getItems().setAll(submissionRecords);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
@@ -104,23 +106,37 @@ public class TeacherGradeShortQuestionController implements Initializable {
 
     public void grade(){
         try{
-            Submission selectedSubmission = gradeTable.getSelectionModel().getSelectedItem();
-            ObservableList<String[]> data = FXCollections.observableArrayList();
+            selectedSubmission = gradeTable.getSelectionModel().getSelectedItem();
+            ObservableList<String[]> tableRows = FXCollections.observableArrayList();
             List<String> questions = selectedSubmission.getSqQuestionList();
             List<String> answers = selectedSubmission.getSqAnswerList();
+            List<Integer> maxScore = selectedSubmission.getSqFullScoreList();
             for(int i=0; i<questions.size(); i++){
                 String question = questions.get(i);
                 String answer = answers.get(i);
-                String[] pair = {question, answer};
-                data.add(pair);
+                String score = maxScore.get(i).toString();
+                String[] data = {question, answer, score};
+                tableRows.add(data);
             }
-            questionTable.setItems(data);
+            questionTable.setItems(tableRows);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
     }
 
-    public void correct(){}
+    public void submit(){
+        try{
+            selectedSubmission.updateSqScore(Integer.parseInt(sqScoreTxt.getText()));
+            SubmissionDatabase.getInstance().updateSubmission(selectedSubmission);
+            MsgSender.showConfirm("Successful", "The submission has been graded.", this::refresh);
+        } catch (Exception e) {
+            MsgSender.showConfirm("Error", e.getMessage(), ()->{});
+        }
+    }
 
-    public void wrong(){}
+    public void refresh(){
+        questionTable.setItems(FXCollections.observableArrayList());
+        sqScoreTxt.setText("");
+        filter();
+    }
 }

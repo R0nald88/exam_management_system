@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.TextField?>
 <BorderPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.TeacherGradeShortQuestionController">
     <top>
         <HBox alignment="CENTER" prefHeight="80.0" prefWidth="600.0" BorderPane.alignment="CENTER">
@@ -40,15 +41,16 @@
             <children>
                 <Button mnemonicParsing="false" onAction="#grade" text="Grade">
                     <HBox.margin>
-                        <Insets right="20.0" />
+                        <Insets right="200.0" />
                     </HBox.margin>
                 </Button>
-                <Button mnemonicParsing="false" onAction="#correct" text="Correct">
+                <Label text="Score" />
+                <TextField fx:id="sqScoreTxt" maxWidth="150.0">
                     <HBox.margin>
-                        <Insets right="20.0" />
+                        <Insets right="20.0"/>
                     </HBox.margin>
-                </Button>
-                <Button mnemonicParsing="false" onAction="#wrong" text="Wrong">
+                </TextField>
+                <Button mnemonicParsing="false" onAction="#submit" text="Submit">
                     <HBox.margin>
                         <Insets right="20.0" />
                     </HBox.margin>
@@ -57,28 +59,26 @@
         </HBox>
     </bottom>
     <left>
-        <VBox prefHeight="400.0" prefWidth="460.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="400.0" prefWidth="300.0" BorderPane.alignment="CENTER">
             <children>
                 <TableView fx:id="gradeTable" prefHeight="312.0" prefWidth="460.0">
                     <columns>
-                        <TableColumn fx:id="studentColumn" prefWidth="75.0" text="Student" />
-                        <TableColumn fx:id="courseColumn" prefWidth="75.0" text="Course" />
-                        <TableColumn fx:id="examColumn" prefWidth="75.0" text="Exam" />
-                        <TableColumn fx:id="scoreColumn" prefWidth="75.0" text="Score" />
-                        <TableColumn fx:id="fullScoreColumn" prefWidth="75.0" text="Full Score" />
-                        <TableColumn fx:id="timeSpendColumn" prefWidth="80.0" text="Time Spend" />
+                        <TableColumn fx:id="studentColumn" prefWidth="100.0" text="Student" />
+                        <TableColumn fx:id="courseColumn" prefWidth="100.0" text="Course" />
+                        <TableColumn fx:id="examColumn" prefWidth="100.0" text="Exam" />
                     </columns>
                 </TableView>
             </children>
         </VBox>
     </left>
     <right>
-        <VBox prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="400.0" prefWidth="300.0" BorderPane.alignment="CENTER">
             <children>
                 <TableView fx:id="questionTable" prefHeight="312.0" prefWidth="460.0">
                     <columns>
-                        <TableColumn fx:id="questionColumn" prefWidth="200.0" text="Question" />
-                        <TableColumn fx:id="answerColumn" prefWidth="200.0" text="Answer" />
+                        <TableColumn fx:id="questionColumn" prefWidth="100.0" text="Question" />
+                        <TableColumn fx:id="answerColumn" prefWidth="100.0" text="Answer" />
+                        <TableColumn fx:id="maxScoreColumn" prefWidth="100.0" text="Full Score" />
                     </columns>
                 </TableView>
             </children>
