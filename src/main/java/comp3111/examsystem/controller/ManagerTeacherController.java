@@ -70,6 +70,8 @@ public class ManagerTeacherController implements Initializable{
         passwordColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getPassword()));
         genderCombox.setItems(FXCollections.observableList(Arrays.stream(Gender.values()).map(Gender::getName).toList()));
         positionCombox.setItems(FXCollections.observableList(Arrays.stream(Position.values()).map(Position::getName).toList()));
+        genderCombox.getSelectionModel().selectFirst();
+        positionCombox.getSelectionModel().selectFirst();
     }
 
     public void reset(){
