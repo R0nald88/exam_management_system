@@ -8,6 +8,7 @@ import comp3111.examsystem.entity.Questions.QuestionType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a submission of an exam by a student.
@@ -26,16 +27,16 @@ public class Submission extends Entity{
     private int fullScore;
     private int numberOfCorrect = 0;
     private int timeSpend;
-
     private int mcScore = 0;
     private int mcFullScore = 0;
     private int tfScore = 0;
     private int tfFullScore = 0;
     private int sqScore = 0;
     private int sqFullScore = 0;
-    private List<String> sqQuestionList = new ArrayList<>();
+    private List<Question> sqQuestionList = new ArrayList<>();
     private List<String> sqAnswerList = new ArrayList<>();
-    private List<Integer> sqFullScoreList = new ArrayList<>();
+    private List<Boolean> sqGradedBooleanList = new ArrayList<>();
+    private List<Integer> sqScoreList = new ArrayList<>();
     private boolean graded = false;
 
     /**
@@ -75,7 +76,6 @@ public class Submission extends Entity{
             Question q = QuestionDatabase.getInstance().queryByKey(qId.toString());
             questionObjectList.add(q);
         }
-        System.out.println(exam.getQuestionIds().size());
         for (int i = 0; i < exam.getQuestionIds().size(); i++) {
             answerList.add(null);
             scoreList.add(0);
@@ -148,7 +148,7 @@ public class Submission extends Entity{
      * @return The list of answers.
      * @author Li Ching Ho
      */
-    public List<String> getAnswer() {
+    public List<String> getAnswerList() {
         return answerList;
     }
 
@@ -267,28 +267,39 @@ public class Submission extends Entity{
      * @return The list of short answer questions.
      * @author Wan Hanzhe
      */
-    public List<String> getSqQuestionList(){
+    public List<Question> getSqQuestionList(){
         return sqQuestionList;
     }
 
     /**
-     * Gets the list of answers for short answer questions.
+     * Gets the list of student's answers to short answer questions.
      *
-     * @return The list of short answer answers.
+     * @return The list of student's answers to short answer questions.
      * @author Wan Hanzhe
      */
-    public List<String> getSqAnswerList(){
+    public List<String> getSqAnswerList() {
         return sqAnswerList;
     }
 
     /**
-     * Gets the list of full scores for short answer questions.
+     * Get the list of Boolean to check if the short questions in this submission has been graded.
      *
-     * @return The list of full scores for short answer questions.
-     * @author Wan HanZhe
+     * @return The list of Boolean for checking if the short questions
+     *         in sqQuestionList is graded.
+     * @author Li Ching Ho
      */
-    public List<Integer> getSqFullScoreList(){
-        return sqFullScoreList;
+    public List<Boolean> getSqGradedBooleanList() {
+        return sqGradedBooleanList;
+    }
+
+    /**
+     * Gets the list of student's scores to short answer questions.
+     *
+     * @return The list of student's scores to short answer questions.
+     * @author Wan Hanzhe
+     */
+    public List<Integer> getSqScoreList() {
+        return sqScoreList;
     }
 
     /**
@@ -344,7 +355,6 @@ public class Submission extends Entity{
         if (answerList != null) {
             for (int i = 0; i < questionObjectList.size(); i++) {
                 if (answerList.get(i) != null && answerList.get(i).equals(questionObjectList.get(i).getAnswer())) {
-                    System.out.println(i);
                     scoreList.set(i, questionObjectList.get(i).getScore());
                     score += questionObjectList.get(i).getScore();
                     if (questionObjectList.get(i).getType() == QuestionType.SINGLE || questionObjectList.get(i).getType() == QuestionType.MULTIPLE) {
@@ -359,9 +369,10 @@ public class Submission extends Entity{
                         sqScore += questionObjectList.get(i).getScore();
                         sqFullScore += questionObjectList.get(i).getScore();
 
-                        sqQuestionList.add(questionObjectList.get(i).getQuestion());
+                        sqQuestionList.add(questionObjectList.get(i));
                         sqAnswerList.add(answerList.get(i));
-                        sqFullScoreList.add(questionObjectList.get(i).getScore());
+                        sqGradedBooleanList.add(false);
+                        sqScoreList.add(questionObjectList.get(i).getScore());
                     }
                     numberOfCorrect++;
                 } else {
@@ -374,12 +385,12 @@ public class Submission extends Entity{
                     else if (questionObjectList.get(i).getType() == QuestionType.SHORT_Q) {
                         sqFullScore += questionObjectList.get(i).getScore();
 
-                        sqQuestionList.add(questionObjectList.get(i).getQuestion());
+                        sqQuestionList.add(questionObjectList.get(i));
                         sqAnswerList.add(answerList.get(i));
-                        sqFullScoreList.add(questionObjectList.get(i).getScore());
+                        sqGradedBooleanList.add(false);
+                        sqScoreList.add(0);
                     }
                 }
-                System.out.println("By now answerList: " + answerList);
             }
         }
     }
@@ -420,9 +431,20 @@ public class Submission extends Entity{
         }
         else if (questionObjectList.get(questionNumber).getType() == QuestionType.SHORT_Q) {
             sqScore = sqScore - originalScore + score;
+            for (int i = 0; i < sqQuestionList.size(); i++) {
+                if (Objects.equals(sqQuestionList.get(i).getId(), questionObjectList.get(questionNumber).getId())) {
+                    sqScoreList.set(i, score);
+                    sqScoreList.set(i, score);
+                    sqGradedBooleanList.set(i, true);
+                    break;
+                }
+            }
         }
         this.score = this.score-originalScore+score;
         graded = true;
+        for (Boolean b : sqGradedBooleanList) {
+            if (b == false) graded = false;
+        }
     }
 
     /**

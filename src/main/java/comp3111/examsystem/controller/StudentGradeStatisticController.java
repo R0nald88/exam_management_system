@@ -56,15 +56,19 @@ public class StudentGradeStatisticController implements Initializable {
         public String getCourseNum() {
             return courseNum;
         }
+
         public String getExamName() {
             return examName;
         }
+
         public String getScore() {
             return score;
         }
+
         public String getFullScore() {
             return fullScore;
         }
+
         public int getTimeSpend() {
             return timeSpend;
         }
@@ -173,7 +177,6 @@ public class StudentGradeStatisticController implements Initializable {
 
     private Student student;
     private List<Submission> studentGradeTableList;
-    private List<Submission> studentGradeBarChartList;
 
     private final ObservableList<GradeDetailClass> gradeList = FXCollections.observableArrayList();
     private final ObservableList<ExamDetailClass> examDetailList = FXCollections.observableArrayList();
@@ -238,64 +241,8 @@ public class StudentGradeStatisticController implements Initializable {
                 courseCombox.getItems().addAll(courseList);
             }
         }
-
-        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getUsername(), null, null);
-        if (!studentGradeBarChartList.isEmpty()) {
-            for (Submission submission : studentGradeBarChartList) {
-                GradeDetailClass gradeDetail = new GradeDetailClass();
-                Exam exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
-                if (exam != null) {
-                    gradeDetail.setCourseNum(exam.getCourseId());
-                    gradeDetail.setExamName(exam.getName());
-                    gradeDetail.setScore(String.valueOf(submission.getScore()));
-                    gradeDetail.setFullScore(String.valueOf(exam.getFullScore()));
-                    gradeDetail.setTimeSpend(submission.getTimeSpend());
-
-                    // Add the populated grade detail to the grade list
-                    gradeList.add(gradeDetail);
-                }
-            }
-            gradeTable.setItems(gradeList);
-            gradeTable.setRowFactory(tv -> {
-                TableRow<GradeDetailClass> tableRow = new TableRow<GradeDetailClass>() {};
-
-                // Handle mouse click event
-                tableRow.setOnMouseClicked(event -> {
-                    examDetailTable.getItems().clear();
-                    pieChart.getData().clear();
-                    if (!tableRow.isEmpty()) {
-                        Submission submission = SubmissionDatabase.getInstance().queryByKey(studentGradeTableList.get(tableRow.getIndex()).getId().toString());
-                        for (Question question : submission.getQuestionObjectList()) {
-                            int i = submission.getQuestionObjectList().indexOf(question);
-                            ExamDetailClass examDetail = new ExamDetailClass();
-                            examDetail.setQuestion(question.getQuestion());
-                            examDetail.setOptionA(question.getOptionA());
-                            examDetail.setOptionB(question.getOptionB());
-                            examDetail.setOptionC(question.getOptionC());
-                            examDetail.setOptionD(question.getOptionD());
-                            examDetail.setStudentAnswer(submission.getAnswer().get(i));
-                            examDetail.setAnswer(question.getAnswer());
-                            examDetail.setStudentScore(submission.getScoreList().get(i).toString());
-                            examDetail.setFullScore(String.valueOf(question.getScore()));
-
-                            // Add the populated grade detail to the grade list
-                            examDetailList.add(examDetail);
-                        }
-                        examDetailTable.setItems(examDetailList);
-                        setExamDetailTooltips();
-
-                        pieChart.setTitle("Score Distribution for each Question Type");
-                        pieChart.getData().add(new PieChart.Data("Multiple-Choice Questions Score", submission.getMcFullScore()));
-                        pieChart.getData().add(new PieChart.Data("True/False Questions Score", submission.getTfScore()));
-                        pieChart.getData().add(new PieChart.Data("Short Questions Score", submission.getSqScore()));
-                    }
-                });
-
-                return tableRow;
-            });
-
-        }
         reset();
+        setTable();
         loadChart();
     }
 
@@ -349,7 +296,68 @@ public class StudentGradeStatisticController implements Initializable {
     public void refresh() {
         setStudent(student);
         reset();
+        setTable();;
         loadChart();
+    }
+
+    private void setTable() {
+        gradeTable.getItems().clear();
+        if(!studentGradeTableList.isEmpty()) {
+            for (Submission submission : studentGradeTableList) {
+                GradeDetailClass gradeDetail = new GradeDetailClass();
+                Exam exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
+                if (exam != null) {
+                    gradeDetail.setCourseNum(exam.getCourseId());
+                    gradeDetail.setExamName(exam.getName());
+                    gradeDetail.setScore(String.valueOf(submission.getScore()));
+                    gradeDetail.setFullScore(String.valueOf(exam.getFullScore()));
+                    gradeDetail.setTimeSpend(submission.getTimeSpend());
+
+                    // Add the populated grade detail to the grade list
+                    gradeList.add(gradeDetail);
+                }
+            }
+            gradeTable.setItems(gradeList);
+            gradeTable.setRowFactory(tr -> {
+                TableRow<GradeDetailClass> tableRow = new TableRow<GradeDetailClass>() {
+                };
+
+                // Handle mouse click event
+                tableRow.setOnMouseClicked(event -> {
+                    examDetailTable.getItems().clear();
+                    pieChart.getData().clear();
+                    if (!tableRow.isEmpty()) {
+                        Submission submission = SubmissionDatabase.getInstance().queryByKey(studentGradeTableList.get(tableRow.getIndex()).getId().toString());
+                        for (Question question : submission.getQuestionObjectList()) {
+                            int i = submission.getQuestionObjectList().indexOf(question);
+                            ExamDetailClass examDetail = new ExamDetailClass();
+                            examDetail.setQuestion(question.getQuestion());
+                            examDetail.setOptionA(question.getOptionA());
+                            examDetail.setOptionB(question.getOptionB());
+                            examDetail.setOptionC(question.getOptionC());
+                            examDetail.setOptionD(question.getOptionD());
+                            examDetail.setStudentAnswer(submission.getAnswerList().get(i));
+                            examDetail.setAnswer(question.getAnswer());
+                            examDetail.setStudentScore(submission.getScoreList().get(i).toString());
+                            examDetail.setFullScore(String.valueOf(question.getScore()));
+
+                            // Add the populated grade detail to the grade list
+                            examDetailList.add(examDetail);
+                        }
+                        examDetailTable.setItems(examDetailList);
+                        setExamDetailTooltips();
+
+                        pieChart.setTitle("Score Distribution for each Question Type");
+                        pieChart.getData().add(new PieChart.Data("Multiple-Choice Questions Score", submission.getMcFullScore()));
+                        pieChart.getData().add(new PieChart.Data("True/False Questions Score", submission.getTfScore()));
+                        pieChart.getData().add(new PieChart.Data("Short Questions Score", submission.getSqScore()));
+                    }
+                });
+
+                return tableRow;
+            });
+
+        }
     }
     /**
      * Loads the chart data based on the student's grades.
@@ -360,8 +368,8 @@ public class StudentGradeStatisticController implements Initializable {
         XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
         seriesBar.getData().clear();
         barChart.getData().clear();
-        if (studentGradeBarChartList != null && !studentGradeBarChartList.isEmpty()) {
-            for (Submission submission : studentGradeBarChartList) {
+        if (studentGradeTableList != null && !studentGradeTableList.isEmpty()) {
+            for (Submission submission : studentGradeTableList) {
                 Exam exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
                 if (exam != null) {
                     seriesBar.getData().add(new XYChart.Data<>(exam.getCourseId() + "-" + exam.getName(),
@@ -381,7 +389,7 @@ public class StudentGradeStatisticController implements Initializable {
     @FXML
     public void reset() {
         courseCombox.setValue(null); // Clear the selected item
-        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getUsername(),null,null);
+        studentGradeTableList = SubmissionDatabase.getInstance().filter(student.getUsername(),null,null);
     }
 
     /**
@@ -391,7 +399,8 @@ public class StudentGradeStatisticController implements Initializable {
      */
     @FXML
     public void query() {
-        studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getUsername(), courseCombox.getValue(),null);
+        studentGradeTableList = SubmissionDatabase.getInstance().filter(student.getUsername(), courseCombox.getValue(),null);
+        setTable();
         loadChart();
     }
 }

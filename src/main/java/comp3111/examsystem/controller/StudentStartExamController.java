@@ -350,15 +350,15 @@ public class StudentStartExamController implements Initializable {
                 questionVBox.getChildren().add(optionDHBox);
             }
 
-            if (submission.getAnswer() != null) {
-                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                    if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
+            if (submission.getAnswerList() != null) {
+                if (submission.getAnswerList().get(destQuestionNumber) != null && !submission.getAnswerList().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("A")) {
                         radioButtonA.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
+                    } else if (submission.getAnswerList().get(destQuestionNumber).contains("B")) {
                         radioButtonB.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
+                    } else if (submission.getAnswerList().get(destQuestionNumber).contains("C")) {
                         radioButtonC.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
+                    } else if (submission.getAnswerList().get(destQuestionNumber).contains("D")) {
                         radioButtonD.setSelected(true);
                     }
                 }
@@ -394,18 +394,18 @@ public class StudentStartExamController implements Initializable {
                 questionVBox.getChildren().add(optionDHBox);
             }
 
-            if (submission.getAnswer() != null) {
-                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                    if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
+            if (submission.getAnswerList() != null) {
+                if (submission.getAnswerList().get(destQuestionNumber) != null && !submission.getAnswerList().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("A")) {
                         checkBoxA.setSelected(true);
                     }
-                    if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("B")) {
                         checkBoxB.setSelected(true);
                     }
-                    if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("C")) {
                         checkBoxC.setSelected(true);
                     }
-                    if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("D")) {
                         checkBoxD.setSelected(true);
                     }
                 }
@@ -428,11 +428,11 @@ public class StudentStartExamController implements Initializable {
             questionVBox.getChildren().add(trueHBox);
             questionVBox.getChildren().add(falseHBox);
 
-            if (submission.getAnswer() != null) {
-                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                    if (submission.getAnswer().get(destQuestionNumber).contains("T")) {
+            if (submission.getAnswerList() != null) {
+                if (submission.getAnswerList().get(destQuestionNumber) != null && !submission.getAnswerList().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("T")) {
                         trueRadioButton.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("F")) {
+                    } else if (submission.getAnswerList().get(destQuestionNumber).contains("F")) {
                         falseRadioButton.setSelected(true);
                     }
                 }
@@ -451,9 +451,9 @@ public class StudentStartExamController implements Initializable {
             shortQuestionAnswerHBox.getChildren().addAll(shortQuestionAnswerLabel, shortQuestionAnswerField);
             questionVBox.getChildren().add(shortQuestionAnswerHBox);
 
-            if (submission.getAnswer() != null) {
-                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                    shortQuestionAnswerField.setText(submission.getAnswer().get(destQuestionNumber));
+            if (submission.getAnswerList() != null) {
+                if (submission.getAnswerList().get(destQuestionNumber) != null && !submission.getAnswerList().get(destQuestionNumber).isEmpty()) {
+                    shortQuestionAnswerField.setText(submission.getAnswerList().get(destQuestionNumber));
                 }
             }
         }

@@ -80,7 +80,8 @@ public class StudentLoginController implements Initializable {
                 }
             });
         } catch (Exception e1) {
-            MsgSender.showConfirm("Login Error", e1.getMessage(), () -> {});
+            //MsgSender.showConfirm("Login Error", e1.getMessage(), () -> {});
+            e1.printStackTrace();
         }
     }
 
