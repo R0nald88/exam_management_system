@@ -6,6 +6,7 @@ import comp3111.examsystem.entity.Exam.Exam;
 import comp3111.examsystem.entity.Exam.ExamDatabase;
 import comp3111.examsystem.entity.Exam.Submission;
 import comp3111.examsystem.entity.Exam.SubmissionDatabase;
+import comp3111.examsystem.entity.Questions.Question;
 import comp3111.examsystem.tools.MsgSender;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -108,9 +109,13 @@ public class TeacherGradeShortQuestionController implements Initializable {
         try{
             selectedSubmission = gradeTable.getSelectionModel().getSelectedItem();
             ObservableList<String[]> tableRows = FXCollections.observableArrayList();
-            List<String> questions = selectedSubmission.getSqQuestionList();
+            List<String> questions = new ArrayList<>();
+            List<Integer> maxScore = new ArrayList<>();
+            for (Question q : selectedSubmission.getSqQuestionList()) {
+                questions.add(q.getQuestion());
+                maxScore.add(q.getScore());
+            }
             List<String> answers = selectedSubmission.getSqAnswerList();
-            List<Integer> maxScore = selectedSubmission.getSqFullScoreList();
             for(int i=0; i<questions.size(); i++){
                 String question = questions.get(i);
                 String answer = answers.get(i);

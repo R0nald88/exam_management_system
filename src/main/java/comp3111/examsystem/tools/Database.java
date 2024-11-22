@@ -287,7 +287,6 @@ public class Database<T> {
             catch (NoSuchFieldException e) {
                 if (clazz.equals(Object.class))
                     throw new RuntimeException(e);
-                System.out.println(e.getMessage());
             }
             catch (IllegalAccessException e) {
                 throw new RuntimeException(e);

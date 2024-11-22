@@ -1,5 +1,8 @@
-package comp3111.examsystem.entity.Questions;
+package comp3111.examsystem.entity;
 
+import comp3111.examsystem.entity.Questions.Question;
+import comp3111.examsystem.entity.Questions.QuestionDatabase;
+import comp3111.examsystem.entity.Questions.QuestionType;
 import org.junit.Test;
 
 import java.util.List;

@@ -41,14 +41,15 @@ import java.util.ResourceBundle;
 
 import static javafx.geometry.Pos.*;
 
+/**
+ * The StudentStartExamController class manages the exam taking process for students.
+ * It handles loading exam data, navigating between questions, saving answers,
+ * and submitting the exam.
+ */
 public class StudentStartExamController implements Initializable {
 
     @FXML
-    public Label examNameLbl;
-    @FXML
-    public Label totalQuestionLbl;
-    @FXML
-    public Label remainTimeLbl;
+    private Label examNameLbl, totalQuestionLbl, remainTimeLbl, currQuestionNumberLabel;
     @FXML
     private TableView<String> questionTable;
     @FXML
@@ -72,6 +73,9 @@ public class StudentStartExamController implements Initializable {
     private Timeline countdownTimer;
     private CountdownValue countdownFrom;
 
+    /**
+     * A private inner class for managing countdown timer values.
+     */
     private static class CountdownValue {
         int value;
 
@@ -88,73 +92,94 @@ public class StudentStartExamController implements Initializable {
         }
     }
 
-    @FXML
-    Label currQuestionNumberLabel;
-    Label optionALabel;
-    RadioButton radioButtonA;
-    CheckBox checkBoxA;
-    HBox optionAHBox;
-    Label optionBLabel;
-    RadioButton radioButtonB;
-    CheckBox checkBoxB;
-    HBox optionBHBox;
-    Label optionCLabel;
-    RadioButton radioButtonC;
-    CheckBox checkBoxC;
-    HBox optionCHBox;
-    Label optionDLabel;
-    RadioButton radioButtonD;
-    CheckBox checkBoxD;
-    HBox optionDHBox;
-    Label trueLabel;
-    RadioButton trueRadioButton;
-    HBox trueHBox;
-    Label falseLabel;
-    RadioButton falseRadioButton;
-    HBox falseHBox;
-    TextField questionField;
-    Label shortQuestionAnswerLabel;
-    TextField shortQuestionAnswerField;
-    HBox shortQuestionAnswerHBox;
+    private Label optionALabel, optionBLabel, optionCLabel, optionDLabel, trueLabel, falseLabel, shortQuestionAnswerLabel;
+    private RadioButton radioButtonA, radioButtonB, radioButtonC, radioButtonD, trueRadioButton, falseRadioButton;
+    private CheckBox checkBoxA, checkBoxB, checkBoxC, checkBoxD;
+    private HBox optionAHBox, optionBHBox, optionCHBox, optionDHBox, trueHBox, falseHBox, shortQuestionAnswerHBox;
+    private TextField questionField, shortQuestionAnswerField;
+
     List<String> questionStringList;
 
 
     private static StudentStartExamController instance;
 
+    /**
+     * Sets the instance of this controller.
+     *
+     * @param studentStartExamController The instance to set.
+     * @author Li Ching Ho
+     */
     public static void setInstance(StudentStartExamController studentStartExamController) {
         instance = studentStartExamController;
     }
+
+    /**
+     * Gets the instance of this controller.
+     *
+     * @return The current instance.
+     * @author Li Ching Ho
+     */
     public static StudentStartExamController getInstance() {
         return instance;
     }
 
     private Parent root;
-
+    /**
+     * Sets the root parent for the controller.
+     *
+     * @param root The root parent.
+     * @author Li Ching Ho
+     */
     public void setRoot(Parent root) {
         this.root = root;
     }
 
+    /**
+     * Gets the root parent for the controller.
+     *
+     * @return root The root parent.
+     * @author Li Ching Ho
+     */
     public Parent getRoot() {
         return root;
     }
 
+    /**
+     * Gets the exam associated with this controller.
+     *
+     * @return The exam.
+     * @author Li Ching Ho
+     */
     public Exam getExam() {
         return exam;
     }
 
+    /**
+     * Initializes the controller after its root element has been processed.
+     *
+     * @param url The location used to resolve relative paths for the root object.
+     * @param resourceBundle The resources used to localize the root object.
+     * @author Li Ching Ho
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("Start initializing start exam");
+        //System.out.println("Start initializing start exam");
         examNameLbl.setText("Exam Name");
         totalQuestionLbl.setText("Total Question: ");
         currQuestionNumber = 0;
     }
 
+    /**
+     * Sets the submission object and initializes the exam data.
+     *
+     * @param submission The submission associated with the exam.
+     * @author Li Ching Ho
+     */
     public void setSubmission(Submission submission) {
         this.submission = submission;
         exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
         student = StudentDatabase.getInstance().queryByField("username",submission.getStudentUsername()).getFirst();
-        System.out.println("In setSubmission, student:" + student);
+        //System.out.println("In setSubmission, student:" + student);
 
         // Set the exam name and total questions
         examNameLbl.setText(exam.getCourseId() + "-" + exam.getName());
@@ -219,6 +244,12 @@ public class StudentStartExamController implements Initializable {
         System.out.println("Now attempting: " + exam.getCourseId() + "-" + exam.getName());
     }
 
+    /**
+     * Starts the countdown timer for the exam.
+     *
+     * @param countdownFrom The initial countdown value.
+     * @author Li Ching Ho
+     */
     private void startCountdownTimer(CountdownValue countdownFrom) {
         this.countdownFrom = countdownFrom; // Store the value
         if (countdownTimer == null) {
@@ -236,6 +267,13 @@ public class StudentStartExamController implements Initializable {
         }
     }
 
+    /**
+     * Switches to a specific question by updating the UI elements.
+     * Saves answer of the current question
+     *
+     * @param destQuestionNumber The index of the question to switch to.
+     * @author Li Ching Ho
+     */
     public void switchToQuestion(int destQuestionNumber) {
 
         if (questionList == null || destQuestionNumber < 0 || destQuestionNumber >= questionList.size()) {
@@ -312,15 +350,15 @@ public class StudentStartExamController implements Initializable {
                 questionVBox.getChildren().add(optionDHBox);
             }
 
-            if (submission.getAnswer() != null) {
-                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                    if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
+            if (submission.getAnswerList() != null) {
+                if (submission.getAnswerList().get(destQuestionNumber) != null && !submission.getAnswerList().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("A")) {
                         radioButtonA.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
+                    } else if (submission.getAnswerList().get(destQuestionNumber).contains("B")) {
                         radioButtonB.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
+                    } else if (submission.getAnswerList().get(destQuestionNumber).contains("C")) {
                         radioButtonC.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
+                    } else if (submission.getAnswerList().get(destQuestionNumber).contains("D")) {
                         radioButtonD.setSelected(true);
                     }
                 }
@@ -356,18 +394,18 @@ public class StudentStartExamController implements Initializable {
                 questionVBox.getChildren().add(optionDHBox);
             }
 
-            if (submission.getAnswer() != null) {
-                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                    if (submission.getAnswer().get(destQuestionNumber).contains("A")) {
+            if (submission.getAnswerList() != null) {
+                if (submission.getAnswerList().get(destQuestionNumber) != null && !submission.getAnswerList().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("A")) {
                         checkBoxA.setSelected(true);
                     }
-                    if (submission.getAnswer().get(destQuestionNumber).contains("B")) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("B")) {
                         checkBoxB.setSelected(true);
                     }
-                    if (submission.getAnswer().get(destQuestionNumber).contains("C")) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("C")) {
                         checkBoxC.setSelected(true);
                     }
-                    if (submission.getAnswer().get(destQuestionNumber).contains("D")) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("D")) {
                         checkBoxD.setSelected(true);
                     }
                 }
@@ -390,11 +428,11 @@ public class StudentStartExamController implements Initializable {
             questionVBox.getChildren().add(trueHBox);
             questionVBox.getChildren().add(falseHBox);
 
-            if (submission.getAnswer() != null) {
-                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                    if (submission.getAnswer().get(destQuestionNumber).contains("T")) {
+            if (submission.getAnswerList() != null) {
+                if (submission.getAnswerList().get(destQuestionNumber) != null && !submission.getAnswerList().get(destQuestionNumber).isEmpty()) {
+                    if (submission.getAnswerList().get(destQuestionNumber).contains("T")) {
                         trueRadioButton.setSelected(true);
-                    } else if (submission.getAnswer().get(destQuestionNumber).contains("F")) {
+                    } else if (submission.getAnswerList().get(destQuestionNumber).contains("F")) {
                         falseRadioButton.setSelected(true);
                     }
                 }
@@ -413,16 +451,21 @@ public class StudentStartExamController implements Initializable {
             shortQuestionAnswerHBox.getChildren().addAll(shortQuestionAnswerLabel, shortQuestionAnswerField);
             questionVBox.getChildren().add(shortQuestionAnswerHBox);
 
-            if (submission.getAnswer() != null) {
-                if (submission.getAnswer().get(destQuestionNumber) != null && !submission.getAnswer().get(destQuestionNumber).isEmpty()) {
-                    shortQuestionAnswerField.setText(submission.getAnswer().get(destQuestionNumber));
+            if (submission.getAnswerList() != null) {
+                if (submission.getAnswerList().get(destQuestionNumber) != null && !submission.getAnswerList().get(destQuestionNumber).isEmpty()) {
+                    shortQuestionAnswerField.setText(submission.getAnswerList().get(destQuestionNumber));
                 }
             }
         }
         currQuestionNumber = destQuestionNumber;
     }
 
-    //Save answer: will be used by question label cell and previous and next button
+    /**
+     * Saves the current answer for the question being answered.
+     * Used by previousBtn, nextBtn, submitBtn and question clicked in side column
+     *
+     * @author Li Ching Ho
+     */
     private void saveAnswer() {
         System.out.println("At saveAnswer, currQuestionNumber: " + currQuestionNumber);
         QuestionType currQuestionType = QuestionDatabase.getInstance().queryByKey(questionList.get(currQuestionNumber).toString()).getType();
@@ -459,6 +502,12 @@ public class StudentStartExamController implements Initializable {
     }
 
 
+    /**
+     * Handles the action of clicking the previous question button.
+     * Used by previousBtn
+     *
+     * @author Li  Ching Ho
+     */
     @FXML
     public void previous() {
         System.out.println("Previous button clicked. Current question number: " + currQuestionNumber);
@@ -468,6 +517,12 @@ public class StudentStartExamController implements Initializable {
         }
     }
 
+    /**
+     * Handles the action of clicking the next question button.
+     * Used by nextBtn
+     *
+     * @author Li Ching Ho
+     */
     @FXML
     public void next() {
         System.out.println("Next button clicked. Current question number: " + currQuestionNumber);
@@ -477,6 +532,14 @@ public class StudentStartExamController implements Initializable {
         }
     }
 
+    /**
+     * Handles the action of submitting the exam.
+     * Calculates Score and displays some MsgBox after submission.
+     * Used by submitBtn
+     *
+     * @param e The ActionEvent triggered by the submit button.
+     * @author Li Ching Ho
+     */
     @FXML
     public void submit(ActionEvent e) {
         saveAnswer();
@@ -525,11 +588,22 @@ public class StudentStartExamController implements Initializable {
         }
     }
 
+    /**
+     * Closes the current exam window.
+     *
+     * @param e The ActionEvent triggered by the close action.
+     */
     public void close(ActionEvent e) {
         Stage stage = (Stage)  questionVBox.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the event when the time for the exam runs out.
+     * Submit the exam automatically
+     *
+     * @author Li Ching Ho
+     */
     public void handleTimeUp() {
         // Use Platform.runLater to ensure that the dialog is shown after current processing
         Platform.runLater(() -> {

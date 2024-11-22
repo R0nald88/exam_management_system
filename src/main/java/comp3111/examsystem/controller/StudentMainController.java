@@ -25,6 +25,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+/**
+ * The StudentMainController class manages the main interface for students
+ * in the examination system. It allows students to select exams, start exams,
+ * and view their grade statistics.
+ */
 public class StudentMainController implements Initializable {
     @FXML
     private ChoiceBox<String> examCombox;
@@ -36,6 +41,43 @@ public class StudentMainController implements Initializable {
     private static List<Stage> activeStages = new ArrayList<>();
     private Stage currentStage;
 
+    /**
+     * Initializes the controller after its root element has been completely processed.
+     * This method is called automatically after the FXML file is loaded.
+     *
+     * @param location The location used to resolve relative paths for the root object,
+     *                 or null if the location is not known.
+     * @param resources The resources used to localize the root object,
+     *                  or null if the root object was not localized.
+     * @author Li Ching Ho
+     */
+    public void initialize(URL location, ResourceBundle resources) {
+        // Close all existing stages of StudentMainController
+
+        examList = ExamDatabase.getInstance().filter(null, null, "true");
+        if (!examList.isEmpty()) {
+            for (Exam e: examList) {
+                examCombox.getItems().add(e.getCourseId()+"-"+e.getName());
+            }
+
+            examCombox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                int selectedExamIndex = examCombox.getItems().indexOf(newValue);
+                System.out.println("Selected index: " + selectedExamIndex);
+                selectedExamName = examList.get(selectedExamIndex).getName();
+                selectedExamCourseId = examList.get(selectedExamIndex).getCourseId();
+            });
+
+        } else System.out.println("ExamList have no exam");
+
+    }
+
+    /**
+     * Sets the student for this controller and populates the exam selection box
+     * with available exams based on the student's submissions.
+     *
+     * @param student The student whose information will be used.
+     * @author Li Ching Ho
+     */
     public void setStudent(Student student) {
         this.student = student;
         List<Submission> studentSubmissionList = SubmissionDatabase.getInstance().filter(student.getUsername(),null, null);
@@ -72,26 +114,12 @@ public class StudentMainController implements Initializable {
         }
     }
 
-    public void initialize(URL location, ResourceBundle resources) {
-        // Close all existing stages of StudentMainController
-
-        examList = ExamDatabase.getInstance().filter(null, null, "true");
-        if (!examList.isEmpty()) {
-            for (Exam e: examList) {
-                examCombox.getItems().add(e.getCourseId()+"-"+e.getName());
-            }
-
-            examCombox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                int selectedExamIndex = examCombox.getItems().indexOf(newValue);
-                System.out.println("Selected index: " + selectedExamIndex);
-                selectedExamName = examList.get(selectedExamIndex).getName();
-                selectedExamCourseId = examList.get(selectedExamIndex).getCourseId();
-            });
-
-        } else System.out.println("ExamList have no exam");
-
-    }
-
+    /**
+     * Sets the current stage for this controller and manages active stages.
+     *
+     * @param stage The current stage to be set for this controller.
+     * @author Li Ching Ho
+     */
     @FXML
     public void setStage(Stage stage) {
         this.currentStage = stage; // Store the reference to the current stage
@@ -112,6 +140,12 @@ public class StudentMainController implements Initializable {
         });
     }
 
+    /**
+     * Opens the exam user interface for the selected exam.
+     *
+     * @param e The ActionEvent triggered when the user wants to start the exam.
+     * @author Li Ching Ho
+     */
     @FXML
     public void openExamUI(ActionEvent e) {
         if (examCombox.getValue() != null) {
@@ -143,6 +177,7 @@ public class StudentMainController implements Initializable {
                     StudentStartExamController newController = fxmlLoader.getController();
                     newController.setRoot(root);
                     newController.setSubmission(submission);
+                    System.out.println("openSubmissionUI, student username: " + submission.getStudentUsername());
 
                     // Save the new instance for future use
                     StudentStartExamController.setInstance(newController);
@@ -166,6 +201,12 @@ public class StudentMainController implements Initializable {
         }
     }
 
+    /**
+     * Opens the grade statistics interface for the student.
+     *
+     * @param e The ActionEvent triggered when the user wants to view grade statistics.
+     * @author Li Ching Ho
+     */
     @FXML
     public void openGradeStatistic(ActionEvent e) {
         try {
@@ -187,6 +228,9 @@ public class StudentMainController implements Initializable {
         }
     }
 
+    /**
+     * Exits the application.
+     */
     @FXML
     public void exit() {
         System.exit(0);
