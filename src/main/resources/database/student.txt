@@ -1,6 +1,1 @@
-{"username":"amy","name":"Amy","age":18,"gender":"FEMALE","department":"MATH","password":"123456!Az","id":1732103845144}
-{"username":"jack","name":"Jack","age":25,"gender":"MALE","department":"MATH","password":"123456!Az","id":1732103862265}
-{"username":"chlibs","name":"Chlibs","age":21,"gender":"MALE","department":"CSE","password":"12345678!aZ","id":1732122419014}
-{"username":"amy","name":"Amy","age":20,"gender":"FEMALE","department":"MATH","password":"123456!Az","id":1732120159439}
-{"username":"ray","name":"Ray","age":20,"gender":"MALE","department":"MATH","password":"123456!Az","id":1732120173448}
-{"username":"s1","name":"s1","age":21,"gender":"MALE","department":"MATH","password":"123456!aZ","id":1732298327254}
+{"username":"s1","name":"s1","age":21,"gender":"MALE","department":"CSE","password":"123456!aZ","id":1732300756467}

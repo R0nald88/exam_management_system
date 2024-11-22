@@ -155,7 +155,7 @@ public class TeacherExamManagementController implements Initializable {
             });
         } catch (Exception e) {
             MsgSender.showConfirm("Exam Creation Error", e.getMessage(), () -> {});
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
