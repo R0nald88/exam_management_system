@@ -177,6 +177,7 @@ public class StudentMainController implements Initializable {
                     StudentStartExamController newController = fxmlLoader.getController();
                     newController.setRoot(root);
                     newController.setSubmission(submission);
+                    System.out.println("openSubmissionUI, student username: " + submission.getStudentUsername());
 
                     // Save the new instance for future use
                     StudentStartExamController.setInstance(newController);
