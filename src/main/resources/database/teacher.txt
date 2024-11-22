@@ -1,1 +1,1 @@
-{"position":"PROFESSOR","username":"desmond","name":"Desmond","age":25,"gender":"MALE","department":"CSE","password":"123456!Az","id":1732120191538}
+{"position":"ASSISTANT_PROFESSOR","username":"user1","name":"Teacher 3209","age":43,"gender":"MALE","department":"COMP","password":"1234%^QWe","id":1732285286607}

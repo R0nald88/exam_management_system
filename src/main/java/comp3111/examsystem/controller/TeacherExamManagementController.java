@@ -88,10 +88,6 @@ public class TeacherExamManagementController implements Initializable {
     public void delete(ActionEvent actionEvent) {
         try {
             Exam selectedExam = examTable.getSelectionModel().getSelectedItem();
-            List<Submission> list = SubmissionDatabase.getInstance().queryByField("examId", selectedExam.getId().toString());
-
-
-
             ExamDatabase.getInstance().deleteExam(selectedExam);
             MsgSender.showConfirm("Successful Deletion", "Exam deleted successfully.", this::refreshExamTable);
         } catch (Exception e) {
@@ -100,27 +96,27 @@ public class TeacherExamManagementController implements Initializable {
 
     }
 
-    private void deleteExam(boolean deleteSubmission) {
-        try {
-            Exam selectedExam = examTable.getSelectionModel().getSelectedItem();
-            List<Submission> list = SubmissionDatabase.getInstance().queryByField("examId", selectedExam.getId().toString());
-
-            if (!deleteSubmission && !list.isEmpty()) {
-                MsgSender.showConfirm("Deletion Warning",
-                        "This exam has already been taken by student(s). Deleting it will also delete associated submission record.\nClick \"OK\" to delete anyway.",
-                        () -> deleteExam(true)
-                );
-                return;
-            } else if (!list.isEmpty()) {
-                SubmissionDatabase.getInstance().deleteSubmissions(list);
-            }
-
-            ExamDatabase.getInstance().deleteExam(selectedExam);
-            MsgSender.showConfirm("Successful Deletion", "Exam deleted successfully.", this::refreshExamTable);
-        } catch (Exception e) {
-            MsgSender.showConfirm("Exam Deletion Error", e.getMessage(), () -> {});
-        }
-    }
+//    private void deleteExam(boolean deleteSubmission) {
+//        try {
+//            Exam selectedExam = examTable.getSelectionModel().getSelectedItem();
+//            List<Submission> list = SubmissionDatabase.getInstance().queryByField("examId", selectedExam.getId().toString());
+//
+//            if (!deleteSubmission && !list.isEmpty()) {
+//                MsgSender.showConfirm("Deletion Warning",
+//                        "This exam has already been taken by student(s). Deleting it will also delete associated submission record.\nClick \"OK\" to delete anyway.",
+//                        () -> deleteExam(true)
+//                );
+//                return;
+//            } else if (!list.isEmpty()) {
+//                SubmissionDatabase.getInstance().deleteSubmissions(list);
+//            }
+//
+//            ExamDatabase.getInstance().deleteExam(selectedExam);
+//            MsgSender.showConfirm("Successful Deletion", "Exam deleted successfully.", this::refreshExamTable);
+//        } catch (Exception e) {
+//            MsgSender.showConfirm("Exam Deletion Error", e.getMessage(), () -> {});
+//        }
+//    }
 
     public void update(ActionEvent actionEvent) {
         try {

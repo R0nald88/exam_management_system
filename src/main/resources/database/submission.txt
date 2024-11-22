@@ -1,2 +1,0 @@
-{"studentUsername":"amy","examId":1732120265124,"courseId":"COMP1111","answerList":["A","123"],"scoreList":[5],"score":5,"fullScore":10,"numberOfCorrect":1,"singleMCScore":0,"multipleMCScore":0,"tfScore":0,"sqScore":0,"timeSpend":3,"id":1732120291626}
-{"studentUsername":"amy","examId":1732120275447,"courseId":"COMP1111","answerList":["A"],"scoreList":[5],"score":5,"fullScore":5,"numberOfCorrect":1,"singleMCScore":0,"multipleMCScore":0,"tfScore":0,"sqScore":0,"timeSpend":1,"id":1732120299633}

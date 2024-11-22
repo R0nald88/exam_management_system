@@ -101,10 +101,10 @@ public class ManagerCourseController implements Initializable{
                 );
                 return;
             } else if (!affectedExam.isEmpty()) {
-                SubmissionDatabase db = SubmissionDatabase.getInstance();
-                for (Exam e : affectedExam) {
-                    db.deleteSubmissions(db.queryByField("examId", e.getId().toString()));
-                }
+//                SubmissionDatabase db = SubmissionDatabase.getInstance();
+//                for (Exam e : affectedExam) {
+//                    db.deleteSubmissions(db.queryByField("examId", e.getId().toString()));
+//                }
 
                 ExamDatabase.getInstance().deleteExams(affectedExam);
             }
