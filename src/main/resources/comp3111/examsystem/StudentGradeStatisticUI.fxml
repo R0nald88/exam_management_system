@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.StudentGradeStatisticController">
+<BorderPane prefHeight="450.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.StudentGradeStatisticController">
    <top>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
@@ -39,60 +39,47 @@
       </HBox>
    </top>
    <bottom>
-      <HBox alignment="CENTER_RIGHT" prefHeight="71.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#refresh" text="Refresh">
+            <Label text="Click submission row above to get details of each submission." alignment="CENTER_LEFT" prefHeight="50.0"/>
+
+            <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#refresh" text="Refresh" alignment="CENTER_RIGHT">
                <HBox.margin>
-                  <Insets right="20.0" />
+                  <Insets right="20.0" left="770.0" />
                </HBox.margin>
             </Button>
          </children>
       </HBox>
    </bottom>
    <center>
-      <VBox>
+      <HBox>
           <children>
-              <HBox prefHeight="250.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
-                 <children>
-                    <TableView fx:id="gradeTable" prefHeight="250.0" prefWidth="700.0">
-                      <columns>
-                        <TableColumn fx:id="courseColumn" prefWidth="140.0" text="Course" />
-                        <TableColumn fx:id="examColumn" prefWidth="140.0" text="Exam" />
-                        <TableColumn fx:id="scoreColumn" prefWidth="140.0" text="Score" />
-                        <TableColumn fx:id="fullScoreColumn" prefWidth="140.0" text="Full Score" />
-                        <TableColumn fx:id="timeSpendColumn" prefWidth="140.0" text="Time Spend" />
-                      </columns>
-                    </TableView>
-                    <BarChart fx:id="barChart" prefHeight="250.0" prefWidth="500.0">
-                       <xAxis>
-                          <CategoryAxis fx:id="categoryAxisBar" side="BOTTOM" />
-                       </xAxis>
-                       <yAxis>
-                          <NumberAxis fx:id="numberAxisBar" side="LEFT" />
-                       </yAxis>
-                    </BarChart>
-                 </children>
-              </HBox>
-              <Label text="Click submission row above to get details of each submission." alignment="CENTER_LEFT" prefHeight="50.0"/>
-              <HBox prefHeight="250.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
-                 <children>
-                    <TableView fx:id="examDetailTable" prefHeight="250.0" prefWidth="700.0">
-                       <columns>
-                          <TableColumn fx:id="questionCol" prefWidth="220.0" text="Question"/>
-                          <TableColumn fx:id="optionACol" prefWidth="70.0" text="Option A"/>
-                          <TableColumn fx:id="optionBCol" prefWidth="70.0" text="Option B"/>
-                          <TableColumn fx:id="optionCCol" prefWidth="70.0" text="Option C"/>
-                          <TableColumn fx:id="optionDCol" prefWidth="70.0" text="Option D"/>
-                          <TableColumn fx:id="answerCol" prefWidth="100.0" text="Answer"/>
-                          <TableColumn fx:id="studentAnswerCol" prefWidth="100.0" text="Your Answer"/>
-                          <TableColumn fx:id="studentScoreCol" prefWidth="50.0" text="Score"/>
-                          <TableColumn fx:id="fullScoreCol" prefWidth="80.0" text="Full Score"/>
-                       </columns>
-                    </TableView>
-                    <PieChart fx:id="pieChart" prefHeight="250.0" prefWidth="500.0" />
-                 </children>
-              </HBox>
+                <TableView fx:id="gradeTable" prefHeight="300.0" prefWidth="440.0">
+                  <columns>
+                    <TableColumn fx:id="courseColumn" prefWidth="80.0" text="Course" />
+                    <TableColumn fx:id="examColumn" prefWidth="80.0" text="Exam" />
+                    <TableColumn fx:id="scoreColumn" prefWidth="80.0" text="Score" />
+                    <TableColumn fx:id="fullScoreColumn" prefWidth="80.0" text="Full Score" />
+                    <TableColumn fx:id="timeSpendColumn" prefWidth="80.0" text="Time Spend" />
+                  </columns>
+                </TableView>
+             <BarChart fx:id="examBarChart" prefHeight="250.0" prefWidth="500.0">
+                <xAxis>
+                   <CategoryAxis fx:id="examCategoryAxisBar" side="BOTTOM" />
+                </xAxis>
+                <yAxis>
+                   <NumberAxis fx:id="examNumberAxisBar" side="LEFT" />
+                </yAxis>
+             </BarChart>
+             <BarChart fx:id="submissionBarChart" prefHeight="250.0" prefWidth="500.0">
+                <xAxis>
+                   <CategoryAxis fx:id="submissionCategoryAxisBar" side="BOTTOM" />
+                </xAxis>
+                <yAxis>
+                   <NumberAxis fx:id="submissionNumberAxisBar" side="LEFT" />
+                </yAxis>
+             </BarChart>
            </children>
-       </VBox>
+       </HBox>
     </center>
 </BorderPane>

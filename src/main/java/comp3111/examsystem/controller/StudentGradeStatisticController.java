@@ -74,126 +74,46 @@ public class StudentGradeStatisticController implements Initializable {
         }
     }
 
-    /**
-     * This ExamDetailClass is to be used by examDetailTable to help display data
-     * Represents the details of a student's submission for a specific exam.
-     */
-    public static class ExamDetailClass {
-        private String question, optionA, optionB, optionC, optionD, studentAnswer, answer, studentScore, fullScore;
-
-        public void setQuestion(String question) {
-            this.question = question;
-        }
-
-        public void setOptionA(String optionA) {
-            this.optionA = optionA;
-        }
-
-        public void setOptionB(String optionB) {
-            this.optionB = optionB;
-        }
-
-        public void setOptionC(String optionC) {
-            this.optionC = optionC;
-        }
-
-        public void setOptionD(String optionD) {
-            this.optionD = optionD;
-        }
-
-        public void setStudentAnswer(String studentAnswer) {
-            this.studentAnswer = studentAnswer;
-        }
-
-        public void setAnswer(String answer) {
-            this.answer = answer;
-        }
-
-        public void setStudentScore(String studentScore) {
-            this.studentScore = studentScore;
-        }
-
-        public void setFullScore(String fullScore) {
-            this.fullScore = fullScore;
-        }
-
-        public String getQuestion() {
-            return question;
-        }
-
-        public String getOptionA() {
-            return optionA;
-        }
-
-        public String getOptionB() {
-            return optionB;
-        }
-
-        public String getOptionC() {
-            return optionC;
-        }
-
-        public String getOptionD() {
-            return optionD;
-        }
-
-        public String getStudentAnswer() {
-            return studentAnswer;
-        }
-
-        public String getAnswer() {
-            return answer;
-        }
-
-        public String getStudentScore() {
-            return studentScore;
-        }
-
-        public String getFullScore() {
-            return fullScore;
-        }
-    }
-
     @FXML
     private ChoiceBox<String> courseCombox;
     @FXML
     private TableView<GradeDetailClass> gradeTable;
     @FXML
     private TableColumn<GradeDetailClass, String> courseColumn, examColumn, scoreColumn, fullScoreColumn, timeSpendColumn;
-    @FXML
-    public TableColumn<ExamDetailClass, String> questionCol, optionACol, optionBCol, optionCCol, optionDCol, answerCol, studentAnswerCol, studentScoreCol, fullScoreCol;
 
     private List<String> courseList;
     @FXML
-    BarChart<String, Number> barChart;
+    BarChart<String, Number> examBarChart;
     @FXML
-    PieChart pieChart;
+    BarChart<String, Number> submissionBarChart;
+
     @FXML
-    CategoryAxis categoryAxisBar;
+    CategoryAxis examCategoryAxisBar, submissionCategoryAxisBar;
     @FXML
-    NumberAxis numberAxisBar;
-    @FXML
-    private TableView<ExamDetailClass> examDetailTable;
+    NumberAxis examNumberAxisBar, submissionNumberAxisBar;
 
     private Student student;
     private List<Submission> studentGradeTableList;
 
     private final ObservableList<GradeDetailClass> gradeList = FXCollections.observableArrayList();
-    private final ObservableList<ExamDetailClass> examDetailList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gradeList.clear();
         courseList = new ArrayList<>();
 
-        barChart.setLegendVisible(false);
-        barChart.setAnimated(false);
-        categoryAxisBar.setLabel("Exam");
-        categoryAxisBar.setAnimated(false);
-        numberAxisBar.setLabel("Score");
+        examBarChart.setLegendVisible(false);
+        examBarChart.setAnimated(false);
+        examCategoryAxisBar.setLabel("Exam");
+        examCategoryAxisBar.setAnimated(false);
+        examNumberAxisBar.setLabel("Score (%)");
 
-        pieChart.setLegendVisible(false);
-        pieChart.setAnimated(false);
+        submissionBarChart.setLegendVisible(false);
+        submissionBarChart.setAnimated(false);
+        submissionCategoryAxisBar.setLabel("Question Type");
+        submissionCategoryAxisBar.setAnimated(false);
+        submissionNumberAxisBar.setLabel("Correct Percentage (%)");
+
 
         courseColumn.setCellValueFactory(new PropertyValueFactory<>("courseNum"));
         examColumn.setCellValueFactory(new PropertyValueFactory<>("examName"));
@@ -201,15 +121,6 @@ public class StudentGradeStatisticController implements Initializable {
         fullScoreColumn.setCellValueFactory(new PropertyValueFactory<>("fullScore"));
         timeSpendColumn.setCellValueFactory(new PropertyValueFactory<>("timeSpend"));
 
-        questionCol.setCellValueFactory(new PropertyValueFactory<>("question"));
-        optionACol.setCellValueFactory(new PropertyValueFactory<>("optionA"));
-        optionBCol.setCellValueFactory(new PropertyValueFactory<>("optionB"));
-        optionCCol.setCellValueFactory(new PropertyValueFactory<>("optionC"));
-        optionDCol.setCellValueFactory(new PropertyValueFactory<>("optionD"));
-        studentAnswerCol.setCellValueFactory(new PropertyValueFactory<>("studentAnswer"));
-        answerCol.setCellValueFactory(new PropertyValueFactory<>("answer"));
-        studentScoreCol.setCellValueFactory(new PropertyValueFactory<>("studentScore"));
-        fullScoreCol.setCellValueFactory(new PropertyValueFactory<>("fullScore"));
     }
 
     /**
@@ -222,9 +133,6 @@ public class StudentGradeStatisticController implements Initializable {
     public void setStudent(Student student) {
         this.student = student;
         gradeList.clear();
-        examDetailList.clear();
-        pieChart.setTitle(null);
-        pieChart.getData().clear();
         courseCombox.getItems().clear();
 
         studentGradeTableList = SubmissionDatabase.getInstance().filter(student.getUsername(), null, null);
@@ -247,47 +155,6 @@ public class StudentGradeStatisticController implements Initializable {
     }
 
     /**
-     * Sets ToolTips for all table cells in column in examDetailTable
-     *
-     * @author Li Ching Ho
-     */
-    private void setExamDetailTooltips() {
-        questionCol.setCellFactory(col -> createTooltipCell());
-        optionACol.setCellFactory(col -> createTooltipCell());
-        optionBCol.setCellFactory(col -> createTooltipCell());
-        optionCCol.setCellFactory(col -> createTooltipCell());
-        optionDCol.setCellFactory(col -> createTooltipCell());
-        studentAnswerCol.setCellFactory(col -> createTooltipCell());
-        answerCol.setCellFactory(col -> createTooltipCell());
-        studentScoreCol.setCellFactory(col -> createTooltipCell());
-        fullScoreCol.setCellFactory(col -> createTooltipCell());
-    }
-
-    /**
-     * Creates a TableCell with a tooltip for the exam detail table.
-     *
-     * @param <T> The type of the cell value.
-     * @return A TableCell configured to show a tooltip.
-     * @author Li Ching Ho
-     */
-    private <T> TableCell<ExamDetailClass, T> createTooltipCell() {
-        return new TableCell<ExamDetailClass, T>() {
-            @Override
-            protected void updateItem(T item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setTooltip(null);
-                } else {
-                    setText(item.toString());
-                    Tooltip tooltip = new Tooltip(item.toString()); // Set tooltip with cell data
-                    setTooltip(tooltip);
-                }
-            }
-        };
-    }
-
-    /**
      * Refreshes the displayed statistics and charts for the current student.
      *
      * @author Li Ching Ho
@@ -296,6 +163,7 @@ public class StudentGradeStatisticController implements Initializable {
     public void refresh() {
         setStudent(student);
         reset();
+        submissionBarChart.getData().clear();
         setTable();;
         loadChart();
     }
@@ -324,33 +192,26 @@ public class StudentGradeStatisticController implements Initializable {
 
                 // Handle mouse click event
                 tableRow.setOnMouseClicked(event -> {
-                    examDetailTable.getItems().clear();
-                    pieChart.getData().clear();
-                    if (!tableRow.isEmpty()) {
-                        Submission submission = SubmissionDatabase.getInstance().queryByKey(studentGradeTableList.get(tableRow.getIndex()).getId().toString());
-                        for (Question question : submission.getQuestionObjectList()) {
-                            int i = submission.getQuestionObjectList().indexOf(question);
-                            ExamDetailClass examDetail = new ExamDetailClass();
-                            examDetail.setQuestion(question.getQuestion());
-                            examDetail.setOptionA(question.getOptionA());
-                            examDetail.setOptionB(question.getOptionB());
-                            examDetail.setOptionC(question.getOptionC());
-                            examDetail.setOptionD(question.getOptionD());
-                            examDetail.setStudentAnswer(submission.getAnswerList().get(i));
-                            examDetail.setAnswer(question.getAnswer());
-                            examDetail.setStudentScore(submission.getScoreList().get(i).toString());
-                            examDetail.setFullScore(String.valueOf(question.getScore()));
-
-                            // Add the populated grade detail to the grade list
-                            examDetailList.add(examDetail);
+                    XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
+                    seriesBar.getData().clear();
+                    submissionBarChart.getData().clear();
+                    if (studentGradeTableList != null && !studentGradeTableList.isEmpty()) {
+                        Submission submission = studentGradeTableList.get(tableRow.getIndex());
+                        if (submission != null) {
+                            if (submission.getMcFullScore() != 0) {
+                                Double mcPercentage = (double) (submission.getMcScore()) / submission.getMcFullScore() * 100;
+                                seriesBar.getData().add(new XYChart.Data<>("Multiple Choice", mcPercentage));
+                            }
+                            if (submission.getTfFullScore() != 0) {
+                                Double tfPercentage = (double) (submission.getTfScore()) / submission.getTfFullScore() * 100;
+                                seriesBar.getData().add(new XYChart.Data<>("True/False", tfPercentage));
+                            }
+                            if (submission.getSqFullScore() != 0) {
+                                Double sqPercentage = (double) (submission.getSqScore()) / submission.getSqFullScore() * 100;
+                                seriesBar.getData().add(new XYChart.Data<>("Short Question", sqPercentage));
+                            }
                         }
-                        examDetailTable.setItems(examDetailList);
-                        setExamDetailTooltips();
-
-                        pieChart.setTitle("Score Distribution for each Question Type");
-                        pieChart.getData().add(new PieChart.Data("Multiple-Choice Questions Score", submission.getMcFullScore()));
-                        pieChart.getData().add(new PieChart.Data("True/False Questions Score", submission.getTfScore()));
-                        pieChart.getData().add(new PieChart.Data("Short Questions Score", submission.getSqScore()));
+                        submissionBarChart.getData().add(seriesBar);
                     }
                 });
 
@@ -367,16 +228,17 @@ public class StudentGradeStatisticController implements Initializable {
     private void loadChart() {
         XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
         seriesBar.getData().clear();
-        barChart.getData().clear();
+        examBarChart.getData().clear();
         if (studentGradeTableList != null && !studentGradeTableList.isEmpty()) {
             for (Submission submission : studentGradeTableList) {
                 Exam exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
                 if (exam != null) {
+                    Double scorePercentage = (double) (submission.getScore()) / submission.getFullScore() * 100;
                     seriesBar.getData().add(new XYChart.Data<>(exam.getCourseId() + "-" + exam.getName(),
-                            submission.getScore()));
+                            scorePercentage));
                 }
             }
-            barChart.getData().add(seriesBar);
+            examBarChart.getData().add(seriesBar);
         }
 
     }
@@ -400,6 +262,7 @@ public class StudentGradeStatisticController implements Initializable {
     @FXML
     public void query() {
         studentGradeTableList = SubmissionDatabase.getInstance().filter(student.getUsername(), courseCombox.getValue(),null);
+        submissionBarChart.getData().clear();
         setTable();
         loadChart();
     }
