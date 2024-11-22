@@ -4,6 +4,12 @@ import comp3111.examsystem.tools.Database;
 
 import java.util.List;
 
+/**
+ * Represents a database for managing student entities.
+ * This class extends the generic Database class and provides
+ * methods for student registration, login validation, and
+ * username existence checks.
+ */
 public class StudentDatabase extends Database<Student> {
     public static final int STUDENT_AGE_UPPER_LIMIT = 100;
     public static final int STUDENT_AGE_LOWER_LIMIT = 5;
@@ -14,19 +20,47 @@ public class StudentDatabase extends Database<Student> {
     public static final int STUDENT_PASSWORD_LENGTH_LOWER_LIMIT = 8;
     private static StudentDatabase instance = null;
 
+    /**
+     * Private constructor to prevent instantiation.
+     *
+     * @param entity The class type of the Student entity.
+     * @author Li Ching Ho
+     */
     private StudentDatabase(Class<Student> entity) {
         super(entity);
     }
 
+    /**
+     * Gets the singleton instance of the StudentDatabase.
+     *
+     * @return The instance of StudentDatabase.
+     * @author Li Ching Ho
+     */
     public static StudentDatabase getInstance() {
         if (instance == null) instance = new StudentDatabase(Student.class);
         return instance;
     }
 
+    /**
+     * Checks if a username already exists in the database.
+     *
+     * @param username The username to check.
+     * @return True if the username exists, false otherwise.
+     * @author Li Ching Ho
+     */
     public boolean existUsername(String username) {
         return !queryByField("username", username).isEmpty();
     }
 
+    /**
+     * Validates student login by checking the username and password.
+     *
+     * @param username The username of the student.
+     * @param pwd The password of the student.
+     * @return The Student object if the login is successful.
+     * @throws RuntimeException If the username does not exist or the password is incorrect.
+     * @author Li Ching Ho
+     */
     public Student validateStudentLogin(String username, String pwd) {
         List<Student> list = queryByField("username", username);
         if (list.isEmpty()) {
@@ -39,6 +73,12 @@ public class StudentDatabase extends Database<Student> {
 
     }
 
+    /**
+     * Registers a new student by adding it to the database.
+     *
+     * @param student The Student object to register.
+     * @author Li Ching Ho
+     */
     public void registerStudent(Student student) {
         add(student);
     }
@@ -72,6 +112,14 @@ public class StudentDatabase extends Database<Student> {
         }
     }
 
+    /**
+     * Checks if the input string contains any character from a specified set.
+     *
+     * @param input The string to check.
+     * @param check The string containing characters to look for.
+     * @return True if the input contains any characters from the check string, false otherwise.
+     * @author Li Ching Ho
+     */
     private static boolean containAny(String input, String check) {
         for (char a : input.toCharArray()) {
             if (check.contains(a + "")) return true;

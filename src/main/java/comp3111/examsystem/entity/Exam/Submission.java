@@ -9,6 +9,11 @@ import comp3111.examsystem.entity.Questions.QuestionType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a submission of an exam by a student.
+ * This class handles the answers provided by the student,
+ * calculates scores, and manages question data.
+ */
 public class Submission extends Entity{
     private String studentUsername;
     private Long examId;
@@ -33,14 +38,30 @@ public class Submission extends Entity{
     private List<Integer> sqFullScoreList = new ArrayList<>();
     private boolean graded = false;
 
+    /**
+     * Constructs a new Submission with a timestamp.
+     * @author Li Ching Ho
+     */
     public Submission() {
         super(System.currentTimeMillis());
     }
 
+    /**
+     * Sets the username of the student making the submission.
+     *
+     * @param studentUsername The username of the student.
+     * @author Li Ching Ho
+     */
     public void setStudentUsername(String studentUsername) {
         this.studentUsername = studentUsername;
     }
 
+    /**
+     * Sets the ID of the exam and initializes related fields.
+     *
+     * @param examId The ID of the exam.
+     * @author Li Ching Ho & Wan Hanzhe
+     */
     public void setExamId(Long examId) {
         this.examId = examId;
         Exam exam = ExamDatabase.getInstance().queryByKey(examId.toString());
@@ -61,109 +82,264 @@ public class Submission extends Entity{
             }
     }
 
+    /**
+     * Sets the full score for the exam.
+     *
+     * @param fullScore The total score for the exam.
+     * @author Wan Hanzhe
+     */
     public void setFullScore(int fullScore) {
         this.fullScore = fullScore;
     }
 
+    /**
+     * Sets the time spent on the exam.
+     *
+     * @param timeSpend The time spent in seconds.
+     * @author Li Ching Ho
+     */
     public void setTimeSpend(int timeSpend) {
         this.timeSpend = timeSpend;
     }
 
+    /**
+     * Gets the username of the student.
+     *
+     * @return The student's username.
+     * @author Li Ching Ho
+     */
     public String getStudentUsername() {
         return studentUsername;
     }
 
+    /**
+     * Gets the ID of the exam.
+     *
+     * @return The exam ID.
+     * @author Li Ching Ho
+     */
     public Long getExamId() {
         return examId;
     }
 
+    /**
+     * Gets the name of the exam.
+     *
+     * @return The exam name.
+     * @author Li Ching Ho
+     */
     public String getExamName(){
         return examName;
     }
 
+    /**
+     * Gets the course ID associated with the exam.
+     *
+     * @return The course ID.
+     * @author Li Ching Ho
+     */
     public String getCourseId() {
         return courseId;
     }
 
+    /**
+     * Gets the list of answers provided by the student.
+     *
+     * @return The list of answers.
+     * @author Li Ching Ho
+     */
     public List<String> getAnswer() {
         return answerList;
     }
 
+    /**
+     * Gets the list of question objects associated with the exam.
+     *
+     * @return The list of questions.
+     * @author Li Ching Ho
+     */
     public List<Question> getQuestionObjectList() {
         return questionObjectList;
     }
 
+    /**
+     * Gets the total score achieved by the student.
+     *
+     * @return The total score.
+     * @author Li Ching Ho
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Gets the full score for the exam.
+     *
+     * @return The full score.
+     * @author Li Ching Ho
+     */
     public int getFullScore() {
         return fullScore;
     }
 
+    /**
+     * Gets the time spent on the exam.
+     *
+     * @return The time spent in seconds.
+     * @author Li Ching Ho
+     */
     public int getTimeSpend() {
         return timeSpend;
     }
 
+    /**
+     * Gets the number of correct answers provided by the student.
+     *
+     * @return The number of correct answers.
+     * @author Li Ching Ho
+     */
     public int getNumberOfCorrect() {
         return numberOfCorrect;
     }
 
+    /**
+     * Gets the score for multiple choice questions.
+     *
+     * @return The multiple choice score.
+     * @author Wan Hanzhe
+     */
     public int getMcScore(){
         return mcScore;
     }
 
+    /**
+     * Gets the full score for multiple choice questions.
+     *
+     * @return The multiple choice full score.
+     * @author Wan Hanzhe
+     */
     public int getMcFullScore(){
         return mcFullScore;
     }
-
+    /**
+     * Gets the score for true/false questions.
+     *
+     * @return The true/false score.
+     * @author Wan Hanzhe
+     */
     public int getTfScore(){
         return tfScore;
     }
 
+    /**
+     * Gets the full score for true/false questions.
+     *
+     * @return The true/false full score.
+     * @author Wan Hanzhe
+     */
     public int getTfFullScore(){
         return tfFullScore;
     }
 
+    /**
+     * Gets the score for short questions.
+     *
+     * @return The short questions score.
+     * @author Wan Hanzhe
+     */
     public int getSqScore(){
         return sqScore;
     }
 
+    /**
+     * Gets the full score for short questions.
+     *
+     * @return The short questions full score.
+     * @author Wan Hanzhe
+     */
     public int getSqFullScore(){
         return sqFullScore;
     }
 
+    /**
+     * Gets the list of short answer questions.
+     *
+     * @return The list of short answer questions.
+     * @author Wan Hanzhe
+     */
     public List<String> getSqQuestionList(){
         return sqQuestionList;
     }
 
+    /**
+     * Gets the list of answers for short answer questions.
+     *
+     * @return The list of short answer answers.
+     * @author Wan Hanzhe
+     */
     public List<String> getSqAnswerList(){
         return sqAnswerList;
     }
 
+    /**
+     * Gets the list of full scores for short answer questions.
+     *
+     * @return The list of full scores for short answer questions.
+     * @author Wan HanZhe
+     */
     public List<Integer> getSqFullScoreList(){
         return sqFullScoreList;
     }
 
+    /**
+     * Gets the list of scores for short answer questions.
+     *
+     * @return The list of scores for short answer questions.
+     * @author Wan HanZhe
+     */
     public List<Integer> getScoreList(){
         return scoreList;
     }
 
+    /**
+     * Checks if the submission has been graded.
+     *
+     * @return True if graded, false otherwise.
+     * @author Wan Hanzhe
+     */
     public boolean isGraded(){
         return graded;
     }
 
+    /**
+     * Saves the answer for a specific question.
+     *
+     * @param questionNumber The index of the question.
+     * @param answer The answer provided by the student.
+     * @author Li Ching Ho
+     */
     public void saveAnswer(int questionNumber, String answer) {
         if (questionNumber >= 0 && questionNumber < questionObjectList.size() && answer != null) {
             answerList.set(questionNumber, answer);
         }
     }
 
+    /**
+     * Converts the submission object to a JSON string.
+     *
+     * @return The JSON representation of the submission.
+     * @author Li Ching Ho
+     */
     @Override
     public String toString() {
         return new Gson().toJson(this);
     }
 
+    /**
+     * Calculates the initial score based on the answers provided straight after submission.
+     *
+     * @author Li Ching Ho
+     */
     public void calculateInitialScore() {
         if (answerList != null) {
             for (int i = 0; i < questionObjectList.size(); i++) {
@@ -208,6 +384,13 @@ public class Submission extends Entity{
         }
     }
 
+    /**
+     * Gets the index of a question based on its ID from question list of the exam.
+     *
+     * @param id The ID of the question.
+     * @return The index of the question, or -1 if not found.
+     * @author Li Ching Ho
+     */
     public int getQuestionNumberByQuestionId(long id) {
         for (int i = 0; i < questionObjectList.size(); i++) {
             if (questionObjectList.get(i).getId() == id) return i;
@@ -215,6 +398,14 @@ public class Submission extends Entity{
         return -1;
     }
 
+    /**
+     * Updates the score for a specific question.
+     *
+     * @param questionNumber The index of the question.
+     * @param score The new score to set.
+     * @throws Exception If the score is out of range.
+     * @author Li Ching Ho
+     */
     public void updateScore(int questionNumber, int score) throws Exception{
         int originalScore = scoreList.get(questionNumber);
         Question question = QuestionDatabase.getInstance().queryByKey(ExamDatabase.getInstance().queryByKey(examId.toString()).getQuestionIds().get(questionNumber).toString());
@@ -234,6 +425,13 @@ public class Submission extends Entity{
         graded = true;
     }
 
+    /**
+     * Updates the score for short answer questions.
+     *
+     * @param newSqScore The new score for short answer questions.
+     * @throws Exception If the new score is out of the valid range.
+     * @author Wan Hanzhe
+     */
     public void updateSqScore(int newSqScore) throws Exception{
         if (newSqScore < 0 || newSqScore > sqFullScore)
             throw new Exception("Score should be non-negative and no larger than the maximum score.");

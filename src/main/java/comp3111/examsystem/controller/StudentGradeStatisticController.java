@@ -17,8 +17,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * The StudentGradeStatisticController class handles the statistics
+ * related to the grades of a student in the exam system. It manages
+ * the display of the student's grades and the details of each exam,
+ * including the questions and answers.
+ */
 public class StudentGradeStatisticController implements Initializable {
 
+    /**
+     * This GradeDetailClass is to be used by gradeTable to help display data
+     * Represents the details of a student's grade for a specific exam.
+     */
     public static class GradeDetailClass {
         private String courseNum, examName, score, fullScore;
         private int timeSpend;
@@ -60,6 +70,10 @@ public class StudentGradeStatisticController implements Initializable {
         }
     }
 
+    /**
+     * This ExamDetailClass is to be used by examDetailTable to help display data
+     * Represents the details of a student's submission for a specific exam.
+     */
     public static class ExamDetailClass {
         private String question, optionA, optionB, optionC, optionD, studentAnswer, answer, studentScore, fullScore;
 
@@ -164,6 +178,44 @@ public class StudentGradeStatisticController implements Initializable {
     private final ObservableList<GradeDetailClass> gradeList = FXCollections.observableArrayList();
     private final ObservableList<ExamDetailClass> examDetailList = FXCollections.observableArrayList();
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        gradeList.clear();
+        courseList = new ArrayList<>();
+
+        barChart.setLegendVisible(false);
+        barChart.setAnimated(false);
+        categoryAxisBar.setLabel("Exam");
+        categoryAxisBar.setAnimated(false);
+        numberAxisBar.setLabel("Score");
+
+        pieChart.setLegendVisible(false);
+        pieChart.setAnimated(false);
+
+        courseColumn.setCellValueFactory(new PropertyValueFactory<>("courseNum"));
+        examColumn.setCellValueFactory(new PropertyValueFactory<>("examName"));
+        scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        fullScoreColumn.setCellValueFactory(new PropertyValueFactory<>("fullScore"));
+        timeSpendColumn.setCellValueFactory(new PropertyValueFactory<>("timeSpend"));
+
+        questionCol.setCellValueFactory(new PropertyValueFactory<>("question"));
+        optionACol.setCellValueFactory(new PropertyValueFactory<>("optionA"));
+        optionBCol.setCellValueFactory(new PropertyValueFactory<>("optionB"));
+        optionCCol.setCellValueFactory(new PropertyValueFactory<>("optionC"));
+        optionDCol.setCellValueFactory(new PropertyValueFactory<>("optionD"));
+        studentAnswerCol.setCellValueFactory(new PropertyValueFactory<>("studentAnswer"));
+        answerCol.setCellValueFactory(new PropertyValueFactory<>("answer"));
+        studentScoreCol.setCellValueFactory(new PropertyValueFactory<>("studentScore"));
+        fullScoreCol.setCellValueFactory(new PropertyValueFactory<>("fullScore"));
+    }
+
+    /**
+     * Sets the student for which the statistics will be displayed.
+     * Sets the content of the tables and charts
+     *
+     * @param student The student whose grades and statistics are to be displayed.
+     * @author Li Ching Ho
+     */
     public void setStudent(Student student) {
         this.student = student;
         gradeList.clear();
@@ -176,13 +228,10 @@ public class StudentGradeStatisticController implements Initializable {
         if (!studentGradeTableList.isEmpty()) {
             for (Submission submission : studentGradeTableList) {
                 Exam exam = ExamDatabase.getInstance().queryByKey(submission.getExamId().toString());
-                //System.out.println("Exam submitted:" + exam);
                 if (exam != null) {
-                    //System.out.println(exam.getCourseId());
                     if (!courseList.contains(exam.getCourseId())) {
                         courseList.add(exam.getCourseId());
                     }
-                    //System.out.println(courseList);
                 }
             }
             if (courseList != null) {
@@ -250,6 +299,11 @@ public class StudentGradeStatisticController implements Initializable {
         loadChart();
     }
 
+    /**
+     * Sets ToolTips for all table cells in column in examDetailTable
+     *
+     * @author Li Ching Ho
+     */
     private void setExamDetailTooltips() {
         questionCol.setCellFactory(col -> createTooltipCell());
         optionACol.setCellFactory(col -> createTooltipCell());
@@ -262,6 +316,13 @@ public class StudentGradeStatisticController implements Initializable {
         fullScoreCol.setCellFactory(col -> createTooltipCell());
     }
 
+    /**
+     * Creates a TableCell with a tooltip for the exam detail table.
+     *
+     * @param <T> The type of the cell value.
+     * @return A TableCell configured to show a tooltip.
+     * @author Li Ching Ho
+     */
     private <T> TableCell<ExamDetailClass, T> createTooltipCell() {
         return new TableCell<ExamDetailClass, T>() {
             @Override
@@ -279,46 +340,22 @@ public class StudentGradeStatisticController implements Initializable {
         };
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        gradeList.clear();
-        courseList = new ArrayList<>();
-
-        barChart.setLegendVisible(false);
-        barChart.setAnimated(false);
-        categoryAxisBar.setLabel("Exam");
-        categoryAxisBar.setAnimated(false);
-        numberAxisBar.setLabel("Score");
-
-        pieChart.setLegendVisible(false);
-        pieChart.setAnimated(false);
-
-        courseColumn.setCellValueFactory(new PropertyValueFactory<>("courseNum"));
-        examColumn.setCellValueFactory(new PropertyValueFactory<>("examName"));
-        scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
-        fullScoreColumn.setCellValueFactory(new PropertyValueFactory<>("fullScore"));
-        timeSpendColumn.setCellValueFactory(new PropertyValueFactory<>("timeSpend"));
-
-        questionCol.setCellValueFactory(new PropertyValueFactory<>("question")); //question, optionA, optionB, optionC, optionD, studentAnswer, answer, studentScore, fullScore
-        optionACol.setCellValueFactory(new PropertyValueFactory<>("optionA"));
-        optionBCol.setCellValueFactory(new PropertyValueFactory<>("optionB"));
-        optionCCol.setCellValueFactory(new PropertyValueFactory<>("optionC"));
-        optionDCol.setCellValueFactory(new PropertyValueFactory<>("optionD"));
-        studentAnswerCol.setCellValueFactory(new PropertyValueFactory<>("studentAnswer"));
-        answerCol.setCellValueFactory(new PropertyValueFactory<>("answer"));
-        studentScoreCol.setCellValueFactory(new PropertyValueFactory<>("studentScore"));
-        fullScoreCol.setCellValueFactory(new PropertyValueFactory<>("fullScore"));
-    }
-
+    /**
+     * Refreshes the displayed statistics and charts for the current student.
+     *
+     * @author Li Ching Ho
+     */
     @FXML
     public void refresh() {
-        //System.out.println("gradeTable: " + gradeTable.getColumns());
-        // examDetailList.clear();
         setStudent(student);
         reset();
         loadChart();
     }
-
+    /**
+     * Loads the chart data based on the student's grades.
+     *
+     * @author Li Ching Ho
+     */
     private void loadChart() {
         XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
         seriesBar.getData().clear();
@@ -336,12 +373,22 @@ public class StudentGradeStatisticController implements Initializable {
 
     }
 
+    /**
+     * Resets the current view by clearing selections of course filter.
+     *
+     * @author Li Ching Ho
+     */
     @FXML
     public void reset() {
         courseCombox.setValue(null); // Clear the selected item
         studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getUsername(),null,null);
     }
 
+    /**
+     * Queries the student's grades based on the selected course filter.
+     *
+     * @author Li Ching Ho
+     */
     @FXML
     public void query() {
         studentGradeBarChartList = SubmissionDatabase.getInstance().filter(student.getUsername(), courseCombox.getValue(),null);
