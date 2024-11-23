@@ -2,6 +2,7 @@ package comp3111.examsystem.entity.Course;
 
 import comp3111.examsystem.tools.Database;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CourseDatabase extends Database<Course>{
@@ -22,5 +23,15 @@ public class CourseDatabase extends Database<Course>{
 
     public boolean existCourseID(String courseID){
         return !queryByField("courseID", courseID).isEmpty();
+    }
+
+    /**
+     * Access a list of course id for all courses in course database
+     * @return List of course id
+     * @author Cheung Tuen King
+     */
+    public static ArrayList<String> getCourseIds() {
+        List<Course> courseList = CourseDatabase.getInstance().getAll();
+        return new ArrayList<>(courseList.stream().map(Course::getCourseID).toList());
     }
 }

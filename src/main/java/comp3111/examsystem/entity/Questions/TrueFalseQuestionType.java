@@ -5,16 +5,43 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
+/**
+ * Singleton containing true/ false question type validation and UI set-up related methods.
+ * As this class only contains utility methods, using singleton could reduce space due to class initialization.
+ * @author Cheung Tuen King
+ */
 public final class TrueFalseQuestionType extends QuestionTypeFactory {
+    /**
+     * True/ False question type singleton instance
+     */
     private static TrueFalseQuestionType instance = null;
 
+    /**
+     * Constructor for TrueFalseQuestionType
+     * @author Cheung Tuen King
+     */
     private TrueFalseQuestionType() {}
 
+    /**
+     * Access singleton instance of TrueFalseQuestionType
+     * @author Cheung Tuen King
+     * @return TrueFalseQuestionType singleton instance
+     */
     public static TrueFalseQuestionType getInstance() {
         if (instance == null) instance = new TrueFalseQuestionType();
         return instance;
     }
 
+    /**
+     * Validate answer.
+     * Answer for true/ false question should:
+     * <li>be a letter of either "T" or "F"</li>
+     *
+     * @param answer Answer for validation
+     * @return Validated answer
+     * @throws Exception Any condition above is not met
+     * @author Cheung Tuen King
+     */
     @Override
     public String validateAnswer(String answer) throws Exception {
         if (answer.isEmpty()) {
@@ -26,6 +53,15 @@ public final class TrueFalseQuestionType extends QuestionTypeFactory {
         return answer;
     }
 
+    /**
+     * Validate the option text.
+     * True/ false question should have the first 2 option being "True" and "False.
+     * Rest should all be empty.
+     *
+     * @param option Option text
+     * @param index  Integer 0 to 3 indicating option A to D
+     * @throws Exception Any option text does not meet the condition above
+     */
     @Override
     public void validateOption(String option, int index) throws Exception {
         switch (index) {
@@ -41,6 +77,18 @@ public final class TrueFalseQuestionType extends QuestionTypeFactory {
         }
     }
 
+    /**
+     * Set up the question form UI by setting, disabling or enabling the labels and text field guiding and inputting options.
+     * As for true/ false question, all option TextField and Label should be disabled as all is predefined as in validateOption()
+     *
+     * @param labels Array of Label guiding options input
+     * @param fields Array of TextField for inputting options
+     * @param options Array for storing options
+     * @param originalLabel Original Label as reference for resetting the modified Labels
+     * @param originalField Original TextField as reference for resetting the modified TextFields
+     *
+     * @author Cheung Tuen King
+     */
     @Override
     public void setUpForm(Label[] labels, TextField[] fields, String[] options, Label originalLabel, TextField originalField) {
         for (int i = 0; i < 4; i++) {
@@ -54,6 +102,15 @@ public final class TrueFalseQuestionType extends QuestionTypeFactory {
         fields[3].setText("");
     }
 
+    /**
+     * Fill in the question form option UI based on the question given.
+     * As for true/ false question, all option is predefined as in validateOption()
+     *
+     * @param fields TextField for question form option
+     * @param form Question entity for initialization
+     * @throws Exception Question option does not meet the validation rules. Visit QuestionTypeFactory.validateOption() for details
+     * @author Cheung Tuen King
+     */
     @Override
     public void initialize(TextField[] fields, Question form) throws Exception {
         form.setOptionA("True");
@@ -62,6 +119,14 @@ public final class TrueFalseQuestionType extends QuestionTypeFactory {
         form.setOptionD("");
     }
 
+    /**
+     * Save the option text user inputted in question form UI before user changing the question type.
+     * As for true/ false question, no option is saved as all of them are predefined as in validateOption()
+     *
+     * @param fields Array of TextField displaying option text
+     * @param options Array for storing options
+     * @author Cheung Tuen King
+     */
     @Override
     public void saveOptions(TextField[] fields, String[] options) {
 
