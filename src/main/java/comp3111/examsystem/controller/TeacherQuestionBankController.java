@@ -25,6 +25,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for UI TeacherQuestionBank.fxml
+ * @author Cheung Tuen King
+ */
 public class TeacherQuestionBankController implements Initializable {
     // buttons
     @FXML private Button refreshBtn;
@@ -68,13 +72,28 @@ public class TeacherQuestionBankController implements Initializable {
     @FXML private TextField questionSearchTxt;
     private String scoreFilter, questionFilter, typeFilter;
 
+    /**
+     * Reset the question table filter.
+     * All text fields in question table filter is set to empty.
+     * All combo boxes in question table filter is set to "all".
+     * This method is called when "Reset" button in question table filter is clicked
+     * @author Chueng Tuen King
+     */
     public void reset() {
         questionSearchTxt.setText("");
         typeSearchCombox.getSelectionModel().selectFirst();
         scoreSearchTxt.setText("");
     }
 
-    public void filter(ActionEvent actionEvent) {
+    /**
+     * Filter the question table based on the text fields and combo boxes input in question table filter.
+     * Empty text field or Combo box set to "all" would not be used in filtering.
+     * If score text field in question table filter is not an integer, an error message dialog is prompted and filtering is terminated.
+     * After filtering, all question in question table is deselected and the question form is cleared.
+     * This method is called when "Filter" button in question table filter is clicked
+     * @author Chueng Tuen King
+     */
+    public void filter() {
         try {
             List<Question> questions = QuestionDatabase.getInstance().filter(
                     questionSearchTxt.getText(),
@@ -94,11 +113,27 @@ public class TeacherQuestionBankController implements Initializable {
         refreshQuestionTable();
     }
 
-    public void refresh(ActionEvent actionEvent) {
+    /**
+     * Refresh the question table by reloading the question data from question database.
+     * After refreshing, all question in question table is deselected and the question form is cleared.
+     * This method is called when "Refresh" button in exam table filter is clicked
+     * @author Chueng Tuen King
+     */
+    public void refresh() {
         refreshQuestionTable();
     }
 
-    public void delete(ActionEvent actionEvent) {
+    /**
+     * Delete the selected question from question table.
+     * After successful deletion, the question table is refreshed, all question in question table is deselected and the question form is cleared.
+     * If any error occurred, the operation is terminated with error message dialog prompted.
+     * If any exam contains the deleting question, a warning dialog is prompted to notify affected exam.
+     * If the user click "OK" in the warning dialog, all affected exam will delete the question as well while deleting those exam containing only th deleted question;
+     * else, the operation terminated.
+     * This method is called when "Delete" button is clicked
+     * @author Chueng Tuen King
+     */
+    public void delete() {
         try {
             deleteQuestion(false);
         } catch (RuntimeException e) {
@@ -112,6 +147,14 @@ public class TeacherQuestionBankController implements Initializable {
         }
     }
 
+    /**
+     * Delete the selected question from question table.
+     * After successful deletion, the question table is refreshed, all question in question table is deselected and the question form is cleared.
+     * If any error occurred, the operation is terminated with error message dialog prompted.
+     * If any exam contains the deleting question and deleteExam is false, a warning dialog is prompted to notify affected exam;
+     * else, all affected exam will delete the question as well while deleting those exam containing only th deleted question.
+     * @author Chueng Tuen King
+     */
     private void deleteQuestion(boolean deleteExam) {
         try {
             QuestionDatabase.getInstance().deleteQuestion(questionTable.getSelectionModel().getSelectedItem(), deleteExam);
@@ -123,7 +166,14 @@ public class TeacherQuestionBankController implements Initializable {
         }
     }
 
-    public void update(ActionEvent actionEvent) {
+    /**
+     * Update the selected question in question table.
+     * After successful updating, a notification dialog is popped up and the exam table is refreshed.
+     * If any error occurred, the update operation is terminated with error message prompted in dialog.
+     * This method is called when "Update" button in question input form is clicked
+     * @author Chueng Tuen King
+     */
+    public void update() {
         try {
             Question selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
             selectedQuestion.setQuestion(questionFormTxt.getText());
@@ -135,11 +185,17 @@ public class TeacherQuestionBankController implements Initializable {
             MsgSender.showConfirm("Successful Question Update", "Question updated successfully.", this::refreshQuestionTable);
         } catch (Exception e) {
             MsgSender.showConfirm("Question Update Error", e.getMessage(), () -> {});
-            e.printStackTrace();
         }
     }
 
-    public void add(ActionEvent actionEvent) {
+    /**
+     * Create a question in question table and save to the database.
+     * After successful creation, a notification dialog is popped up and the question table is refreshed.
+     * If any error occurred, the creation operation is terminated with error message prompted in dialog.
+     * This method is called when "Add" button in question input form is clicked
+     * @author Chueng Tuen King
+     */
+    public void add() {
         try {
             Question question = new Question();
             question.setQuestion(questionFormTxt.getText());
@@ -154,6 +210,10 @@ public class TeacherQuestionBankController implements Initializable {
         }
     }
 
+    /**
+     * Initialize the QuestionBank UI for teacher
+     * @author Cheung Tuen King
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initQuestionTable();
@@ -161,6 +221,12 @@ public class TeacherQuestionBankController implements Initializable {
         initQuestionForm();
     }
 
+    /**
+     * Check if the attribute is empty and return "---" if so to represent empty cell
+     * @param s String for checking
+     * @return Marked string
+     * @author Cheung Tuen King
+     */
     private String markEmptyCell(String s) {
         if (s == null || s.isEmpty()) {
             return "---";
@@ -168,6 +234,13 @@ public class TeacherQuestionBankController implements Initializable {
         return s;
     }
 
+    /**
+     * Set up the question table, including:
+     * <li>Set the value of each columns to link with corresponding attribute from Question entity</li>
+     * <li>Fill in the question form automatically based on the row (question entity) selected</li>
+     * <li>Enable or disable the "Update" and "Delete" button automatically by checking if any row selected</li>
+     * @author Cheung Tuen King
+     */
     private void initQuestionTable() {
         questionCol.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getQuestion()));
         optionACol.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(
@@ -216,6 +289,10 @@ public class TeacherQuestionBankController implements Initializable {
         refreshQuestionTable();
     }
 
+    /**
+     * Initialize the question filter by setting up the combo boxes selections
+     * @author Cheung Tuen King
+     */
     private void initQuestionFilter() {
         ArrayList<String> typeList = new ArrayList<>(Arrays.stream(QuestionType.values()).map(QuestionType::getName).toList());
         typeList.addFirst("all");
@@ -223,6 +300,11 @@ public class TeacherQuestionBankController implements Initializable {
         reset();
     }
 
+    /**
+     * Initialize the question input form by setting up the combo boxes selections
+     * When the selection changed, save the options for current type and retrieved the options saved for the type selected.
+     * @author Cheung Tuen King
+     */
     private void initQuestionForm() {
         typeCombox.setItems(FXCollections.observableList(Arrays.stream(QuestionType.values()).map(QuestionType::getName).toList()));
         typeCombox.getSelectionModel().selectedItemProperty().addListener((observableValue, s, t1) -> {
@@ -233,6 +315,11 @@ public class TeacherQuestionBankController implements Initializable {
         resetQuestionForm();
     }
 
+    /**
+     * Reset the question input form by setting all text field to empty and
+     * combo boxes to "all"
+     * @author Cheung Tuen King
+     */
     private void resetQuestionForm() {
         typeCombox.getSelectionModel().selectFirst();
         // setUpFormByType(QuestionType.SINGLE.getName());
@@ -245,6 +332,13 @@ public class TeacherQuestionBankController implements Initializable {
         scoreTxt.setText("");
     }
 
+    /**
+     * Refresh and filter the question table based on the field in question filter.
+     * Empty text field or Combo box set to "all" would not be used in filtering.
+     * If score text field in question table filter is not an integer, an error message dialog is prompted and filtering is terminated.
+     * After refreshing, all selected question is deselected and question form is reset.
+     * @author Cheung Tuen King
+     */
     private void refreshQuestionTable() {
         try {
             List<Question> questions = QuestionDatabase.getInstance().filter(questionFilter, typeFilter, scoreFilter);
@@ -256,6 +350,11 @@ public class TeacherQuestionBankController implements Initializable {
         clearSelectedQuestion();
     }
 
+    /**
+     * Set up the option text field in question form according to the type selected.
+     * @param type Question type selected by user
+     * @author Cheung Tuen King
+     */
     private void setUpFormByType(String type) {
         QuestionTypeFactory.getInstance(
                 QuestionType.toType(type)
@@ -266,6 +365,11 @@ public class TeacherQuestionBankController implements Initializable {
         );
     }
 
+    /**
+     * Save the option that user input for the current question and retrieved when the type is reselected
+     * @param type Question type selected by user
+     * @author Cheung Tuen King
+     */
     private void saveOptions(String type) {
         System.out.println(type);
         if (type == null) return;
@@ -277,6 +381,10 @@ public class TeacherQuestionBankController implements Initializable {
         );
     }
 
+    /**
+     * Clear the selection in question table and disable the "Update" and "Delete" button.
+     * @author Cheung Tuen King
+     */
     private void clearSelectedQuestion() {
         questionTable.getSelectionModel().clearSelection();
         deleteBtn.setDisable(true);

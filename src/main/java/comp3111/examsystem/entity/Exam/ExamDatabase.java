@@ -6,6 +6,10 @@ import comp3111.examsystem.tools.Database;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Database for storing and accessing exam entity
+ * @author Cheugn Tuen King
+ */
 public class ExamDatabase extends Database<Exam> {
     /**
      * Restriction of the upper time limit of exam time. Set to -1 to remove restriction.
@@ -27,6 +31,10 @@ public class ExamDatabase extends Database<Exam> {
      */
     private static ExamDatabase instance = null;
 
+
+    /**
+     * Constructor for ExamDatabase
+     */
     private ExamDatabase() {
         super(Exam.class);
     }
@@ -175,8 +183,8 @@ public class ExamDatabase extends Database<Exam> {
         if (!exist(entity)) {
             throw new Exception("Exam " + entity.getCourseId() + " " + entity.getName() + " does not exist.");
         }
-        List<Submission> submissions = SubmissionDatabase.getInstance().filter(null, null, entity.getId().toString());
-        SubmissionDatabase.getInstance().deleteSubmissions(submissions);
+//        List<Submission> submissions = SubmissionDatabase.getInstance().filter(null, null, entity.getId().toString());
+//        SubmissionDatabase.getInstance().deleteSubmissions(submissions);
 
 
         delByKey(entity.getId() + "");
