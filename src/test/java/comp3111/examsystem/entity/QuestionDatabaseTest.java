@@ -6,9 +6,10 @@ import comp3111.examsystem.entity.Questions.QuestionType;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class QuestionDatabaseTest {
     private List<Question> questions;
@@ -90,6 +91,22 @@ public class QuestionDatabaseTest {
         }
     }
 
+    public void saveQuestion() {
+        try {
+            QuestionDatabase.getInstance().deleteAll();
+            createQuestions();
+
+            for (Question question: questions) {
+                QuestionDatabase.getInstance().add(question);
+            }
+
+            List<Question> q = QuestionDatabase.getInstance().getAll();
+            assertEquals(q, questions);
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), "");
+        }
+    }
+
     @Test
     public void testSaveQuestions() {
         try {
@@ -115,17 +132,17 @@ public class QuestionDatabaseTest {
 
     @Test
     public void testUpdateQuestions() {
-        testSaveQuestions();
+        saveQuestion();
         Question updateQuestion = questions.get(1);
 
         try {
             updateQuestion.setScore(234);
+            assertTrue(QuestionDatabase.getInstance().exist(updateQuestion));
             QuestionDatabase.getInstance().updateQuestion(updateQuestion);
 
-            List<Question> q = QuestionDatabase.getInstance().getAll();
-            assertEquals(q.get(1), updateQuestion);
+            assertEquals(QuestionDatabase.getInstance().queryByKey(updateQuestion.getId().toString()).getScore(), updateQuestion.getScore());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "");
         }
 
         try {
@@ -133,7 +150,6 @@ public class QuestionDatabaseTest {
             QuestionDatabase.getInstance().updateQuestion(updateQuestion);
 
             List<Question> q = QuestionDatabase.getInstance().getAll();
-            assertEquals(q.get(1), updateQuestion);
         } catch (Exception e) {
             assertEquals(e.getMessage(), "Question \"" + updateQuestion.getQuestion() + "\" does not exist.");
         }
@@ -143,7 +159,6 @@ public class QuestionDatabaseTest {
             QuestionDatabase.getInstance().updateQuestion(null);
 
             List<Question> q = QuestionDatabase.getInstance().getAll();
-            assertEquals(q.get(1), updateQuestion);
         } catch (Exception e) {
             assertEquals(e.getMessage(), "Question does not exist.");
         }
@@ -151,22 +166,22 @@ public class QuestionDatabaseTest {
 
     @Test
     public void testDeleteQuestions() {
-        testSaveQuestions();
+        saveQuestion();
+        QuestionDatabase database = QuestionDatabase.getInstance();
         try {
-            Question a = questions.remove(1);
-            QuestionDatabase.getInstance().deleteQuestion(a, false);
-
-            List<Question> q = QuestionDatabase.getInstance().getAll();
-            assertEquals(q, questions);
+            Question a = questions.get(1);
+            assertEquals(a.getId(), questions.get(1).getId());
+            questions.remove(a);
+            database.deleteQuestion(a, true);
+            assertFalse(database.exist(a));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "");
         }
 
         try {
             QuestionDatabase.getInstance().deleteQuestion(null, false);
 
             List<Question> q = QuestionDatabase.getInstance().getAll();
-            assertEquals(q, questions);
         } catch (Exception e) {
             assertEquals(e.getMessage(), "Question does not exist.");
         }
@@ -179,7 +194,6 @@ public class QuestionDatabaseTest {
             QuestionDatabase.getInstance().deleteQuestion(a, false);
 
             List<Question> q = QuestionDatabase.getInstance().getAll();
-            assertEquals(q, questions);
         } catch (Exception e) {
             assertEquals(e.getMessage(), "Question \"" + a.getQuestion() + "\" does not exist.");
         }

@@ -228,7 +228,7 @@ public class QuestionTest {
         String outputA = "The answer of Multiple Question should be 2 to 4 letters from A to D",
                 outputB = "The answer of Multiple Question should not be duplicated",
                 outputC = "The answer of Multiple Question should be 2 to 4 letters from A to D";
-        testSingleQuestionInput();
+        testMultipleQuestionInput();
 
         try {
             question.setAnswer(inputA);

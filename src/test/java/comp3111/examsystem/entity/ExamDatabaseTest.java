@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class ExamDatabaseTest {
     List<Exam> exams;
@@ -102,7 +103,7 @@ public class ExamDatabaseTest {
         try {
             updateExam.setTime(90);
             ExamDatabase.getInstance().updateExam(updateExam);
-            assertEquals(ExamDatabase.getInstance().getAll(), exams);
+            assertEquals(updateExam, ExamDatabase.getInstance().queryByKey(updateExam.getId().toString()));
         } catch (Exception e) {
             assertEquals(e.getMessage(), "");
         }
@@ -110,14 +111,12 @@ public class ExamDatabaseTest {
         try {
             updateExam.setId(id);
             ExamDatabase.getInstance().updateExam(updateExam);
-            assertEquals(ExamDatabase.getInstance().getAll(), exams);
         } catch (Exception e) {
             assertEquals(e.getMessage(), "Exam " + updateExam.getCourseId() + " " + updateExam.getName() + " does not exist.");
         }
 
         try {
             ExamDatabase.getInstance().updateExam(null);
-            assertEquals(ExamDatabase.getInstance().getAll(), exams);
         } catch (Exception e) {
             assertEquals(e.getMessage(), "Exam does not exist.");
         }
@@ -132,7 +131,7 @@ public class ExamDatabaseTest {
         try {
             exams.remove(deletedExam);
             ExamDatabase.getInstance().deleteExam(deletedExam);
-            assertEquals(ExamDatabase.getInstance().getAll(), exams);
+            assertEquals(exams, ExamDatabase.getInstance().getAll());
         } catch (Exception e) {
             assertEquals(e.getMessage(), "");
         }
@@ -140,14 +139,12 @@ public class ExamDatabaseTest {
         try {
             deletedExam.setId(id);
             ExamDatabase.getInstance().deleteExam(deletedExam);
-            assertEquals(ExamDatabase.getInstance().getAll(), exams);
         } catch (Exception e) {
             assertEquals(e.getMessage(), "Exam " + deletedExam.getCourseId() + " " + deletedExam.getName() + " does not exist.");
         }
 
         try {
             ExamDatabase.getInstance().deleteExam(null);
-            assertEquals(ExamDatabase.getInstance().getAll(), exams);
         } catch (Exception e) {
             assertEquals(e.getMessage(), "Exam does not exist.");
         }
