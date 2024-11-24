@@ -97,6 +97,16 @@ public class StudentGradeStatisticController implements Initializable {
 
     private final ObservableList<GradeDetailClass> gradeList = FXCollections.observableArrayList();
 
+    /**
+     * Initializes the controller after its root element has been completely processed.
+     * This method is called automatically after the FXML file is loaded.
+     *
+     * @param url The location used to resolve relative paths for the root object,
+     *                 or null if the location is not known.
+     * @param resourceBundle The resources used to localize the root object,
+     *                  or null if the root object was not localized.
+     * @author Li Ching Ho
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gradeList.clear();

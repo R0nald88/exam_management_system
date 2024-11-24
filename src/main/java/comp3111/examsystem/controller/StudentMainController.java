@@ -224,7 +224,8 @@ public class StudentMainController implements Initializable {
             stage.show();
 
         } catch ( IOException e1) {
-            e1.printStackTrace();
+            MsgSender.showConfirm("Open Grade Statistics Error", e1.getMessage(), () -> {});
+            //e1.printStackTrace();
         }
     }
 
