@@ -1,11 +1,13 @@
 package comp3111.examsystem.controller;
 
+import comp3111.examsystem.entity.Exam.Submission;
 import comp3111.examsystem.entity.Personnel.Gender;
 import comp3111.examsystem.entity.Personnel.Student;
 import comp3111.examsystem.entity.Personnel.StudentDatabase;
 import comp3111.examsystem.tools.MsgSender;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,7 +16,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Button;
 
 import java.net.URL;
 import java.util.*;
@@ -54,6 +56,12 @@ public class ManagerStudentController implements Initializable{
     @FXML
     private TableColumn<Student, String> passwordColumn;
 
+    @FXML
+    private Button deleteBtn;
+    @FXML
+    private Button updateBtn;
+
+
 
     public void initialize(URL url, ResourceBundle resourceBundle){
         List<Student> students = StudentDatabase.getInstance().getAll();
@@ -67,6 +75,15 @@ public class ManagerStudentController implements Initializable{
         passwordColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getPassword()));
         genderCombox.setItems(FXCollections.observableList(Arrays.stream(Gender.values()).map(Gender::getName).toList()));
         genderCombox.getSelectionModel().selectFirst();
+
+        recordTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Student>) change -> {
+            if (!change.getList().isEmpty()) {
+                deleteBtn.setDisable(false);
+                updateBtn.setDisable(false);
+            }
+        });
+        deleteBtn.setDisable(true);
+        updateBtn.setDisable(true);
     }
 
     @FXML
@@ -130,6 +147,9 @@ public class ManagerStudentController implements Initializable{
         formDepartmentTxt.setText("");
         formPasswordTxt.setText("");
         genderCombox.getSelectionModel().selectFirst();
+
+        deleteBtn.setDisable(true);
+        updateBtn.setDisable(true);
 
         reset();
         filter();

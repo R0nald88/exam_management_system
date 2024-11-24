@@ -39,12 +39,12 @@
     <bottom>
         <HBox alignment="CENTER_RIGHT" prefHeight="71.0" prefWidth="960.0" BorderPane.alignment="CENTER">
             <children>
-                <Button mnemonicParsing="false" onAction="#grade" text="Grade">
+                <Button fx:id="gradeBtn" mnemonicParsing="false" onAction="#grade" text="Grade">
                     <HBox.margin>
                         <Insets right="200.0" />
                     </HBox.margin>
                 </Button>
-                <Label text="Score">
+                <Label fx:id="sqScorePrompt" text="Score">
                     <HBox.margin>
                         <Insets right="20.0" />
                     </HBox.margin>
@@ -54,7 +54,7 @@
                         <Insets right="20.0"/>
                     </HBox.margin>
                 </TextField>
-                <Button mnemonicParsing="false" onAction="#submit" text="Submit">
+                <Button fx:id="submitBtn" mnemonicParsing="false" onAction="#submit" text="Submit">
                     <HBox.margin>
                         <Insets right="20.0" />
                     </HBox.margin>

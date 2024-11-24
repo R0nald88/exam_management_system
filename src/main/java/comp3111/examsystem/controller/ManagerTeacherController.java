@@ -4,14 +4,12 @@ import comp3111.examsystem.entity.Personnel.*;
 import comp3111.examsystem.tools.MsgSender;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.*;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
@@ -56,6 +54,11 @@ public class ManagerTeacherController implements Initializable{
     @FXML
     private TableColumn<Teacher, String> passwordColumn;
 
+    @FXML
+    private Button deleteBtn;
+    @FXML
+    private Button updateBtn;
+
 
     public void initialize(URL url, ResourceBundle resourceBundle){
         List<Teacher> teachers = TeacherDatabase.getInstance().getAll();
@@ -72,6 +75,15 @@ public class ManagerTeacherController implements Initializable{
         positionCombox.setItems(FXCollections.observableList(Arrays.stream(Position.values()).map(Position::getName).toList()));
         genderCombox.getSelectionModel().selectFirst();
         positionCombox.getSelectionModel().selectFirst();
+
+        recordTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Teacher>) change -> {
+            if (!change.getList().isEmpty()) {
+                deleteBtn.setDisable(false);
+                updateBtn.setDisable(false);
+            }
+        });
+        deleteBtn.setDisable(true);
+        updateBtn.setDisable(true);
     }
 
     @FXML
@@ -136,6 +148,9 @@ public class ManagerTeacherController implements Initializable{
         formPasswordTxt.setText("");
         genderCombox.getSelectionModel().selectFirst();
         positionCombox.getSelectionModel().selectFirst();
+
+        deleteBtn.setDisable(true);
+        updateBtn.setDisable(true);
 
         reset();
         filter();

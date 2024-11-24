@@ -5,17 +5,16 @@ import comp3111.examsystem.entity.Course.CourseDatabase;
 import comp3111.examsystem.entity.Exam.Exam;
 import comp3111.examsystem.entity.Exam.ExamDatabase;
 import comp3111.examsystem.entity.Exam.SubmissionDatabase;
+import comp3111.examsystem.entity.Personnel.Student;
 import comp3111.examsystem.tools.MsgSender;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.*;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
@@ -44,6 +43,11 @@ public class ManagerCourseController implements Initializable{
     @FXML
     private TableColumn<Course, String> departmentColumn;
 
+    @FXML
+    private Button deleteBtn;
+    @FXML
+    private Button updateBtn;
+
 
     public void initialize(URL url, ResourceBundle resourceBundle){
         List<Course> courses = CourseDatabase.getInstance().getAll();
@@ -52,6 +56,15 @@ public class ManagerCourseController implements Initializable{
         courseIDColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getCourseID()));
         courseNameColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getCourseName()));
         departmentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getDepartment()));
+
+        recordTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Course>) change -> {
+            if (!change.getList().isEmpty()) {
+                deleteBtn.setDisable(false);
+                updateBtn.setDisable(false);
+            }
+        });
+        deleteBtn.setDisable(true);
+        updateBtn.setDisable(true);
     }
 
     @FXML
@@ -129,6 +142,9 @@ public class ManagerCourseController implements Initializable{
         formCourseIDTxt.setText("");
         formCourseNameTxt.setText("");
         formDepartmentTxt.setText("");
+
+        deleteBtn.setDisable(true);
+        updateBtn.setDisable(true);
 
         reset();
         filter();

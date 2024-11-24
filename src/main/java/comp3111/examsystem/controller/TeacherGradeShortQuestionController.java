@@ -11,6 +11,7 @@ import comp3111.examsystem.tools.MsgSender;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,7 +44,14 @@ public class TeacherGradeShortQuestionController implements Initializable {
     @FXML
     private ChoiceBox<String> examCombox;
     @FXML
+    private Label sqScorePrompt;
+    @FXML
     private TextField sqScoreTxt;
+
+    @FXML
+    private Button gradeBtn;
+    @FXML
+    private Button submitBtn;
 
     private List<Submission> submissions = new ArrayList<>();
 
@@ -83,6 +91,14 @@ public class TeacherGradeShortQuestionController implements Initializable {
             examCombox.getItems().add(examOption);
         }
         examCombox.getSelectionModel().selectFirst();
+
+        gradeTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Submission>) change -> {
+            if (!change.getList().isEmpty()) {
+                gradeBtn.setDisable(false);
+            }
+        });
+        gradeBtn.setDisable(true);
+        submitBtn.setDisable(true);
     }
 
     @FXML
@@ -113,9 +129,11 @@ public class TeacherGradeShortQuestionController implements Initializable {
             ObservableList<String[]> tableRows = FXCollections.observableArrayList();
             List<String> questions = new ArrayList<>();
             List<Integer> maxScore = new ArrayList<>();
+            int total = 0;
             for (Question q : selectedSubmission.getSqQuestionList()) {
                 questions.add(q.getQuestion());
                 maxScore.add(q.getScore());
+                total += q.getScore();
             }
             List<String> answers = selectedSubmission.getSqAnswerList();
             for(int i=0; i<questions.size(); i++){
@@ -126,6 +144,8 @@ public class TeacherGradeShortQuestionController implements Initializable {
                 tableRows.add(data);
             }
             questionTable.setItems(tableRows);
+            sqScorePrompt.setText("Score(0~"+total+"):");
+            submitBtn.setDisable(false);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
@@ -134,6 +154,8 @@ public class TeacherGradeShortQuestionController implements Initializable {
     @FXML
     public void submit(){
         try{
+            if(sqScoreTxt.getText().isEmpty())
+                throw new Exception("Please enter a score.");
             selectedSubmission.updateSqScore(Integer.parseInt(sqScoreTxt.getText()));
             SubmissionDatabase.getInstance().updateSubmission(selectedSubmission);
             MsgSender.showConfirm("Successful", "The submission has been graded.", this::refresh);
@@ -145,6 +167,10 @@ public class TeacherGradeShortQuestionController implements Initializable {
     @FXML
     public void refresh(){
         questionTable.setItems(FXCollections.observableArrayList());
+        submitBtn.setDisable(true);
+        gradeTable.getSelectionModel().clearSelection();
+        gradeBtn.setDisable(true);
+        sqScorePrompt.setText("Score:");
         sqScoreTxt.setText("");
         filter();
     }
