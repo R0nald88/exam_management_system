@@ -84,38 +84,47 @@ public class ManagerTeacherController implements Initializable{
     @FXML
     public void filter(){
         try{
-            List<Teacher> teachers = new ArrayList<>();
-            List<Teacher> usernameFilterTeachers = new ArrayList<>();
-            List<Teacher> nameFilterTeachers = new ArrayList<>();
-            List<Teacher> departmentFilterTeachers = new ArrayList<>();
-            if(usernameTxt.getText().isEmpty())
-                usernameFilterTeachers = TeacherDatabase.getInstance().getAll();
-            else
-                usernameFilterTeachers = TeacherDatabase.getInstance().queryFuzzyByField("username", usernameTxt.getText());
-            if(nameTxt.getText().isEmpty())
-                nameFilterTeachers = TeacherDatabase.getInstance().getAll();
-            else
-                nameFilterTeachers = TeacherDatabase.getInstance().queryFuzzyByField("name", nameTxt.getText());
-            if(departmentTxt.getText().isEmpty())
-                departmentFilterTeachers = TeacherDatabase.getInstance().getAll();
-            else
-                departmentFilterTeachers = TeacherDatabase.getInstance().queryFuzzyByField("department", departmentTxt.getText());
-            teachers = TeacherDatabase.getInstance().join(TeacherDatabase.getInstance().join(usernameFilterTeachers, nameFilterTeachers), departmentFilterTeachers);
+            List<Teacher> teachers = filterTeachers(usernameTxt.getText(), nameTxt.getText(), departmentTxt.getText());
             recordTable.getItems().setAll(teachers);
         } catch (Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
     }
 
+    public static List<Teacher> filterTeachers(String username, String name, String department){
+        List<Teacher> teachers = new ArrayList<>();
+        List<Teacher> usernameFilterTeachers = new ArrayList<>();
+        List<Teacher> nameFilterTeachers = new ArrayList<>();
+        List<Teacher> departmentFilterTeachers = new ArrayList<>();
+        if(username.isEmpty())
+            usernameFilterTeachers = TeacherDatabase.getInstance().getAll();
+        else
+            usernameFilterTeachers = TeacherDatabase.getInstance().queryFuzzyByField("username", username);
+        if(name.isEmpty())
+            nameFilterTeachers = TeacherDatabase.getInstance().getAll();
+        else
+            nameFilterTeachers = TeacherDatabase.getInstance().queryFuzzyByField("name", name);
+        if(department.isEmpty())
+            departmentFilterTeachers = TeacherDatabase.getInstance().getAll();
+        else
+            departmentFilterTeachers = TeacherDatabase.getInstance().queryFuzzyByField("department", department);
+        teachers = TeacherDatabase.getInstance().join(TeacherDatabase.getInstance().join(usernameFilterTeachers, nameFilterTeachers), departmentFilterTeachers);
+        return teachers;
+    }
+
     @FXML
     public void delete(){
         try{
             Teacher selectedTeacher = recordTable.getSelectionModel().getSelectedItem();
-            TeacherDatabase.getInstance().delByFiled("username", selectedTeacher.getUsername());
+            deleteTeacher(selectedTeacher);
             MsgSender.showConfirm("Successful", "The teacher record has been deleted.", this::refresh);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
+    }
+
+    public static void deleteTeacher(Teacher teacher){
+        TeacherDatabase.getInstance().delByFiled("username", teacher.getUsername());
     }
 
     @FXML
@@ -135,39 +144,47 @@ public class ManagerTeacherController implements Initializable{
     @FXML
     public void add(){
         try{
-            Teacher teacher = new Teacher();
-            teacher.setUsername(formUsernameTxt.getText());
-            teacher.setName(formNameTxt.getText());
-            teacher.setAge(formAgeTxt.getText());
-            teacher.setDepartment(formDepartmentTxt.getText());
-            teacher.setPassword(formPasswordTxt.getText());
-            teacher.setGender(genderCombox.getValue());
-            teacher.setPosition(positionCombox.getValue());
-            TeacherDatabase.getInstance().add(teacher);
+            addTeacher(formUsernameTxt.getText(), formNameTxt.getText(), formAgeTxt.getText(), formDepartmentTxt.getText(), formPasswordTxt.getText(), genderCombox.getValue(), positionCombox.getValue());
             MsgSender.showConfirm("Successful", "A new teacher record has been created.", this::refresh);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
     }
 
+    public static void addTeacher(String username, String name, String age, String department, String password, String gender, String position){
+        Teacher teacher = new Teacher();
+        teacher.setUsername(username);
+        teacher.setName(name);
+        teacher.setAge(age);
+        teacher.setDepartment(department);
+        teacher.setPassword(password);
+        teacher.setGender(gender);
+        teacher.setPosition(position);
+        TeacherDatabase.getInstance().add(teacher);
+    }
+
     @FXML
     public void update(){
         try{
             Teacher selectedTeacher = recordTable.getSelectionModel().getSelectedItem();
-            if(selectedTeacher.getUsername().equals(formUsernameTxt.getText()))
-                selectedTeacher.forceSetUsername(formUsernameTxt.getText());
-            else
-                selectedTeacher.setUsername(formUsernameTxt.getText());
-            selectedTeacher.setName(formNameTxt.getText());
-            selectedTeacher.setAge(formAgeTxt.getText());
-            selectedTeacher.setDepartment(formDepartmentTxt.getText());
-            selectedTeacher.setPassword(formPasswordTxt.getText());
-            selectedTeacher.setGender(genderCombox.getValue());
-            selectedTeacher.setPosition(positionCombox.getValue());
-            TeacherDatabase.getInstance().update(selectedTeacher);
+            updateTeacher(selectedTeacher, formUsernameTxt.getText(), formNameTxt.getText(), formAgeTxt.getText(), formDepartmentTxt.getText(), formPasswordTxt.getText(), genderCombox.getValue(), positionCombox.getValue());
             MsgSender.showConfirm("Successful", "The teacher record has been updated.", this::refresh);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
+    }
+
+    public static void updateTeacher(Teacher selectedTeacher, String username, String name, String age, String department, String password, String gender, String position){
+        if(selectedTeacher.getUsername().equals(username))
+            selectedTeacher.forceSetUsername(username);
+        else
+            selectedTeacher.setUsername(username);
+        selectedTeacher.setName(name);
+        selectedTeacher.setAge(age);
+        selectedTeacher.setDepartment(department);
+        selectedTeacher.setPassword(password);
+        selectedTeacher.setGender(gender);
+        selectedTeacher.setPosition(position);
+        TeacherDatabase.getInstance().update(selectedTeacher);
     }
 }

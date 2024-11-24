@@ -1,7 +1,9 @@
 package comp3111.examsystem.controller;
 
-import comp3111.examsystem.entity.Personnel.Student;
-import comp3111.examsystem.entity.Personnel.StudentDatabase;
+import comp3111.examsystem.entity.Personnel.Teacher;
+import comp3111.examsystem.entity.Personnel.TeacherDatabase;
+import comp3111.examsystem.entity.Personnel.Teacher;
+import comp3111.examsystem.entity.Personnel.TeacherDatabase;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -9,69 +11,73 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ManagerStudentControllerTest {
+class ManagerTeacherControllerTest {
 
-    public Student student0 = new Student();
-    public Student student1 = new Student();
-    public Student student2 = new Student();
+    public Teacher teacher0 = new Teacher();
+    public Teacher teacher1 = new Teacher();
+    public Teacher teacher2 = new Teacher();
 
     @Test
-    void studentController() {
-        List<Student> studentList = StudentDatabase.getInstance().getAll();
-        for(Student student : studentList)
-            StudentDatabase.getInstance().delByKey(student.getId().toString());
+    void teacherController() {
+        List<Teacher> teacherList = TeacherDatabase.getInstance().getAll();
+        for(Teacher teacher : teacherList)
+            TeacherDatabase.getInstance().delByKey(teacher.getId().toString());
 
-        addStudent();
+        addTeacher();
 
-        filterStudents0();
-        filterStudents1();
-        filterStudents2();
-        filterStudents3();
-        filterStudents4();
-        filterStudents5();
-        filterStudents6();
-        filterStudents7();
+        filterTeachers0();
+        filterTeachers1();
+        filterTeachers2();
+        filterTeachers3();
+        filterTeachers4();
+        filterTeachers5();
+        filterTeachers6();
+        filterTeachers7();
 
-        deleteStudent();
+        deleteTeacher();
 
-        updateStudent();
+        updateTeacher();
 
-        List<Student> newStudentList = StudentDatabase.getInstance().getAll();
-        for(Student student : newStudentList)
-            StudentDatabase.getInstance().delByKey(student.getId().toString());
+        List<Teacher> newTeacherList = TeacherDatabase.getInstance().getAll();
+        for(Teacher teacher : newTeacherList)
+            TeacherDatabase.getInstance().delByKey(teacher.getId().toString());
     }
 
-    void addStudent(){
-        student0.setUsername("student0");
-        student0.setName("Jack");
-        student0.setAge("25");
-        student0.setDepartment("MATH");
-        student0.setPassword("123456!Az");
-        student0.setGender("Male");
-        ManagerStudentController.addStudent("student0", "Jack", "25", "MATH", "123456!Az", "Male");
 
-        student1.setUsername("student1");
-        student1.setName("Jack");
-        student1.setAge("25");
-        student1.setDepartment("PHYS");
-        student1.setPassword("123456!Az");
-        student1.setGender("Male");
-        ManagerStudentController.addStudent("student1", "Jack", "25", "PHYS", "123456!Az", "Male");
+    void addTeacher(){
+        teacher0.setUsername("teacher0");
+        teacher0.setName("Jack");
+        teacher0.setAge("25");
+        teacher0.setDepartment("MATH");
+        teacher0.setPassword("123456!Az");
+        teacher0.setGender("Male");
+        teacher0.setPosition("Professor");
+        ManagerTeacherController.addTeacher("teacher0", "Jack", "25", "MATH", "123456!Az", "Male", "Professor");
 
-        student2.setUsername("student2");
-        student2.setName("Ray");
-        student2.setAge("25");
-        student2.setDepartment("PHYS");
-        student2.setPassword("123456!Az");
-        student2.setGender("Male");
-        ManagerStudentController.addStudent("student2", "Ray", "25", "PHYS", "123456!Az", "Male");
+        teacher1.setUsername("teacher1");
+        teacher1.setName("Jack");
+        teacher1.setAge("25");
+        teacher1.setDepartment("PHYS");
+        teacher1.setPassword("123456!Az");
+        teacher1.setGender("Male");
+        teacher1.setPosition("Professor");
+        ManagerTeacherController.addTeacher("teacher1", "Jack", "25", "PHYS", "123456!Az", "Male", "Professor");
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student0);
-        expect.add(student1);
-        expect.add(student2);
+        teacher2.setUsername("teacher2");
+        teacher2.setName("Ray");
+        teacher2.setAge("25");
+        teacher2.setDepartment("PHYS");
+        teacher2.setPassword("123456!Az");
+        teacher2.setGender("Male");
+        teacher2.setPosition("Professor");
+        ManagerTeacherController.addTeacher("teacher2", "Ray", "25", "PHYS", "123456!Az", "Male", "Professor");
 
-        List<Student> actual = StudentDatabase.getInstance().getAll();
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher0);
+        expect.add(teacher1);
+        expect.add(teacher2);
+
+        List<Teacher> actual = TeacherDatabase.getInstance().getAll();
 
         assertEquals(expect.size(), actual.size());
 
@@ -82,17 +88,18 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 
-    void deleteStudent(){
-        ManagerStudentController.deleteStudent(student1);
-        ManagerStudentController.deleteStudent(student2);
+    void deleteTeacher(){
+        ManagerTeacherController.deleteTeacher(teacher1);
+        ManagerTeacherController.deleteTeacher(teacher2);
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student0);
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher0);
 
-        List<Student> actual = StudentDatabase.getInstance().getAll();
+        List<Teacher> actual = TeacherDatabase.getInstance().getAll();
 
         assertEquals(expect.size(), actual.size());
 
@@ -103,22 +110,24 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 
-    void updateStudent(){
-        Student student = StudentDatabase.getInstance().getAll().getFirst();
-        ManagerStudentController.updateStudent(student, "student0", "David", "30", "CSE", "13579!Az", "Male");
-        student.setName("David");
-        student.setAge("30");
-        student.setDepartment("CSE");
-        student.setPassword("13579!Az");
-        student.setGender("Male");
+    void updateTeacher(){
+        Teacher teacher = TeacherDatabase.getInstance().getAll().getFirst();
+        ManagerTeacherController.updateTeacher(teacher, "teacher0", "David", "30", "CSE", "13579!Az", "Male", "Instructor");
+        teacher.setName("David");
+        teacher.setAge("30");
+        teacher.setDepartment("CSE");
+        teacher.setPassword("13579!Az");
+        teacher.setGender("Male");
+        teacher.setPosition("Instructor");
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student);
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher);
 
-        List<Student> actual = StudentDatabase.getInstance().getAll();
+        List<Teacher> actual = TeacherDatabase.getInstance().getAll();
 
         assertEquals(expect.size(), actual.size());
 
@@ -129,18 +138,19 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 
-    void filterStudents0() {
-        String input0 = "student0";
+    void filterTeachers0() {
+        String input0 = "teacher0";
         String input1 = "";
         String input2 = "";
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student0);
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher0);
 
-        List<Student> actual = ManagerStudentController.filterStudents(input0, input1, input2);
+        List<Teacher> actual = ManagerTeacherController.filterTeachers(input0, input1, input2);
 
         assertEquals(expect.size(), actual.size());
 
@@ -151,19 +161,20 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 
-    void filterStudents1() {
+    void filterTeachers1() {
         String input0 = "";
         String input1 = "Jack";
         String input2 = "";
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student0);
-        expect.add(student1);
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher0);
+        expect.add(teacher1);
 
-        List<Student> actual = ManagerStudentController.filterStudents(input0, input1, input2);
+        List<Teacher> actual = ManagerTeacherController.filterTeachers(input0, input1, input2);
 
         assertEquals(expect.size(), actual.size());
 
@@ -174,19 +185,20 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 
-    void filterStudents2() {
+    void filterTeachers2() {
         String input0 = "";
         String input1 = "";
         String input2 = "PHYS";
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student1);
-        expect.add(student2);
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher1);
+        expect.add(teacher2);
 
-        List<Student> actual = ManagerStudentController.filterStudents(input0, input1, input2);
+        List<Teacher> actual = ManagerTeacherController.filterTeachers(input0, input1, input2);
 
         assertEquals(expect.size(), actual.size());
 
@@ -197,18 +209,19 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 
-    void filterStudents3() {
-        String input0 = "student0";
+    void filterTeachers3() {
+        String input0 = "teacher0";
         String input1 = "Jack";
         String input2 = "";
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student0);
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher0);
 
-        List<Student> actual = ManagerStudentController.filterStudents(input0, input1, input2);
+        List<Teacher> actual = ManagerTeacherController.filterTeachers(input0, input1, input2);
 
         assertEquals(expect.size(), actual.size());
 
@@ -219,18 +232,19 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 
-    void filterStudents4() {
-        String input0 = "student0";
+    void filterTeachers4() {
+        String input0 = "teacher0";
         String input1 = "";
         String input2 = "MATH";
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student0);
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher0);
 
-        List<Student> actual = ManagerStudentController.filterStudents(input0, input1, input2);
+        List<Teacher> actual = ManagerTeacherController.filterTeachers(input0, input1, input2);
 
         assertEquals(expect.size(), actual.size());
 
@@ -241,18 +255,19 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 
-    void filterStudents5() {
+    void filterTeachers5() {
         String input0 = "";
         String input1 = "Ray";
         String input2 = "PHYS";
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student2);
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher2);
 
-        List<Student> actual = ManagerStudentController.filterStudents(input0, input1, input2);
+        List<Teacher> actual = ManagerTeacherController.filterTeachers(input0, input1, input2);
 
         assertEquals(expect.size(), actual.size());
 
@@ -263,18 +278,19 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 
-    void filterStudents6() {
-        String input0 = "student2";
+    void filterTeachers6() {
+        String input0 = "teacher2";
         String input1 = "Ray";
         String input2 = "PHYS";
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student2);
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher2);
 
-        List<Student> actual = ManagerStudentController.filterStudents(input0, input1, input2);
+        List<Teacher> actual = ManagerTeacherController.filterTeachers(input0, input1, input2);
 
         assertEquals(expect.size(), actual.size());
 
@@ -285,20 +301,21 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 
-    void filterStudents7() {
+    void filterTeachers7() {
         String input0 = "";
         String input1 = "";
         String input2 = "";
 
-        List<Student> expect = new ArrayList<>();
-        expect.add(student0);
-        expect.add(student1);
-        expect.add(student2);
+        List<Teacher> expect = new ArrayList<>();
+        expect.add(teacher0);
+        expect.add(teacher1);
+        expect.add(teacher2);
 
-        List<Student> actual = ManagerStudentController.filterStudents(input0, input1, input2);
+        List<Teacher> actual = ManagerTeacherController.filterTeachers(input0, input1, input2);
 
         assertEquals(expect.size(), actual.size());
 
@@ -309,6 +326,7 @@ class ManagerStudentControllerTest {
             assertEquals(expect.get(i).getDepartment(), actual.get(i).getDepartment());
             assertEquals(expect.get(i).getPassword(), actual.get(i).getPassword());
             assertEquals(expect.get(i).getGender(), actual.get(i).getGender());
+            assertEquals(expect.get(i).getPosition(), actual.get(i).getPosition());
         }
     }
 }
