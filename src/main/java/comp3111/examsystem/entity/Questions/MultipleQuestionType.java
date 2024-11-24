@@ -5,16 +5,45 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Singleton containing multiple question type validation and UI set-up related methods.
+ * As this class only contains utility methods, using singleton could reduce space due to class initialization.
+ * @author Cheung Tuen King
+ */
 public final class MultipleQuestionType extends QuestionTypeFactory {
+    /**
+     * Multiple question type singleton instance
+     */
     private static MultipleQuestionType instance = null;
 
+    /**
+     * Constructor for MultipleQuestionType
+     * @author Cheung Tuen King
+     */
     private MultipleQuestionType() {}
 
+    /**
+     * Access singleton instance of MultipleQuestionType
+     * @author Cheung Tuen King
+     * @return MultipleQuestionType singleton instance
+     */
     public static MultipleQuestionType getInstance() {
         if (instance == null) instance = new MultipleQuestionType();
         return instance;
     }
 
+    /**
+     * Validate answer for multiple question.
+     * Answer for multiple question should:
+     * <li>contains 2 ot 4 letters only from A to D</li>
+     * <li>contains no duplicated letters</li>
+     * The validated answer would be finalized by ordering ascendingly
+     *
+     * @param answer Answer for validation
+     * @return Validated answer with letters in ascending order
+     * @throws Exception Any condition above is not met
+     * @author Cheung Tuen King
+     */
     @Override
     public String validateAnswer(String answer) throws Exception {
         if (answer.length() <= 1 || answer.length() > 4) {

@@ -7,7 +7,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
+/**
+ * Main class to start the first page of the system
+ */
 public class Main extends Application {
+	/**
+	 * Open the LoginUI as the first page of the system
+	 */
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("LoginUI.fxml"));
@@ -18,7 +24,10 @@ public class Main extends Application {
 			MsgSender.showMsg(e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Main method to start the program
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}

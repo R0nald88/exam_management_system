@@ -12,6 +12,10 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for main page of manager.
+ * @author Wan Hanzhe
+ */
 public class ManagerMainController implements Initializable {
     @FXML
     private VBox mainbox;
@@ -19,6 +23,9 @@ public class ManagerMainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
 
+    /**
+     * Direct user to the student management system when StudentManagement button is pressed.
+     */
     @FXML
     public void openStudentManageUI() {
         try {
@@ -32,6 +39,9 @@ public class ManagerMainController implements Initializable {
         }
     }
 
+    /**
+     * Direct user to the teacher management system when TeacherManagement button is pressed.
+     */
     @FXML
     public void openTeacherManageUI() {
         try {
@@ -45,6 +55,9 @@ public class ManagerMainController implements Initializable {
         }
     }
 
+    /**
+     * Direct user to the course management system when CourseManagement button is pressed.
+     */
     @FXML
     public void openCourseManageUI() {
         try {

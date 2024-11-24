@@ -6,19 +6,54 @@ import comp3111.examsystem.tools.Database;
 
 import java.util.List;
 
+/**
+ * Database for accessing and storing question entity
+ * @author Cheung Tuen King
+ */
 public class QuestionDatabase extends Database<Question> {
+    /**
+     * Length limit of options. Set to -1 for removing length limit
+     */
     public static final int OPTION_LENGTH_LIMIT = 20;
+
+    /**
+     * Length limit of answer. Set to -1 for removing length limit
+     */
     public static final int ANSWER_LENGTH_LIMIT = -1;
+
+    /**
+     * Length limit of question. Set to -1 for removing length limit
+     */
     public static final int QUESTION_LENGTH_LIMIT = -1;
+
+    /**
+     * Upper limit of score. Set to -1 for removing upper limit
+     */
     public static final int SCORE_UPPER_LIMIT = -1;
+
+    /**
+     * Lower limit of options
+     */
     public static final int SCORE_LOWER_LIMIT = 0;
 
+    /**
+     * QuestionDatabase singleton instance
+     */
     private static QuestionDatabase instance = null;
 
+    /**
+     * Constructor of QuestionDatabase
+     * @author Cheung Tuen King
+     */
     private QuestionDatabase() {
         super(Question.class);
     }
 
+    /**
+     * Access QuestionDatabase singleton
+     * @author Cheung Tuen King
+     * @return QuestionDatabase singleton instance
+     */
     public static QuestionDatabase getInstance() {
         if (instance == null) instance = new QuestionDatabase();
         return instance;
@@ -73,6 +108,7 @@ public class QuestionDatabase extends Database<Question> {
      *
      * @return List of questions matching the parameters
      * @author Cheung Tuen King
+     * @throws Exception Score is not an integer
      */
     public List<Question> filter(String question, String type, String score) throws Exception {
         int s = -1;
@@ -112,10 +148,13 @@ public class QuestionDatabase extends Database<Question> {
     }
 
     /**
-     * Validate and add the question provided to the database
+     * Validate and add the question provided to the database.
+     * Duplicated id will automatically change before adding.
+     * Duplicated questions, where the input question matched another question with all attributes same in database, is not allowed
      *
-     * @param question Exam id for checking
+     * @param question Question for adding
      * @author Cheung Tuen King
+     * @throws Exception Duplicated question
      */
     public void addQuestion(Question question) throws Exception {
         List<Question> q = filter(question.getQuestion(), question.getType(), question.getScore());
@@ -133,6 +172,13 @@ public class QuestionDatabase extends Database<Question> {
         add(question);
     }
 
+    /**
+     * Validate and update the question provided to the database
+     *
+     * @param question Question for updating
+     * @author Cheung Tuen King
+     * @throws Exception Question id does not exist
+     */
     public void updateQuestion(Question question) throws Exception {
         if (question == null) {
             throw new Exception("Question does not exist.");
@@ -145,6 +191,14 @@ public class QuestionDatabase extends Database<Question> {
         update(question);
     }
 
+    /**
+     * Delete the question from database
+     *
+     * @param question Question for deleting
+     * @param deleteExam Whether exam containing question for deleting should be affected
+     * @author Cheung Tuen King
+     * @throws Exception Question id does not exist, or certain exam is affected but cannot be updated according to deleteExam
+     */
     public void deleteQuestion(Question question, boolean deleteExam) throws Exception {
         if (question == null) {
             throw new Exception("Question does not exist.");
@@ -161,17 +215,36 @@ public class QuestionDatabase extends Database<Question> {
         } else if (!affectedExam.isEmpty()) {
             affectedExam.removeIf(e -> e.getQuestionIds().size() == 1 && e.getQuestionIds().contains(question.getId()));
             ExamDatabase.getInstance().deleteExams(affectedExam);
+
+            affectedExam = ExamDatabase.getInstance().queryByQuestion(question.getId());
+            for (Exam exam : affectedExam) {
+                exam.deleteQuestion(question);
+                ExamDatabase.getInstance().updateExam(exam);
+            }
         }
 
         delByKey(question.getId().toString());
     }
 
+    /**
+     * Delete a list of questions from database
+     * @param questions List of questions for deleting
+     * @param deleteExam Whether exam containing question for deleting should be affected
+     * @throws Exception Question id does not exist, or certain exam is affected but cannot be updated according to deleteExam
+     * @author Cheung Tuen King
+     */
     public void deleteQuestions(List<Question> questions, boolean deleteExam) throws Exception {
         for (Question q : questions) {
             deleteQuestion(q, deleteExam);
         }
     }
 
+    /**
+     * Delete all questions from database.
+     * Affected exam will all be updated or deleted automatically.
+     * For testing purpose only.
+     * @throws Exception Question id does not exist
+     */
     public void deleteAll() throws Exception {
         deleteQuestions(getAll(), true);
     }

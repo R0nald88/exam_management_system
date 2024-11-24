@@ -456,7 +456,7 @@ public class Submission extends Entity{
      */
     public void updateSqScore(int newSqScore) throws Exception{
         if (newSqScore < 0 || newSqScore > sqFullScore)
-            throw new Exception("Score should be non-negative and no larger than the maximum score.");
+            throw new Exception("Score should be non-negative and no larger than the total score of all short questions.");
         score += newSqScore - sqScore;
         sqScore = newSqScore;
         graded = true;

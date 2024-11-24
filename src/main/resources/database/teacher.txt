@@ -1,2 +1,1 @@
-{"position":"PROFESSOR","username":"t1","name":"t1","age":45,"gender":"MALE","department":"MATH","password":"123456!aZ","id":1732300848783}
-{"position":"PROFESSOR","username":"t2","name":"t2","age":40,"gender":"MALE","department":"CSE","password":"123456!aZ","id":1732307039358}
+{"position":"ASSISTANT_PROFESSOR","username":"user1","name":"Teacher 3209","age":43,"gender":"MALE","department":"COMP","password":"1234%^QWe","id":1732442005342}

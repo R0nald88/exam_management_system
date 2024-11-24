@@ -24,28 +24,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Controller class for grade statistics.
+ * @author Wan Hanzhe
+ */
 public class TeacherGradeStatisticController implements Initializable {
-    public static class GradeExampleClass {
-        public String getStudentUsername() {
-            return "student";
-        }
-        public String getCourseNum() {
-            return "comp3111";
-        }
-        public String getExamName() {
-            return "final";
-        }
-        public String getScore() {
-            return "100";
-        }
-        public String getFullScore() {
-            return "100";
-        }
-        public String getTimeSpend() {
-            return "60";
-        }
-    }
-
     @FXML
     private ChoiceBox<String> courseCombox;
     @FXML
@@ -83,16 +66,36 @@ public class TeacherGradeStatisticController implements Initializable {
     @FXML
     PieChart pieChart;
 
+    /**
+     * A list of all courses.
+     */
     private List<Course> courses = CourseDatabase.getInstance().getAll();
 
+    /**
+     * A list of all exams.
+     */
     private List<Exam> exams = ExamDatabase.getInstance().getAll();
 
+    /**
+     * A list of all students.
+     */
     private List<Student> students = StudentDatabase.getInstance().getAll();
 
+    /**
+     * A list of filtered submissions.
+     */
     private List<Submission> currentSubmissionList = new ArrayList<>();
 
+    /**
+     * A dictionary that maps (course ID, exam name) to exam ID.
+     */
     private Dictionary<String, String> examNameToIdDict = new Hashtable<>();
 
+    /**
+     * Initialize the table, choice boxes and charts.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         currentSubmissionList = SubmissionDatabase.getInstance().getAll();
@@ -114,6 +117,7 @@ public class TeacherGradeStatisticController implements Initializable {
             courseCombox.getItems().add(course.getCourseID());
         }
 
+        examNameToIdDict = new Hashtable<>();
         examCombox.getItems().add("All");
         for(Exam exam : exams){
             String courseID = CourseDatabase.getInstance().queryByField("courseID", exam.getCourseId()).getFirst().getCourseID();
@@ -149,12 +153,20 @@ public class TeacherGradeStatisticController implements Initializable {
         loadChart();
     }
 
+    /**
+     * Called when the user clicks the refresh button.
+     * Initialize the table, choice boxes and charts.
+     */
     @FXML
     public void refresh() {
         reset();
         filter();
     }
 
+    /**
+     * Called by filter().
+     * Refresh the charts.
+     */
     private void loadChart() {
         XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
         seriesBar.getData().clear();
@@ -203,6 +215,10 @@ public class TeacherGradeStatisticController implements Initializable {
 
     }
 
+    /**
+     * Called when the user clicks the reset button.
+     * Reset the filter.
+     */
     @FXML
     public void reset() {
         courseCombox.getSelectionModel().selectFirst();
@@ -211,25 +227,15 @@ public class TeacherGradeStatisticController implements Initializable {
         questionCombox.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Called when the user clicks the filter button.
+     * Filter the submission records according to the filter.
+     * The charts will also be updated.
+     */
     @FXML
     public void filter() {
         try{
-            List<Submission> courseFilterSubmissions = new ArrayList<>();
-            List<Submission> examFilterSubmissions = new ArrayList<>();
-            List<Submission> studentFilterSubmissions = new ArrayList<>();
-            if(courseCombox.getValue().equals("All"))
-                courseFilterSubmissions = SubmissionDatabase.getInstance().getAll();
-            else
-                courseFilterSubmissions = SubmissionDatabase.getInstance().queryByField("courseId", courseCombox.getValue());
-            if(examCombox.getValue().equals("All"))
-                examFilterSubmissions = SubmissionDatabase.getInstance().getAll();
-            else
-                examFilterSubmissions = SubmissionDatabase.getInstance().queryByField("examId", examNameToIdDict.get(examCombox.getValue()));
-            if(studentCombox.getValue().equals("All"))
-                studentFilterSubmissions = SubmissionDatabase.getInstance().getAll();
-            else
-                studentFilterSubmissions = SubmissionDatabase.getInstance().queryByField("studentUsername", studentCombox.getValue());
-            List<Submission> filteredSubmissions = SubmissionDatabase.getInstance().join(SubmissionDatabase.getInstance().join(courseFilterSubmissions, examFilterSubmissions), studentFilterSubmissions);
+            List<Submission> filteredSubmissions = filterSubmissions(courseCombox.getValue(), examCombox.getValue(), studentCombox.getValue());
             List<Submission> submissionRecords = new ArrayList<>();
 
             if(questionCombox.getValue().equals("All")){
@@ -274,5 +280,32 @@ public class TeacherGradeStatisticController implements Initializable {
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
         loadChart();
+    }
+
+    /**
+     * Retrieve submission records from the database.
+     * @param courseFilter the filter for course.
+     * @param examFilter the filter for exam.
+     * @param studentFilter the filter for student.
+     * @return a list of records matches the filter.
+     */
+    public List<Submission> filterSubmissions(String courseFilter, String examFilter, String studentFilter){
+        List<Submission> courseFilterSubmissions = new ArrayList<>();
+        List<Submission> examFilterSubmissions = new ArrayList<>();
+        List<Submission> studentFilterSubmissions = new ArrayList<>();
+        if(courseFilter.equals("All"))
+            courseFilterSubmissions = SubmissionDatabase.getInstance().getAll();
+        else
+            courseFilterSubmissions = SubmissionDatabase.getInstance().queryByField("courseId", courseFilter);
+        if(examFilter.equals("All"))
+            examFilterSubmissions = SubmissionDatabase.getInstance().getAll();
+        else
+            examFilterSubmissions = SubmissionDatabase.getInstance().queryByField("examId", examNameToIdDict.get(examFilter));
+        if(studentFilter.equals("All"))
+            studentFilterSubmissions = SubmissionDatabase.getInstance().getAll();
+        else
+            studentFilterSubmissions = SubmissionDatabase.getInstance().queryByField("studentUsername", studentFilter);
+        List<Submission> filteredSubmissions = SubmissionDatabase.getInstance().join(SubmissionDatabase.getInstance().join(courseFilterSubmissions, examFilterSubmissions), studentFilterSubmissions);
+        return filteredSubmissions;
     }
 }

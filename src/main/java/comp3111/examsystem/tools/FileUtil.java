@@ -5,9 +5,18 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for accessing and writing files
+ */
 public class FileUtil {
 
-    public static boolean writeTxtFile(String content, File fileName) throws Exception {
+    /**
+     * Write content to the file specified
+     * @param content File content to be written
+     * @param fileName File to be written
+     * @return Boolean determining if the writing is successful
+     */
+    public static boolean writeTxtFile(String content, File fileName) {
         boolean flag = false;
         FileOutputStream fileOutputStream = null;
         try {
@@ -21,6 +30,11 @@ public class FileUtil {
         return flag;
     }
 
+    /**
+     * Read the content in file line by line
+     * @param fileName File for reading
+     * @return List of string, each item representing a line in the file
+     */
     public static List<String> readFileByLines(String fileName) {
         File file = new File(fileName);
         List<String> list = new ArrayList<String>();

@@ -16,6 +16,10 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for TeacherRegisterUI.fxml
+ * @author Cheung Tuen King
+ */
 public class TeacherRegisterUIController implements Initializable {
     @FXML private TextField usernameTxt;
     @FXML private TextField nameTxt;
@@ -27,13 +31,33 @@ public class TeacherRegisterUIController implements Initializable {
     @FXML private PasswordField confirmedPwdTxt;
     @FXML private Label hintLabel;
 
+    /**
+     * Close the register page.
+     * This method is called when "Close" button is clicked
+     * @param e Action event of teh button
+     */
     public void close(ActionEvent e) {
         ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 
+    /**
+     * Validate and register the teacher based on the form input.
+     * If validation failed, or any error occurred, an error message dialog is prompted and the operation is terminated.
+     * After successful registration, a notification dialog is shown and this page is closed.
+     * This method is called when "Register" button is clicked
+     * @param actionEvent Action event of the button
+     */
     public void register(ActionEvent actionEvent) {
         try {
-            Teacher teacher = getTeacher();
+            Teacher teacher = new Teacher();
+            teacher.setUsername(usernameTxt.getText());
+            teacher.setName(nameTxt.getText());
+            teacher.setAge(ageTxt.getText());
+            teacher.setDepartment(deptTxt.getText());
+            teacher.setPassword(pwdTxt.getText());
+            teacher.setPosition(positionCombox.getSelectionModel().getSelectedItem());
+            teacher.setGender(genderCombox.getSelectionModel().getSelectedItem());
+            teacher.confirmPassword(confirmedPwdTxt.getText());
             TeacherDatabase.getInstance().registerTeacher(teacher);
             MsgSender.showConfirm("Successful Registration", "Teacher registered successfully.", () -> close(actionEvent));
         } catch (Exception e) {
@@ -41,19 +65,11 @@ public class TeacherRegisterUIController implements Initializable {
         }
     }
 
-    private Teacher getTeacher() {
-        Teacher teacher = new Teacher();
-        teacher.setUsername(usernameTxt.getText());
-        teacher.setName(nameTxt.getText());
-        teacher.setAge(ageTxt.getText());
-        teacher.setDepartment(deptTxt.getText());
-        teacher.setPassword(pwdTxt.getText());
-        teacher.setPosition(positionCombox.getSelectionModel().getSelectedItem());
-        teacher.setGender(genderCombox.getSelectionModel().getSelectedItem());
-        teacher.confirmPassword(confirmedPwdTxt.getText());
-        return teacher;
-    }
-
+    /**
+     * Initialize the register page.
+     * Set up all combo boxes selection in the registration form and print the password validation rule on screen
+     * @author Cheung Tuen King
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         genderCombox.setItems(FXCollections.observableList(Arrays.stream(Gender.values()).map(Gender::getName).toList()));
