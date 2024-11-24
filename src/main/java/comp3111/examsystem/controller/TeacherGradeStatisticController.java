@@ -139,11 +139,11 @@ public class TeacherGradeStatisticController implements Initializable {
 
 
         barChart.setLegendVisible(false);
-        categoryAxisBar.setLabel("Exams");
+        categoryAxisBar.setLabel("Courses");
         categoryAxisBar.setAnimated(false);
         numberAxisBar.setLabel("Avg. Score (%)");
         pieChart.setLegendVisible(false);
-        pieChart.setTitle("Avg. Score (%)");
+        pieChart.setTitle("Avg. Exam Score of Students(%)");
         lineChart.setLegendVisible(false);
         categoryAxisLine.setLabel("Exams");
         categoryAxisLine.setAnimated(false);
@@ -178,41 +178,92 @@ public class TeacherGradeStatisticController implements Initializable {
 
         pieChart.getData().clear();
 
-        for(Exam exam : exams){
-            int count = 0;
-            int total = 0;
-            int full = 0;
-            for(Submission submission : currentSubmissionList){
-                if(exam.getId().equals(submission.getExamId())){
-                    count++;
-                    if(questionCombox.getValue().equals("All")){
-                        total += submission.getScore();
-                        full = submission.getFullScore();
+        for(Course course: courses){
+            int examCount = 0;
+            float examTotal = 0;
+            for(Exam exam : exams){
+                if(exam.getCourseId().equals(course.getCourseID())){
+                    int count = 0;
+                    int total = 0;
+                    int full = 0;
+                    for(Submission submission : currentSubmissionList){
+                        if(exam.getId().equals(submission.getExamId())){
+                            count++;
+                            if(questionCombox.getValue().equals("All")){
+                                total += submission.getScore();
+                                full = submission.getFullScore();
+                            }
+                            else if(questionCombox.getValue().equals("MC")){
+                                total += submission.getMcScore();
+                                full = submission.getMcFullScore();
+                            }
+                            else if(questionCombox.getValue().equals("T/F")){
+                                total += submission.getTfScore();
+                                full = submission.getTfFullScore();
+                            }
+                            else if(questionCombox.getValue().equals("Short Questions")){
+                                total += submission.getSqScore();
+                                full = submission.getSqFullScore();
+                            }
+                        }
                     }
-                    else if(questionCombox.getValue().equals("MC")){
-                        total += submission.getMcScore();
-                        full = submission.getMcFullScore();
-                    }
-                    else if(questionCombox.getValue().equals("T/F")){
-                        total += submission.getTfScore();
-                        full = submission.getTfFullScore();
-                    }
-                    else if(questionCombox.getValue().equals("Short Questions")){
-                        total += submission.getSqScore();
-                        full = submission.getSqFullScore();
+                    if(count != 0 && full != 0){
+                        float percentage = (float) (total / count) / full * 100;
+                        examCount++;
+                        examTotal += percentage;
+                        seriesLine.getData().add(new XYChart.Data<>(exam.getCourseId()+"-"+exam.getName(), percentage));
                     }
                 }
             }
-            if(count != 0 && full != 0){
-                float percentage = (float) (total / count) / full * 100;
-                seriesBar.getData().add(new XYChart.Data<>(exam.getCourseId()+"-"+exam.getName(), percentage));
-                seriesLine.getData().add(new XYChart.Data<>(exam.getCourseId()+"-"+exam.getName(), percentage));
-                pieChart.getData().add(new PieChart.Data(exam.getCourseId()+"-"+exam.getName(), percentage));
-            }
+            float coursePercentage = examTotal / examCount;
+            seriesBar.getData().add(new XYChart.Data<>(course.getCourseID(), coursePercentage));
         }
+
         barChart.getData().add(seriesBar);
         lineChart.getData().add(seriesLine);
 
+        for(Student student: students){
+            int examCount = 0;
+            float examTotal = 0;
+            for(Submission submission : currentSubmissionList){
+                if(student.getUsername().equals(submission.getStudentUsername())){
+                    if(questionCombox.getValue().equals("All")){
+                        int total = submission.getScore();
+                        int full = submission.getFullScore();
+                        if(full != 0){
+                            examCount++;
+                            examTotal += (float) total / full;
+                        }
+                    }
+                    else if(questionCombox.getValue().equals("MC")){
+                        int total = submission.getMcScore();
+                        int full = submission.getMcFullScore();
+                        if(full != 0){
+                            examCount++;
+                            examTotal += (float) total / full;
+                        }
+                    }
+                    else if(questionCombox.getValue().equals("T/F")){
+                        int total = submission.getTfScore();
+                        int full = submission.getTfFullScore();
+                        if(full != 0){
+                            examCount++;
+                            examTotal += (float) total / full;
+                        }
+                    }
+                    else if(questionCombox.getValue().equals("Short Questions")){
+                        int total = submission.getSqScore();
+                        int full = submission.getSqFullScore();
+                        if(full != 0){
+                            examCount++;
+                            examTotal += (float) total / full;
+                        }
+                    }
+                }
+            }
+            float percentage = examTotal / examCount;
+            pieChart.getData().add(new PieChart.Data(student.getUsername(), percentage));
+        }
     }
 
     /**
