@@ -80,8 +80,8 @@ public class StudentLoginController implements Initializable {
                 }
             });
         } catch (Exception e1) {
-            //MsgSender.showConfirm("Login Error", e1.getMessage(), () -> {});
-            e1.printStackTrace();
+            MsgSender.showConfirm("Login Error", e1.getMessage(), () -> {});
+            //e1.printStackTrace();
         }
     }
 
@@ -98,7 +98,7 @@ public class StudentLoginController implements Initializable {
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
         } catch (IOException e1) {
-            e1.printStackTrace();
+            MsgSender.showConfirm("Login to Register Error", e1.getMessage(), () -> {});
         }
         stage.show();
     }
