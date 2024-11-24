@@ -79,38 +79,47 @@ public class ManagerStudentController implements Initializable{
     @FXML
     public void filter(){
         try{
-            List<Student> students = new ArrayList<>();
-            List<Student> usernameFilterStudents = new ArrayList<>();
-            List<Student> nameFilterStudents = new ArrayList<>();
-            List<Student> departmentFilterStudents = new ArrayList<>();
-            if(usernameTxt.getText().isEmpty())
-                usernameFilterStudents = StudentDatabase.getInstance().getAll();
-            else
-                usernameFilterStudents = StudentDatabase.getInstance().queryFuzzyByField("username", usernameTxt.getText());
-            if(nameTxt.getText().isEmpty())
-                nameFilterStudents = StudentDatabase.getInstance().getAll();
-            else
-                nameFilterStudents = StudentDatabase.getInstance().queryFuzzyByField("name", nameTxt.getText());
-            if(departmentTxt.getText().isEmpty())
-                departmentFilterStudents = StudentDatabase.getInstance().getAll();
-            else
-                departmentFilterStudents = StudentDatabase.getInstance().queryFuzzyByField("department", departmentTxt.getText());
-            students = StudentDatabase.getInstance().join(StudentDatabase.getInstance().join(usernameFilterStudents, nameFilterStudents), departmentFilterStudents);
+            List<Student> students = filterStudents(usernameTxt.getText(), nameTxt.getText(), departmentTxt.getText());
             recordTable.getItems().setAll(students);
         } catch (Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
     }
 
+    public static List<Student> filterStudents(String username, String name, String department){
+        List<Student> students = new ArrayList<>();
+        List<Student> usernameFilterStudents = new ArrayList<>();
+        List<Student> nameFilterStudents = new ArrayList<>();
+        List<Student> departmentFilterStudents = new ArrayList<>();
+        if(username.isEmpty())
+            usernameFilterStudents = StudentDatabase.getInstance().getAll();
+        else
+            usernameFilterStudents = StudentDatabase.getInstance().queryByField("username", username);
+        if(name.isEmpty())
+            nameFilterStudents = StudentDatabase.getInstance().getAll();
+        else
+            nameFilterStudents = StudentDatabase.getInstance().queryByField("name", name);
+        if(department.isEmpty())
+            departmentFilterStudents = StudentDatabase.getInstance().getAll();
+        else
+            departmentFilterStudents = StudentDatabase.getInstance().queryByField("department", department);
+        students = StudentDatabase.getInstance().join(StudentDatabase.getInstance().join(usernameFilterStudents, nameFilterStudents), departmentFilterStudents);
+        return students;
+    }
+
     @FXML
     public void delete(){
         try{
             Student selectedStudent = recordTable.getSelectionModel().getSelectedItem();
-            StudentDatabase.getInstance().delByFiled("username", selectedStudent.getUsername());
+            deleteStudent(selectedStudent);
             MsgSender.showConfirm("Successful", "The student record has been deleted.", this::refresh);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
+    }
+
+    public static void deleteStudent(Student student){
+        StudentDatabase.getInstance().delByFiled("username", student.getUsername());
     }
 
     @FXML
@@ -129,37 +138,45 @@ public class ManagerStudentController implements Initializable{
     @FXML
     public void add(){
         try{
-            Student student = new Student();
-            student.setUsername(formUsernameTxt.getText());
-            student.setName(formNameTxt.getText());
-            student.setAge(formAgeTxt.getText());
-            student.setDepartment(formDepartmentTxt.getText());
-            student.setPassword(formPasswordTxt.getText());
-            student.setGender(genderCombox.getValue());
-            StudentDatabase.getInstance().add(student);
+            addStudent(formUsernameTxt.getText(), formNameTxt.getText(), formAgeTxt.getText(), formDepartmentTxt.getText(), formPasswordTxt.getText(), genderCombox.getValue());
             MsgSender.showConfirm("Successful", "A new student record has been created.", this::refresh);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
     }
 
+    public static void addStudent(String username, String name, String age, String department, String password, String gender){
+        Student student = new Student();
+        student.setUsername(username);
+        student.setName(name);
+        student.setAge(age);
+        student.setDepartment(department);
+        student.setPassword(password);
+        student.setGender(gender);
+        StudentDatabase.getInstance().add(student);
+    }
+
     @FXML
     public void update(){
         try{
             Student selectedStudent = recordTable.getSelectionModel().getSelectedItem();
-            if(selectedStudent.getUsername().equals(formUsernameTxt.getText()))
-                selectedStudent.forceSetUsername(formUsernameTxt.getText());
-            else
-                selectedStudent.setUsername(formUsernameTxt.getText());
-            selectedStudent.setName(formNameTxt.getText());
-            selectedStudent.setAge(formAgeTxt.getText());
-            selectedStudent.setDepartment(formDepartmentTxt.getText());
-            selectedStudent.setPassword(formPasswordTxt.getText());
-            selectedStudent.setGender(genderCombox.getValue());
-            StudentDatabase.getInstance().update(selectedStudent);
+            updateStudent(selectedStudent, formUsernameTxt.getText(), formNameTxt.getText(), formAgeTxt.getText(), formDepartmentTxt.getText(), formPasswordTxt.getText(), genderCombox.getValue());
             MsgSender.showConfirm("Successful", "The student record has been updated.", this::refresh);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
+    }
+
+    public static void updateStudent(Student selectedStudent, String username, String name, String age, String department, String password, String gender){
+        if(selectedStudent.getUsername().equals(username))
+            selectedStudent.forceSetUsername(username);
+        else
+            selectedStudent.setUsername(username);
+        selectedStudent.setName(name);
+        selectedStudent.setAge(age);
+        selectedStudent.setDepartment(department);
+        selectedStudent.setPassword(password);
+        selectedStudent.setGender(gender);
+        StudentDatabase.getInstance().update(selectedStudent);
     }
 }
