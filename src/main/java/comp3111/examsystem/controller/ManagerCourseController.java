@@ -64,27 +64,32 @@ public class ManagerCourseController implements Initializable{
     @FXML
     public void filter(){
         try{
-            List<Course> courses = new ArrayList<>();
-            List<Course> courseIDFilterCourses = new ArrayList<>();
-            List<Course> courseNameFilterCourses = new ArrayList<>();
-            List<Course> departmentFilterCourses = new ArrayList<>();
-            if(courseIDTxt.getText().isEmpty())
-                courseIDFilterCourses = CourseDatabase.getInstance().getAll();
-            else
-                courseIDFilterCourses = CourseDatabase.getInstance().queryFuzzyByField("courseID", courseIDTxt.getText());
-            if(courseNameTxt.getText().isEmpty())
-                courseNameFilterCourses = CourseDatabase.getInstance().getAll();
-            else
-                courseNameFilterCourses = CourseDatabase.getInstance().queryFuzzyByField("courseName", courseNameTxt.getText());
-            if(departmentTxt.getText().isEmpty())
-                departmentFilterCourses = CourseDatabase.getInstance().getAll();
-            else
-                departmentFilterCourses = CourseDatabase.getInstance().queryFuzzyByField("department", departmentTxt.getText());
-            courses = CourseDatabase.getInstance().join(CourseDatabase.getInstance().join(courseIDFilterCourses, courseNameFilterCourses), departmentFilterCourses);
+            List<Course> courses = filterCourses(courseIDTxt.getText(), courseNameTxt.getText(), departmentTxt.getText());
             recordTable.getItems().setAll(courses);
         } catch (Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
+    }
+
+    public static List<Course> filterCourses(String courseID, String courseName, String department){
+        List<Course> courses = new ArrayList<>();
+        List<Course> courseIDFilterCourses = new ArrayList<>();
+        List<Course> courseNameFilterCourses = new ArrayList<>();
+        List<Course> departmentFilterCourses = new ArrayList<>();
+        if(courseID.isEmpty())
+            courseIDFilterCourses = CourseDatabase.getInstance().getAll();
+        else
+            courseIDFilterCourses = CourseDatabase.getInstance().queryFuzzyByField("courseID", courseID);
+        if(courseName.isEmpty())
+            courseNameFilterCourses = CourseDatabase.getInstance().getAll();
+        else
+            courseNameFilterCourses = CourseDatabase.getInstance().queryFuzzyByField("courseName", courseName);
+        if(department.isEmpty())
+            departmentFilterCourses = CourseDatabase.getInstance().getAll();
+        else
+            departmentFilterCourses = CourseDatabase.getInstance().queryFuzzyByField("department", department);
+        courses = CourseDatabase.getInstance().join(CourseDatabase.getInstance().join(courseIDFilterCourses, courseNameFilterCourses), departmentFilterCourses);
+        return courses;
     }
 
     @FXML
@@ -132,31 +137,39 @@ public class ManagerCourseController implements Initializable{
     @FXML
     public void add(){
         try{
-            Course course = new Course();
-            course.setCourseID(formCourseIDTxt.getText());
-            course.setCourseName(formCourseNameTxt.getText());
-            course.setDepartment(formDepartmentTxt.getText());
-            CourseDatabase.getInstance().add(course);
+            addCourse(formCourseIDTxt.getText(), formCourseNameTxt.getText(), formDepartmentTxt.getText());
             MsgSender.showConfirm("Successful", "A new course record has been created.", this::refresh);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
     }
 
+    public static void addCourse(String courseID, String courseName, String department){
+        Course course = new Course();
+        course.setCourseID(courseID);
+        course.setCourseName(courseName);
+        course.setDepartment(department);
+        CourseDatabase.getInstance().add(course);
+    }
+
     @FXML
     public void update(){
         try{
             Course selectedCourse = recordTable.getSelectionModel().getSelectedItem();
-            if(selectedCourse.getCourseID().equals(formCourseIDTxt.getText()))
-                selectedCourse.forceSetCourseID(formCourseIDTxt.getText());
-            else
-                selectedCourse.setCourseID(formCourseIDTxt.getText());
-            selectedCourse.setCourseName(formCourseNameTxt.getText());
-            selectedCourse.setDepartment(formDepartmentTxt.getText());
-            CourseDatabase.getInstance().update(selectedCourse);
+            updateCourse(selectedCourse, formCourseIDTxt.getText(), formCourseNameTxt.getText(), formDepartmentTxt.getText());
             MsgSender.showConfirm("Successful", "The course record has been updated.", this::refresh);
         } catch(Exception e){
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
+    }
+
+    public static void updateCourse(Course selectedCourse, String courseID, String courseName, String department){
+        if(selectedCourse.getCourseID().equals(courseID))
+            selectedCourse.forceSetCourseID(courseID);
+        else
+            selectedCourse.setCourseID(courseID);
+        selectedCourse.setCourseName(courseName);
+        selectedCourse.setDepartment(department);
+        CourseDatabase.getInstance().update(selectedCourse);
     }
 }

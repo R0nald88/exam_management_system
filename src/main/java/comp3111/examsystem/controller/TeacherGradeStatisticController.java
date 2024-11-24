@@ -114,6 +114,7 @@ public class TeacherGradeStatisticController implements Initializable {
             courseCombox.getItems().add(course.getCourseID());
         }
 
+        examNameToIdDict = new Hashtable<>();
         examCombox.getItems().add("All");
         for(Exam exam : exams){
             String courseID = CourseDatabase.getInstance().queryByField("courseID", exam.getCourseId()).getFirst().getCourseID();
@@ -214,22 +215,7 @@ public class TeacherGradeStatisticController implements Initializable {
     @FXML
     public void filter() {
         try{
-            List<Submission> courseFilterSubmissions = new ArrayList<>();
-            List<Submission> examFilterSubmissions = new ArrayList<>();
-            List<Submission> studentFilterSubmissions = new ArrayList<>();
-            if(courseCombox.getValue().equals("All"))
-                courseFilterSubmissions = SubmissionDatabase.getInstance().getAll();
-            else
-                courseFilterSubmissions = SubmissionDatabase.getInstance().queryByField("courseId", courseCombox.getValue());
-            if(examCombox.getValue().equals("All"))
-                examFilterSubmissions = SubmissionDatabase.getInstance().getAll();
-            else
-                examFilterSubmissions = SubmissionDatabase.getInstance().queryByField("examId", examNameToIdDict.get(examCombox.getValue()));
-            if(studentCombox.getValue().equals("All"))
-                studentFilterSubmissions = SubmissionDatabase.getInstance().getAll();
-            else
-                studentFilterSubmissions = SubmissionDatabase.getInstance().queryByField("studentUsername", studentCombox.getValue());
-            List<Submission> filteredSubmissions = SubmissionDatabase.getInstance().join(SubmissionDatabase.getInstance().join(courseFilterSubmissions, examFilterSubmissions), studentFilterSubmissions);
+            List<Submission> filteredSubmissions = filterSubmissions(courseCombox.getValue(), examCombox.getValue(), studentCombox.getValue());
             List<Submission> submissionRecords = new ArrayList<>();
 
             if(questionCombox.getValue().equals("All")){
@@ -274,5 +260,25 @@ public class TeacherGradeStatisticController implements Initializable {
             MsgSender.showConfirm("Error", e.getMessage(), ()->{});
         }
         loadChart();
+    }
+
+    public List<Submission> filterSubmissions(String courseFilter, String examFilter, String studentFilter){
+        List<Submission> courseFilterSubmissions = new ArrayList<>();
+        List<Submission> examFilterSubmissions = new ArrayList<>();
+        List<Submission> studentFilterSubmissions = new ArrayList<>();
+        if(courseFilter.equals("All"))
+            courseFilterSubmissions = SubmissionDatabase.getInstance().getAll();
+        else
+            courseFilterSubmissions = SubmissionDatabase.getInstance().queryByField("courseId", courseFilter);
+        if(examFilter.equals("All"))
+            examFilterSubmissions = SubmissionDatabase.getInstance().getAll();
+        else
+            examFilterSubmissions = SubmissionDatabase.getInstance().queryByField("examId", examNameToIdDict.get(examFilter));
+        if(studentFilter.equals("All"))
+            studentFilterSubmissions = SubmissionDatabase.getInstance().getAll();
+        else
+            studentFilterSubmissions = SubmissionDatabase.getInstance().queryByField("studentUsername", studentFilter);
+        List<Submission> filteredSubmissions = SubmissionDatabase.getInstance().join(SubmissionDatabase.getInstance().join(courseFilterSubmissions, examFilterSubmissions), studentFilterSubmissions);
+        return filteredSubmissions;
     }
 }
