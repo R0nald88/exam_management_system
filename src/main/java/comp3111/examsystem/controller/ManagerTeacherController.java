@@ -74,12 +74,14 @@ public class ManagerTeacherController implements Initializable{
         positionCombox.getSelectionModel().selectFirst();
     }
 
+    @FXML
     public void reset(){
         usernameTxt.setText("");
         nameTxt.setText("");
         departmentTxt.setText("");
     }
 
+    @FXML
     public void filter(){
         try{
             List<Teacher> teachers = new ArrayList<>();
@@ -105,6 +107,7 @@ public class ManagerTeacherController implements Initializable{
         }
     }
 
+    @FXML
     public void delete(){
         try{
             Teacher selectedTeacher = recordTable.getSelectionModel().getSelectedItem();
@@ -115,6 +118,7 @@ public class ManagerTeacherController implements Initializable{
         }
     }
 
+    @FXML
     public void refresh(){
         formUsernameTxt.setText("");
         formNameTxt.setText("");
@@ -128,6 +132,7 @@ public class ManagerTeacherController implements Initializable{
         filter();
     }
 
+    @FXML
     public void add(){
         try{
             Teacher teacher = new Teacher();
@@ -145,6 +150,7 @@ public class ManagerTeacherController implements Initializable{
         }
     }
 
+    @FXML
     public void update(){
         try{
             Teacher selectedTeacher = recordTable.getSelectionModel().getSelectedItem();

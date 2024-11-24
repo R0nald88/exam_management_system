@@ -69,12 +69,14 @@ public class ManagerStudentController implements Initializable{
         genderCombox.getSelectionModel().selectFirst();
     }
 
+    @FXML
     public void reset(){
         usernameTxt.setText("");
         nameTxt.setText("");
         departmentTxt.setText("");
     }
 
+    @FXML
     public void filter(){
         try{
             List<Student> students = new ArrayList<>();
@@ -100,6 +102,7 @@ public class ManagerStudentController implements Initializable{
         }
     }
 
+    @FXML
     public void delete(){
         try{
             Student selectedStudent = recordTable.getSelectionModel().getSelectedItem();
@@ -110,6 +113,7 @@ public class ManagerStudentController implements Initializable{
         }
     }
 
+    @FXML
     public void refresh(){
         formUsernameTxt.setText("");
         formNameTxt.setText("");
@@ -122,6 +126,7 @@ public class ManagerStudentController implements Initializable{
         filter();
     }
 
+    @FXML
     public void add(){
         try{
             Student student = new Student();
@@ -138,6 +143,7 @@ public class ManagerStudentController implements Initializable{
         }
     }
 
+    @FXML
     public void update(){
         try{
             Student selectedStudent = recordTable.getSelectionModel().getSelectedItem();

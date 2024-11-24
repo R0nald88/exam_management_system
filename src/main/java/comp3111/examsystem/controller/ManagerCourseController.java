@@ -54,12 +54,14 @@ public class ManagerCourseController implements Initializable{
         departmentColumn.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getDepartment()));
     }
 
+    @FXML
     public void reset(){
         courseIDTxt.setText("");
         courseNameTxt.setText("");
         departmentTxt.setText("");
     }
 
+    @FXML
     public void filter(){
         try{
             List<Course> courses = new ArrayList<>();
@@ -85,6 +87,7 @@ public class ManagerCourseController implements Initializable{
         }
     }
 
+    @FXML
     public void delete(){
         deleteCourse(false);
     }
@@ -116,6 +119,7 @@ public class ManagerCourseController implements Initializable{
         }
     }
 
+    @FXML
     public void refresh(){
         formCourseIDTxt.setText("");
         formCourseNameTxt.setText("");
@@ -125,6 +129,7 @@ public class ManagerCourseController implements Initializable{
         filter();
     }
 
+    @FXML
     public void add(){
         try{
             Course course = new Course();
@@ -138,6 +143,7 @@ public class ManagerCourseController implements Initializable{
         }
     }
 
+    @FXML
     public void update(){
         try{
             Course selectedCourse = recordTable.getSelectionModel().getSelectedItem();

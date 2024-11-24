@@ -85,6 +85,7 @@ public class TeacherGradeShortQuestionController implements Initializable {
         examCombox.getSelectionModel().selectFirst();
     }
 
+    @FXML
     public void filter(){
         try{
             List<Submission> examFilterSubmissions = new ArrayList<>();
@@ -105,6 +106,7 @@ public class TeacherGradeShortQuestionController implements Initializable {
         }
     }
 
+    @FXML
     public void grade(){
         try{
             selectedSubmission = gradeTable.getSelectionModel().getSelectedItem();
@@ -129,6 +131,7 @@ public class TeacherGradeShortQuestionController implements Initializable {
         }
     }
 
+    @FXML
     public void submit(){
         try{
             selectedSubmission.updateSqScore(Integer.parseInt(sqScoreTxt.getText()));
@@ -139,6 +142,7 @@ public class TeacherGradeShortQuestionController implements Initializable {
         }
     }
 
+    @FXML
     public void refresh(){
         questionTable.setItems(FXCollections.observableArrayList());
         sqScoreTxt.setText("");
