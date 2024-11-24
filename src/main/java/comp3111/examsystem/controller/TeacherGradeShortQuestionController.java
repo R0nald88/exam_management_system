@@ -184,7 +184,7 @@ public class TeacherGradeShortQuestionController implements Initializable {
 
     /**
      * Called when the user clicks the submit button.
-     * The submission is updated according to the score given by the user.
+     * The total score and short question score of the submission is updated according to the score given by the user.
      */
     @FXML
     public void submit(){
@@ -200,10 +200,9 @@ public class TeacherGradeShortQuestionController implements Initializable {
     }
 
     /**
-     * Called when the user clicks the refresh button.
+     * Called automatically after the teacher graded a submission.
      * Initialize the table, choice boxes and buttons.
      */
-    @FXML
     public void refresh(){
         questionTable.setItems(FXCollections.observableArrayList());
         submitBtn.setDisable(true);
