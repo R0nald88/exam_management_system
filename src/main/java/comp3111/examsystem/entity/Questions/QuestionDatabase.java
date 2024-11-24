@@ -192,7 +192,7 @@ public class QuestionDatabase extends Database<Question> {
     }
 
     /**
-     * Delete teh question from database
+     * Delete the question from database
      *
      * @param question Question for deleting
      * @param deleteExam Whether exam containing question for deleting should be affected
