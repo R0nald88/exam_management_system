@@ -19,18 +19,30 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+/**
+ * Controller class for manager login.
+ * @author Wan Hanzhe
+ */
 public class ManagerLoginController implements Initializable {
     @FXML
     private TextField usernameTxt;
     @FXML
     private PasswordField passwordTxt;
 
+    /**
+     * Skip login when testing.
+     */
     private static boolean testing = false;
 
     public void initialize(URL location, ResourceBundle resources) {
         //createRecord("admin", "12345678");
     }
 
+    /**
+     * Create an admin record, unused.
+     * @param username The username of the manager.
+     * @param password The password of the manager.
+     */
     public void createRecord(String username, String password){
         try{
             FileWriter myWriter = new FileWriter("src/main/resources/database/manager.txt",true);
@@ -41,6 +53,12 @@ public class ManagerLoginController implements Initializable {
         }
     }
 
+    /**
+     * Verify manager login.
+     * @param username The input username.
+     * @param password The input password.
+     * @return true if both username and password are matched, false otherwise.
+     */
     public static boolean verify(String username, String password){
         try{
             File myObj = new File("src/main/resources/database/manager.txt");
@@ -61,6 +79,11 @@ public class ManagerLoginController implements Initializable {
         return true;
     }
 
+    /**
+     * This method is called when the user click the login button.
+     * The user will be directed to main page if login successful.
+     * @param e The Action Event.
+     */
     @FXML
     public void login(ActionEvent e) {
         String username = usernameTxt.getText();

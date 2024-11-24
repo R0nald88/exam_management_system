@@ -15,6 +15,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Controller class for teacher management system.
+ * @author Wan Hanzhe
+ */
 public class ManagerTeacherController implements Initializable{
 
     @FXML
@@ -60,6 +64,11 @@ public class ManagerTeacherController implements Initializable{
     private Button updateBtn;
 
 
+    /**
+     * Initialize the table, choice boxes and buttons.
+     * @param url unused.
+     * @param resourceBundle unused.
+     */
     public void initialize(URL url, ResourceBundle resourceBundle){
         List<Teacher> teachers = TeacherDatabase.getInstance().getAll();
         ObservableList<Teacher> teacherRecords = FXCollections.observableArrayList(teachers);
@@ -86,6 +95,10 @@ public class ManagerTeacherController implements Initializable{
         updateBtn.setDisable(true);
     }
 
+    /**
+     * Called when the user clicks the reset button.
+     * Reset the filter.
+     */
     @FXML
     public void reset(){
         usernameTxt.setText("");
@@ -93,6 +106,10 @@ public class ManagerTeacherController implements Initializable{
         departmentTxt.setText("");
     }
 
+    /**
+     * Called when the user clicks the filter button.
+     * Filter the records according to the filter.
+     */
     @FXML
     public void filter(){
         try{
@@ -103,6 +120,13 @@ public class ManagerTeacherController implements Initializable{
         }
     }
 
+    /**
+     * Retrieve records from the database.
+     * @param username the filter for username.
+     * @param name the filter for name.
+     * @param department the filter for department.
+     * @return a list of records matches the filter.
+     */
     public static List<Teacher> filterTeachers(String username, String name, String department){
         List<Teacher> teachers = new ArrayList<>();
         List<Teacher> usernameFilterTeachers = new ArrayList<>();
@@ -124,6 +148,10 @@ public class ManagerTeacherController implements Initializable{
         return teachers;
     }
 
+    /**
+     * Called when the user selects a record and clicks delete button.
+     * Delete the selected record from the database.
+     */
     @FXML
     public void delete(){
         try{
@@ -135,10 +163,18 @@ public class ManagerTeacherController implements Initializable{
         }
     }
 
+    /**
+     * Perform the deletion.
+     * @param teacher the teacher to be deleted.
+     */
     public static void deleteTeacher(Teacher teacher){
         TeacherDatabase.getInstance().delByFiled("username", teacher.getUsername());
     }
 
+    /**
+     * Called when the user clicks the refresh button, also automatically called after add/delete/update.
+     * Initialize the table, choice boxes and buttons.
+     */
     @FXML
     public void refresh(){
         formUsernameTxt.setText("");
@@ -156,6 +192,10 @@ public class ManagerTeacherController implements Initializable{
         filter();
     }
 
+    /**
+     * Called when the user clicks the add button.
+     * Create and add a record according to the form.
+     */
     @FXML
     public void add(){
         try{
@@ -166,6 +206,16 @@ public class ManagerTeacherController implements Initializable{
         }
     }
 
+    /**
+     * Add the record to the database.
+     * @param username the username of the new teacher.
+     * @param name the name of the new teacher.
+     * @param age the age of the new teacher.
+     * @param department the department of the new teacher.
+     * @param password the password of the new teacher.
+     * @param gender the gender of the new teacher.
+     * @param position the position of the new teacher.
+     */
     public static void addTeacher(String username, String name, String age, String department, String password, String gender, String position){
         Teacher teacher = new Teacher();
         teacher.setUsername(username);
@@ -178,6 +228,10 @@ public class ManagerTeacherController implements Initializable{
         TeacherDatabase.getInstance().add(teacher);
     }
 
+    /**
+     * Called when the user selects a record and clicks the update button.
+     * Update the selected record according to the form.
+     */
     @FXML
     public void update(){
         try{
@@ -189,17 +243,32 @@ public class ManagerTeacherController implements Initializable{
         }
     }
 
+    /**
+     * Perform the update in the database.
+     * @param selectedTeacher the teacher to be updated.
+     * @param username the new username.
+     * @param name the new name.
+     * @param age the new age.
+     * @param department the department.
+     * @param password the password.
+     * @param gender the gender.
+     * @param position the new position.
+     */
     public static void updateTeacher(Teacher selectedTeacher, String username, String name, String age, String department, String password, String gender, String position){
-        if(selectedTeacher.getUsername().equals(username))
-            selectedTeacher.forceSetUsername(username);
-        else
+        if(!username.isEmpty() && !selectedTeacher.getUsername().equals(username))
             selectedTeacher.setUsername(username);
-        selectedTeacher.setName(name);
-        selectedTeacher.setAge(age);
-        selectedTeacher.setDepartment(department);
-        selectedTeacher.setPassword(password);
-        selectedTeacher.setGender(gender);
-        selectedTeacher.setPosition(position);
+        if(!name.isEmpty())
+            selectedTeacher.setName(name);
+        if(!age.isEmpty())
+            selectedTeacher.setAge(age);
+        if(!department.isEmpty())
+            selectedTeacher.setDepartment(department);
+        if(!password.isEmpty())
+            selectedTeacher.setPassword(password);
+        if(!gender.isEmpty())
+            selectedTeacher.setGender(gender);
+        if(!position.isEmpty())
+            selectedTeacher.setPosition(position);
         TeacherDatabase.getInstance().update(selectedTeacher);
     }
 }

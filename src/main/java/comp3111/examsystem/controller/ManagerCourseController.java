@@ -48,7 +48,11 @@ public class ManagerCourseController implements Initializable{
     @FXML
     private Button updateBtn;
 
-
+    /**
+     * Controller class for course management system.
+     * @param url unused.
+     * @param resourceBundle unused.
+     */
     public void initialize(URL url, ResourceBundle resourceBundle){
         List<Course> courses = CourseDatabase.getInstance().getAll();
         ObservableList<Course> courseRecords = FXCollections.observableArrayList(courses);
@@ -67,6 +71,10 @@ public class ManagerCourseController implements Initializable{
         updateBtn.setDisable(true);
     }
 
+    /**
+     * Called when the user clicks the reset button.
+     * Reset the filter.
+     */
     @FXML
     public void reset(){
         courseIDTxt.setText("");
@@ -74,6 +82,10 @@ public class ManagerCourseController implements Initializable{
         departmentTxt.setText("");
     }
 
+    /**
+     * Called when the user clicks the filter button.
+     * Filter the records according to the filter.
+     */
     @FXML
     public void filter(){
         try{
@@ -84,6 +96,13 @@ public class ManagerCourseController implements Initializable{
         }
     }
 
+    /**
+     * Retrieve records from the database.
+     * @param courseID the filter for course ID.
+     * @param courseName the filter for course name.
+     * @param department the filter for department.
+     * @return a list of records matches the filter.
+     */
     public static List<Course> filterCourses(String courseID, String courseName, String department){
         List<Course> courses = new ArrayList<>();
         List<Course> courseIDFilterCourses = new ArrayList<>();
@@ -105,11 +124,21 @@ public class ManagerCourseController implements Initializable{
         return courses;
     }
 
+    /**
+     * Called when the user selects a record and clicks delete button.
+     * Delete the selected record from the database.
+     */
     @FXML
     public void delete(){
         deleteCourse(false);
     }
 
+    /**
+     * Perform the deletion. Called by delete() only.
+     * @param deleteExam Only visible to programmer. A course that has exams will only be deleted when deleteExam is true.
+     *                   Default to be false when called by delete(), and a warning will be sent to the user.
+     *                   The function calls itself again and set deleteExam to be true when the user clicks OK.
+     */
     private void deleteCourse(boolean deleteExam) {
         try{
             Course selectedCourse = recordTable.getSelectionModel().getSelectedItem();
@@ -137,6 +166,10 @@ public class ManagerCourseController implements Initializable{
         }
     }
 
+    /**
+     * Called when the user clicks the refresh button, also automatically called after add/delete/update.
+     * Initialize the table, choice boxes and buttons.
+     */
     @FXML
     public void refresh(){
         formCourseIDTxt.setText("");
@@ -150,6 +183,10 @@ public class ManagerCourseController implements Initializable{
         filter();
     }
 
+    /**
+     * Called when the user clicks the add button.
+     * Create and add a record according to the form.
+     */
     @FXML
     public void add(){
         try{
@@ -160,6 +197,12 @@ public class ManagerCourseController implements Initializable{
         }
     }
 
+    /**
+     * Add the record to the database.
+     * @param courseID the course ID of the new course.
+     * @param courseName the course name of the new course.
+     * @param department the department of the new course.
+     */
     public static void addCourse(String courseID, String courseName, String department){
         Course course = new Course();
         course.setCourseID(courseID);
@@ -168,6 +211,10 @@ public class ManagerCourseController implements Initializable{
         CourseDatabase.getInstance().add(course);
     }
 
+    /**
+     * Called when the user selects a record and clicks the update button.
+     * Update the selected record according to the form.
+     */
     @FXML
     public void update(){
         try{
@@ -179,13 +226,20 @@ public class ManagerCourseController implements Initializable{
         }
     }
 
+    /**
+     * Perform the update in the database.
+     * @param selectedCourse the course to be updated.
+     * @param courseID the new course ID.
+     * @param courseName the new course name.
+     * @param department the new department.
+     */
     public static void updateCourse(Course selectedCourse, String courseID, String courseName, String department){
-        if(selectedCourse.getCourseID().equals(courseID))
-            selectedCourse.forceSetCourseID(courseID);
-        else
+        if(!courseID.isEmpty() && !selectedCourse.getCourseID().equals(courseID))
             selectedCourse.setCourseID(courseID);
-        selectedCourse.setCourseName(courseName);
-        selectedCourse.setDepartment(department);
+        if(!courseName.isEmpty())
+            selectedCourse.setCourseName(courseName);
+        if(!department.isEmpty())
+            selectedCourse.setDepartment(department);
         CourseDatabase.getInstance().update(selectedCourse);
     }
 }
