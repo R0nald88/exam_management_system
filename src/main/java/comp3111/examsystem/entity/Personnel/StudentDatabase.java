@@ -126,4 +126,14 @@ public class StudentDatabase extends Database<Student> {
         }
         return false;
     }
+
+    /**
+     * Delete all teachers in the database. For testing only
+     * @author Li Ching Ho
+     */
+    public void deleteAll() {
+        for (Student s : getAll()) {
+            delByKey(s.getId().toString());
+        }
+    }
 }

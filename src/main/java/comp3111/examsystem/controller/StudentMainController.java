@@ -154,7 +154,6 @@ public class StudentMainController implements Initializable {
             Submission submission = new Submission();
             submission.setStudentUsername(student.getUsername());
             submission.setExamId(selectedExam.getId());
-            submission.setFullScore(selectedExam.getFullScore());
 
             // Check if the controller instance already exists
             StudentStartExamController existingController = StudentStartExamController.getInstance();
@@ -224,7 +223,8 @@ public class StudentMainController implements Initializable {
             stage.show();
 
         } catch ( IOException e1) {
-            e1.printStackTrace();
+            MsgSender.showConfirm("Open Grade Statistics Error", e1.getMessage(), () -> {});
+            //e1.printStackTrace();
         }
     }
 

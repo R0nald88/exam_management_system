@@ -70,6 +70,7 @@ public class Submission extends Entity{
         this.courseId = exam.getCourseId();
         answerList = new ArrayList<>(exam.getQuestionIds().size());
         scoreList =  new ArrayList<>(exam.getQuestionIds().size());
+        fullScore = exam.getFullScore();
         
         questionObjectList =  new ArrayList<>(exam.getQuestionIds().size());
         for (Long qId : exam.getQuestionIds()) {
@@ -81,17 +82,6 @@ public class Submission extends Entity{
             scoreList.add(0);
             }
     }
-
-    /**
-     * Sets the full score for the exam.
-     *
-     * @param fullScore The total score for the exam.
-     * @author Wan Hanzhe
-     */
-    public void setFullScore(int fullScore) {
-        this.fullScore = fullScore;
-    }
-
     /**
      * Sets the time spent on the exam.
      *
@@ -352,6 +342,10 @@ public class Submission extends Entity{
      * @author Li Ching Ho
      */
     public void calculateInitialScore() {
+        score = 0;
+        mcScore = 0;
+        tfScore = 0;
+        sqScore = 0;
         if (answerList != null) {
             for (int i = 0; i < questionObjectList.size(); i++) {
                 if (answerList.get(i) != null && answerList.get(i).equals(questionObjectList.get(i).getAnswer())) {
@@ -410,7 +404,7 @@ public class Submission extends Entity{
     }
 
     /**
-     * Updates the score for a specific question.
+     * Updates the score for student's answer to a question.
      *
      * @param questionNumber The index of the question.
      * @param score The new score to set.
@@ -448,7 +442,7 @@ public class Submission extends Entity{
     }
 
     /**
-     * Updates the score for short answer questions.
+     * Updates the score for student's answers to short answer questions.
      *
      * @param newSqScore The new score for short answer questions.
      * @throws Exception If the new score is out of the valid range.
