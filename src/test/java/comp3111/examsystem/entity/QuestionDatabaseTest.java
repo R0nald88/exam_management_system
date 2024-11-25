@@ -27,6 +27,7 @@ public class QuestionDatabaseTest {
             question.setQuestion("Single Question?");
             question.setScore(34);
             question.setAnswer("D");
+            question.setId(0L);
             questions.add(question);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -42,6 +43,7 @@ public class QuestionDatabaseTest {
             question.setQuestion("Multiple Question?");
             question.setScore(543);
             question.setAnswer("AD");
+            question.setId(1L);
             questions.add(question);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -57,6 +59,7 @@ public class QuestionDatabaseTest {
             question.setQuestion("Short Question?");
             question.setScore(123);
             question.setAnswer("Short Answer");
+            question.setId(2L);
             questions.add(question);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -72,6 +75,7 @@ public class QuestionDatabaseTest {
             question.setQuestion("True False Question?");
             question.setScore(76);
             question.setAnswer("T");
+            question.setId(3L);
             questions.add(question);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -96,8 +100,8 @@ public class QuestionDatabaseTest {
             QuestionDatabase.getInstance().deleteAll();
             createQuestions();
 
-            for (Question question: questions) {
-                QuestionDatabase.getInstance().add(question);
+            for (int i = 0; i < questions.size(); i++) {
+                QuestionDatabase.getInstance().addQuestion(questions.get(i));
             }
 
             List<Question> q = QuestionDatabase.getInstance().getAll();
@@ -113,8 +117,8 @@ public class QuestionDatabaseTest {
             QuestionDatabase.getInstance().deleteAll();
             createQuestions();
 
-            for (Question question: questions) {
-                QuestionDatabase.getInstance().add(question);
+            for (int i = 0; i < questions.size(); i++) {
+                QuestionDatabase.getInstance().addQuestion(questions.get(i));
             }
 
             List<Question> q = QuestionDatabase.getInstance().getAll();
@@ -169,11 +173,11 @@ public class QuestionDatabaseTest {
         saveQuestion();
         QuestionDatabase database = QuestionDatabase.getInstance();
         try {
-            Question a = questions.get(1);
-            assertEquals(a.getId(), questions.get(1).getId());
+            Question a = questions.get(0);
+            assertEquals(a.getId(), questions.get(0).getId());
             questions.remove(a);
             database.deleteQuestion(a, true);
-            assertFalse(database.exist(a));
+            assertEquals(questions, database.getAll());
         } catch (Exception e) {
             assertEquals(e.getMessage(), "");
         }

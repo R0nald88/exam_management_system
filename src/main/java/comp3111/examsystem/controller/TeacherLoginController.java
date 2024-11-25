@@ -32,7 +32,7 @@ public class TeacherLoginController implements Initializable {
     public void login(ActionEvent e) {
         try {
             TeacherDatabase.getInstance().validateTeacherLogin(usernameTxt.getText(), passwordTxt.getText());
-            MsgSender.showConfirm("Login Successfully", "Successful Login", () -> {
+            MsgSender.showMsg("Login Successfully", "Successful Login", () -> {
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherMainUI.fxml"));
                 Stage stage = new Stage();
                 stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");

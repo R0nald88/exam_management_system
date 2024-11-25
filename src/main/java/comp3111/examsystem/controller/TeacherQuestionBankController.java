@@ -158,7 +158,7 @@ public class TeacherQuestionBankController implements Initializable {
     private void deleteQuestion(boolean deleteExam) {
         try {
             QuestionDatabase.getInstance().deleteQuestion(questionTable.getSelectionModel().getSelectedItem(), deleteExam);
-            MsgSender.showConfirm("Successful Question Deletion", "Question deleted successfully.", this::refreshQuestionTable);
+            MsgSender.showMsg("Successful Question Deletion", "Question deleted successfully.", this::refreshQuestionTable);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -182,7 +182,7 @@ public class TeacherQuestionBankController implements Initializable {
             selectedQuestion.setScore(scoreTxt.getText());
             selectedQuestion.setAnswer(answerTxt.getText());
             QuestionDatabase.getInstance().updateQuestion(selectedQuestion);
-            MsgSender.showConfirm("Successful Question Update", "Question updated successfully.", this::refreshQuestionTable);
+            MsgSender.showMsg("Successful Question Update", "Question updated successfully.", this::refreshQuestionTable);
         } catch (Exception e) {
             MsgSender.showConfirm("Question Update Error", e.getMessage(), () -> {});
         }
@@ -204,7 +204,7 @@ public class TeacherQuestionBankController implements Initializable {
             question.setScore(scoreTxt.getText());
             question.setAnswer(answerTxt.getText());
             QuestionDatabase.getInstance().addQuestion(question);
-            MsgSender.showConfirm("Successful Question Creation", "Question created successfully.", this::refreshQuestionTable);
+            MsgSender.showMsg("Successful Question Creation", "Question created successfully.", this::refreshQuestionTable);
         } catch (Exception e) {
             MsgSender.showConfirm("Question Creation Error", e.getMessage(), () -> {});
         }
@@ -264,10 +264,10 @@ public class TeacherQuestionBankController implements Initializable {
         questionTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         questionTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Question>) change -> {
+            resetQuestionForm();
             if (change.getList().isEmpty()) {
                 updateBtn.setDisable(true);
                 deleteBtn.setDisable(true);
-                resetQuestionForm();
                 return;
             }
 

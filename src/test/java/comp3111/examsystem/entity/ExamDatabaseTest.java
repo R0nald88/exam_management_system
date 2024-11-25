@@ -74,6 +74,7 @@ public class ExamDatabaseTest {
                 exam.setName("Exam " + a);
                 exam.setCourseId(inputCourse.getCourseID());
                 exam.setQuestionIds(questionIds);
+                exam.setId((long) a);
             } catch (Exception e) {
                 assertEquals(e.getMessage(), "");
             }
@@ -84,8 +85,8 @@ public class ExamDatabaseTest {
         try {
             ExamDatabase.getInstance().deleteAll();
 
-            for (Exam e : exams) {
-                ExamDatabase.getInstance().addExam(e);
+            for (int i = 0; i < exams.size(); i++) {
+                ExamDatabase.getInstance().addExam(exams.get(i));
             }
 
             assertEquals(ExamDatabase.getInstance().getAll(), exams);

@@ -93,7 +93,7 @@ public class TeacherExamManagementController implements Initializable {
 
 
             ExamDatabase.getInstance().deleteExam(selectedExam);
-            MsgSender.showConfirm("Successful Deletion", "Exam deleted successfully.", this::refreshExamTable);
+            MsgSender.showMsg("Successful Deletion", "Exam deleted successfully.", this::refreshExamTable);
         } catch (Exception e) {
             MsgSender.showConfirm("Exam Deletion Error", e.getMessage(), () -> {});
         }
@@ -116,7 +116,7 @@ public class TeacherExamManagementController implements Initializable {
             }
 
             ExamDatabase.getInstance().deleteExam(selectedExam);
-            MsgSender.showConfirm("Successful Deletion", "Exam deleted successfully.", this::refreshExamTable);
+            MsgSender.showMsg("Successful Deletion", "Exam deleted successfully.", this::refreshExamTable);
         } catch (Exception e) {
             MsgSender.showConfirm("Exam Deletion Error", e.getMessage(), () -> {});
         }
@@ -131,7 +131,7 @@ public class TeacherExamManagementController implements Initializable {
             exam.setPublished("yes".equals(examPublishedCombox.getSelectionModel().getSelectedItem()));
             exam.setQuestionIds(selectedQuestion.stream().map(Entity::getId).toList());
             ExamDatabase.getInstance().updateExam(exam);
-            MsgSender.showConfirm("Successful Exam Update", "Exam updated successfully.", () -> {
+            MsgSender.showMsg("Successful Exam Update", "Exam updated successfully.", () -> {
                 refreshExamTable();
                 resetExamForm();
             });
@@ -149,7 +149,7 @@ public class TeacherExamManagementController implements Initializable {
             exam.setPublished("yes".equals(examPublishedCombox.getSelectionModel().getSelectedItem()));
             exam.setQuestionIds(selectedQuestion.stream().map(Entity::getId).toList());
             ExamDatabase.getInstance().addExam(exam);
-            MsgSender.showConfirm("Successful Exam Creation", "Exam added successfully.", () -> {
+            MsgSender.showMsg("Successful Exam Creation", "Exam added successfully.", () -> {
                 refreshExamTable();
                 resetExamForm();
             });
