@@ -117,6 +117,9 @@ public class TeacherGradeShortQuestionController implements Initializable {
             if (!change.getList().isEmpty()) {
                 gradeBtn.setDisable(false);
             }
+            else{
+                gradeBtn.setDisable(true);
+            }
         });
         gradeBtn.setDisable(true);
         submitBtn.setDisable(true);

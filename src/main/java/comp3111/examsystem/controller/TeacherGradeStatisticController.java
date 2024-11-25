@@ -139,15 +139,20 @@ public class TeacherGradeStatisticController implements Initializable {
 
 
         barChart.setLegendVisible(false);
+        barChart.setAnimated(false);
         categoryAxisBar.setLabel("Courses");
         categoryAxisBar.setAnimated(false);
         numberAxisBar.setLabel("Avg. Score (%)");
+        numberAxisBar.setAnimated(false);
         pieChart.setLegendVisible(false);
         pieChart.setTitle("Avg. Exam Score of Students(%)");
+        pieChart.setAnimated(false);
         lineChart.setLegendVisible(false);
+        lineChart.setAnimated(false);
         categoryAxisLine.setLabel("Exams");
         categoryAxisLine.setAnimated(false);
         numberAxisLine.setLabel("Avg. Score (%)");
+        numberAxisLine.setAnimated(false);
 
         refresh();
         loadChart();
@@ -215,8 +220,10 @@ public class TeacherGradeStatisticController implements Initializable {
                     }
                 }
             }
-            float coursePercentage = examTotal / examCount;
-            seriesBar.getData().add(new XYChart.Data<>(course.getCourseID(), coursePercentage));
+            if(examCount != 0){
+                float coursePercentage = examTotal / examCount;
+                seriesBar.getData().add(new XYChart.Data<>(course.getCourseID(), coursePercentage));
+            }
         }
 
         barChart.getData().add(seriesBar);
@@ -261,8 +268,10 @@ public class TeacherGradeStatisticController implements Initializable {
                     }
                 }
             }
-            float percentage = examTotal / examCount;
-            pieChart.getData().add(new PieChart.Data(student.getUsername(), percentage));
+            if(examCount != 0){
+                float percentage = examTotal / examCount;
+                pieChart.getData().add(new PieChart.Data(student.getUsername(), percentage));
+            }
         }
     }
 

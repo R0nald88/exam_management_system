@@ -89,6 +89,10 @@ public class ManagerStudentController implements Initializable{
                 deleteBtn.setDisable(false);
                 updateBtn.setDisable(false);
             }
+            else{
+                deleteBtn.setDisable(true);
+                updateBtn.setDisable(true);
+            }
         });
         deleteBtn.setDisable(true);
         updateBtn.setDisable(true);
