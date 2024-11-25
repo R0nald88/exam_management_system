@@ -34,4 +34,22 @@ public class MsgSender {
             callback.run();
         }
     }
+
+    /**
+     * Show an message dialog prompting the message, with callback after user confirm the message
+     * @param msg Message to be shown
+     * @param callback Function to be called after user clicked "OK" button
+     * @param title Title of the dialog
+     */
+    static public void showMsg(String title, String msg, Runnable callback) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(msg);
+        ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
+        if (result == ButtonType.OK) {
+            callback.run();
+        } else {
+            callback.run();
+        }
+    }
 }

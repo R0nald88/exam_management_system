@@ -59,7 +59,7 @@ public class TeacherRegisterUIController implements Initializable {
             teacher.setGender(genderCombox.getSelectionModel().getSelectedItem());
             teacher.confirmPassword(confirmedPwdTxt.getText());
             TeacherDatabase.getInstance().registerTeacher(teacher);
-            MsgSender.showConfirm("Successful Registration", "Teacher registered successfully.", () -> close(actionEvent));
+            MsgSender.showMsg("Successful Registration", "Teacher registered successfully.", () -> close(actionEvent));
         } catch (Exception e) {
             MsgSender.showConfirm("Registration Error", e.getMessage(), () -> {});
         }
