@@ -22,8 +22,12 @@ public class TeacherMainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
 
+    /**
+     * Open Question Bank Management Page
+     * @author Cheung Tuen King
+     */
     @FXML
-    public void openQuestionManageUI(ActionEvent e) {
+    public void openQuestionManageUI() {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherQuestionBank.fxml"));
         Stage stage = new Stage();
         stage.setTitle("Question Management Bank");
@@ -35,6 +39,10 @@ public class TeacherMainController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Open Exam Management Page
+     * @author Cheung Tuen King
+     */
     @FXML
     public void openExamManageUI(ActionEvent e) {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherExamManagement.fxml"));
@@ -48,6 +56,10 @@ public class TeacherMainController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Open Grade Statistic Page
+     * @author Cheung Tuen King
+     */
     @FXML
     public void openGradeStatistic() {
         try {
@@ -61,6 +73,10 @@ public class TeacherMainController implements Initializable {
         }
     }
 
+    /**
+     * Open Page for Teacher to grade the short question
+     * @author Cheung Tuen King
+     */
     @FXML
     public void openGradeShortQuestion() {
         try {

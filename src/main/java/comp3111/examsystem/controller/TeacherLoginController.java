@@ -28,6 +28,10 @@ public class TeacherLoginController implements Initializable {
 
     }
 
+    /**
+     * Login the teacher
+     * @param e Action event of Login button
+     */
     @FXML
     public void login(ActionEvent e) {
         try {
@@ -50,6 +54,10 @@ public class TeacherLoginController implements Initializable {
 
     }
 
+    /**
+     * Open Teacher Registration Page
+     * @author Cheung Tuen King
+     */
     @FXML
     public void register() {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherRegisterUI.fxml"));

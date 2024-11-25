@@ -25,6 +25,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static comp3111.examsystem.entity.Course.CourseDatabase.getCourseIds;
+
+/**
+ * Controller class for UI TeacherExamManagement.fxml
+ * @author Cheung Tuen King
+ */
 public class TeacherExamManagementController implements Initializable {
     // exam filter
     @FXML private TextField examNameSearchTxt;
@@ -81,11 +87,24 @@ public class TeacherExamManagementController implements Initializable {
     @FXML private Button updateBtn;
     @FXML private Button addBtn;
 
-    public void refresh(ActionEvent actionEvent) {
+    /**
+     * Refresh the exam table by reloading the exam data from exam database.
+     * After refreshing, all selected exam in exam table is deselected
+     * This method is called when "Refresh" button in exam table filter is clicked
+     * @author Chueng Tuen King
+     */
+    public void refresh() {
         refreshExamTable();
     }
 
-    public void delete(ActionEvent actionEvent) {
+    /**
+     * Delete the selected exam in exam table from database.
+     * After successful deletion, a notification dialog is popped up and the exam table is refreshed.
+     * If any error occurred, the delete operation is terminated with error message prompted in dialog.
+     * This method is called when "Delete" button in exam table is clicked
+     * @author Chueng Tuen King
+     */
+    public void delete() {
         try {
             Exam selectedExam = examTable.getSelectionModel().getSelectedItem();
             List<Submission> list = SubmissionDatabase.getInstance().queryByField("examId", selectedExam.getId().toString());
@@ -100,29 +119,14 @@ public class TeacherExamManagementController implements Initializable {
 
     }
 
-    private void deleteExam(boolean deleteSubmission) {
-        try {
-            Exam selectedExam = examTable.getSelectionModel().getSelectedItem();
-            List<Submission> list = SubmissionDatabase.getInstance().queryByField("examId", selectedExam.getId().toString());
-
-            if (!deleteSubmission && !list.isEmpty()) {
-                MsgSender.showConfirm("Deletion Warning",
-                        "This exam has already been taken by student(s). Deleting it will also delete associated submission record.\nClick \"OK\" to delete anyway.",
-                        () -> deleteExam(true)
-                );
-                return;
-            } else if (!list.isEmpty()) {
-                SubmissionDatabase.getInstance().deleteSubmissions(list);
-            }
-
-            ExamDatabase.getInstance().deleteExam(selectedExam);
-            MsgSender.showMsg("Successful Deletion", "Exam deleted successfully.", this::refreshExamTable);
-        } catch (Exception e) {
-            MsgSender.showConfirm("Exam Deletion Error", e.getMessage(), () -> {});
-        }
-    }
-
-    public void update(ActionEvent actionEvent) {
+    /**
+     * Update the selected exam in exam table.
+     * After successful updating, a notification dialog is popped up and the exam table is refreshed.
+     * If any error occurred, the update operation is terminated with error message prompted in dialog.
+     * This method is called when "Update" button in exam input form is clicked
+     * @author Chueng Tuen King
+     */
+    public void update() {
         try {
             Exam exam = examTable.getSelectionModel().getSelectedItem();
             exam.setCourseId(examCourseIdCombox.getSelectionModel().getSelectedItem());
@@ -140,7 +144,14 @@ public class TeacherExamManagementController implements Initializable {
         }
     }
 
-    public void add(ActionEvent actionEvent) {
+    /**
+     * Create an exam in exam table and save to the database.
+     * After successful creation, a notification dialog is popped up and the exam table is refreshed.
+     * If any error occurred, the creation operation is terminated with error message prompted in dialog.
+     * This method is called when "Add" button in exam input form is clicked
+     * @author Chueng Tuen King
+     */
+    public void add() {
         try {
             Exam exam = new Exam();
             exam.setCourseId(examCourseIdCombox.getSelectionModel().getSelectedItem());
@@ -159,13 +170,27 @@ public class TeacherExamManagementController implements Initializable {
         }
     }
 
+    /**
+     * Reset the exam table filter.
+     * All text fields in exam table filter is set to empty.
+     * All combo boxes in exam table filter is set to "all".
+     * This method is called when "Reset" button in exam table filter is clicked
+     * @author Chueng Tuen King
+     */
     public void examReset() {
         examPublishedSearchCombox.getSelectionModel().selectFirst();
         examCourseIdSearchCombox.getSelectionModel().selectFirst();
         examNameSearchTxt.setText("");
     }
 
-    public void examFilter(ActionEvent actionEvent) {
+    /**
+     * Filter the exam table based on the text fields and combo boxes input in exam table filter.
+     * Empty text field or Combo box set to "all" would not be used in filtering.
+     * After filtering, all exam in exam table is deselected and the exam input form is cleared.
+     * This method is called when "Filter" button in exam table filter is clicked
+     * @author Chueng Tuen King
+     */
+    public void examFilter() {
         examPublishedFilter = examPublishedSearchCombox.getSelectionModel().isSelected(0) ? null :
                 examPublishedSearchCombox.getSelectionModel().getSelectedItem();
         examNameFilter = examNameSearchTxt.getText().trim();
@@ -174,13 +199,28 @@ public class TeacherExamManagementController implements Initializable {
         refreshExamTable();
     }
 
+    /**
+     * Reset the question table filter.
+     * All text fields in question table filter is set to empty.
+     * All combo boxes in question table filter is set to "all".
+     * This method is called when "Reset" button in question table filter is clicked
+     * @author Chueng Tuen King
+     */
     public void questionReset() {
         questionTypeSearchCombox.getSelectionModel().selectFirst();
         questionScoreSearchTxt.setText("");
         questionSearchTxt.setText("");
     }
 
-    public void questionFilter(ActionEvent actionEvent) {
+    /**
+     * Filter the question table based on the text fields and combo boxes input in question table filter.
+     * Empty text field or Combo box set to "all" would not be used in filtering.
+     * If score text field in question table filter is not an integer, an error message dialog is prompted and filtering is terminated.
+     * After filtering, all question in question table is deselected.
+     * This method is called when "Filter" button in question table filter is clicked
+     * @author Chueng Tuen King
+     */
+    public void questionFilter() {
         try {
             List<Question> questions = QuestionDatabase.getInstance().filter(
                     questionSearchTxt.getText(),
@@ -199,17 +239,37 @@ public class TeacherExamManagementController implements Initializable {
         refreshQuestionTable();
     }
 
-    public void deleteQuestion(ActionEvent actionEvent) {
+    /**
+     * Delete the selected question from the table showing all question in the exam.
+     * After successful deletion, the question table and the table showing all question in the exam are refreshed and all question in such table is deselected.
+     * The deleted question is reappeared in the question table.
+     * If any error occurred, the operation is terminated with error message dialog prompted.
+     * This method is called when "Delete from Left" button is clicked
+     * @author Chueng Tuen King
+     */
+    public void deleteQuestion() {
         selectedQuestion.removeAll(examQuestionTable.getSelectionModel().getSelectedItems());
         refreshQuestionTable();
     }
 
-    public void addQuestion(ActionEvent actionEvent) {
+    /**
+     * Add the selected question from the question table to the table showing all question in the exam.
+     * After successful adding, the question table and the table showing all question in the exam are refreshed and all question in such table is deselected.
+     * The added question is reappeared in the table showing all question in the exam.
+     * If any error occurred, the operation is terminated with error message dialog prompted.
+     * This method is called when "Add to Left" button is clicked
+     * @author Chueng Tuen King
+     */
+    public void addQuestion() {
         selectedQuestion.addAll(questionTable.getSelectionModel().getSelectedItems());
         // System.out.println(selectedQuestion.toString());
         refreshQuestionTable();
     }
 
+    /**
+     * Initialize the Exam management UI for teacher
+     * @author Cheung Tuen King
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initExamTable();
@@ -224,6 +284,13 @@ public class TeacherExamManagementController implements Initializable {
         refreshQuestionTable();
     }
 
+    /**
+     * Set up the exam table, including:
+     * <li>Set the value of each columns to link with corresponding attribute from Exam entity</li>
+     * <li>Fill in the exam form automatically based on the row (exam entity) selected</li>
+     * <li>Enable or disable the "Delete" and "Update" button automatically by checking if any row selected</li>
+     * @author Cheung Tuen King
+     */
     private void initExamTable() {
 
         examNameCol.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getName()));
@@ -255,6 +322,12 @@ public class TeacherExamManagementController implements Initializable {
         });
     }
 
+    /**
+     * Set up the table showing all question in an exam, including:
+     * <li>Set the value of each columns to link with corresponding attribute from Question entity</li>
+     * <li>Enable or disable the "Delete from Left" button automatically by checking if any row selected</li>
+     * @author Cheung Tuen King
+     */
     private void initExamQuestionTable() {
         examQuestionCol.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getQuestion()));
         examQuestionScoreCol.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getScore()));
@@ -270,6 +343,12 @@ public class TeacherExamManagementController implements Initializable {
         });
     }
 
+    /**
+     * Set up the question table, including:
+     * <li>Set the value of each columns to link with corresponding attribute from Question entity</li>
+     * <li>Enable or disable the "Add to Left" button automatically by checking if any row selected</li>
+     * @author Cheung Tuen King
+     */
     private void initQuestionTable() {
         questionCol.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getQuestion()));
         questionScoreCol.setCellValueFactory(tableRow -> new ReadOnlyObjectWrapper<>(tableRow.getValue().getScore()));
@@ -284,6 +363,12 @@ public class TeacherExamManagementController implements Initializable {
         });
     }
 
+    /**
+     * Refresh and filter the exam table based on the field in exam filter
+     * Empty text field or Combo box set to "all" would not be used in filtering.
+     * After refreshing, all selected exam is deselected and exam input form is reset.
+     * @author Cheung Tuen King
+     */
     private void refreshExamTable() {
         List<Exam> examList = ExamDatabase.getInstance().filter(examNameFilter, examCourseIdFilter,
                 examPublishedFilter == null ? null : examPublishedFilter.equals("yes") ? "true" : "false"
@@ -293,6 +378,14 @@ public class TeacherExamManagementController implements Initializable {
         clearSelectedExam();
     }
 
+    /**
+     * Refresh and filter the question table based on the field in question filter.
+     * Eliminate those question being selected from the exam.
+     * Empty text field or Combo box set to "all" would not be used in filtering.
+     * If score text field in question table filter is not an integer, an error message dialog is prompted and filtering is terminated.
+     * After refreshing, all selected question is deselected.
+     * @author Cheung Tuen King
+     */
     private void refreshQuestionTable() {
         try {
             List<Question> questionList = QuestionDatabase.getInstance().filter(questionFilter, questionTypeFilter, questionScoreFilter);
@@ -308,6 +401,11 @@ public class TeacherExamManagementController implements Initializable {
         clearSelectedQuestion();
     }
 
+    /**
+     * Refresh the table showing all question in the exam
+     * After refreshing, all selected question is deselected.
+     * @author Cheung Tuen King
+     */
     private void refreshExamQuestionTable() {
         // System.out.println(selectedQuestion);
         examQuestionTable.setItems(FXCollections.observableList(selectedQuestion));
@@ -315,11 +413,19 @@ public class TeacherExamManagementController implements Initializable {
         clearSelectedExamQuestion();
     }
 
+    /**
+     * Initialize the exam input form by setting up the combo boxes selections
+     * @author Cheung Tuen King
+     */
     private void initExamForm() {
         examPublishedCombox.setItems(FXCollections.observableList(List.of("yes", "no")));
         examCourseIdCombox.setItems(FXCollections.observableList(getCourseIds()));
     }
 
+    /**
+     * Initialize the exam table filter form by setting up the combo boxes selections
+     * @author Cheung Tuen King
+     */
     private void initExamFilter() {
         examPublishedSearchCombox.setItems(FXCollections.observableList(List.of("all", "yes", "no")));
         ArrayList<String> courseIds = getCourseIds();
@@ -328,6 +434,10 @@ public class TeacherExamManagementController implements Initializable {
         examReset();
     }
 
+    /**
+     * Initialize the question filter form by setting up the combo boxes selections
+     * @author Cheung Tuen King
+     */
     private void initQuestionFilter() {
         ArrayList<String> typeList = new ArrayList<>(Arrays.stream(QuestionType.values()).map(QuestionType::getName).toList());
         typeList.addFirst("all");
@@ -335,6 +445,11 @@ public class TeacherExamManagementController implements Initializable {
         questionReset();
     }
 
+    /**
+     * Reset the exam input form by setting all text field to empty,
+     * combo boxes to "all" and clear table showing the selected question in exam
+     * @author Cheung Tuen King
+     */
     private void resetExamForm() {
         examNameTxt.setText("");
         examTimeTxt.setText("");
@@ -345,11 +460,12 @@ public class TeacherExamManagementController implements Initializable {
         refreshQuestionTable();
     }
 
-    private static ArrayList<String> getCourseIds() {
-        List<Course> courseList = CourseDatabase.getInstance().getAll();
-        return new ArrayList<>(courseList.stream().map(Course::getCourseID).toList());
-    }
 
+    /**
+     * Clear all selection in exam table.
+     * Disable "Update" and "Delete" button in exam table
+     * @author Cheung Tuen King
+     */
     private void clearSelectedExam() {
         examTable.getSelectionModel().clearSelection();
         updateBtn.setDisable(true);
