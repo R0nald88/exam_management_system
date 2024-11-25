@@ -16,3 +16,10 @@ Assignment: Task 1
 Email: hwanad@connect.ust.hk\
 Github id: velvet214\
 Assignment: Task 3
+
+---
+
+### Accessing Activity 2 - Source Code
+Go to folder "activity_2_source_code" for related documents, where:
+*javadoc folder stores the JavaDoc html export from IntelliJ. Open the index.html to view the documentation webpage
+*
