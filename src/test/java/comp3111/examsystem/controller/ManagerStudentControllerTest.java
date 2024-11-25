@@ -45,26 +45,26 @@ class ManagerStudentControllerTest {
         student0.setUsername("student0");
         student0.setName("Jack");
         student0.setAge("25");
-        student0.setDepartment("MATH");
+        student0.setDepartment("dept1");
         student0.setPassword("123456!Az");
         student0.setGender("Male");
-        ManagerStudentController.addStudent("student0", "Jack", "25", "MATH", "123456!Az", "Male");
+        ManagerStudentController.addStudent("student0", "Jack", "25", "dept1", "123456!Az", "Male");
 
         student1.setUsername("student1");
         student1.setName("Jack");
         student1.setAge("25");
-        student1.setDepartment("PHYS");
+        student1.setDepartment("dept2");
         student1.setPassword("123456!Az");
         student1.setGender("Male");
-        ManagerStudentController.addStudent("student1", "Jack", "25", "PHYS", "123456!Az", "Male");
+        ManagerStudentController.addStudent("student1", "Jack", "25", "dept2", "123456!Az", "Male");
 
         student2.setUsername("student2");
         student2.setName("Ray");
         student2.setAge("25");
-        student2.setDepartment("PHYS");
+        student2.setDepartment("dept2");
         student2.setPassword("123456!Az");
         student2.setGender("Male");
-        ManagerStudentController.addStudent("student2", "Ray", "25", "PHYS", "123456!Az", "Male");
+        ManagerStudentController.addStudent("student2", "Ray", "25", "dept2", "123456!Az", "Male");
 
         List<Student> expect = new ArrayList<>();
         expect.add(student0);
@@ -108,10 +108,10 @@ class ManagerStudentControllerTest {
 
     void updateStudent(){
         Student student = StudentDatabase.getInstance().getAll().getFirst();
-        ManagerStudentController.updateStudent(student, "student0", "David", "30", "CSE", "13579!Az", "Male");
+        ManagerStudentController.updateStudent(student, "student0", "David", "30", "dept3", "13579!Az", "Male");
         student.setName("David");
         student.setAge("30");
-        student.setDepartment("CSE");
+        student.setDepartment("dept3");
         student.setPassword("13579!Az");
         student.setGender("Male");
 
@@ -180,7 +180,7 @@ class ManagerStudentControllerTest {
     void filterStudents2() {
         String input0 = "";
         String input1 = "";
-        String input2 = "PHYS";
+        String input2 = "dept2";
 
         List<Student> expect = new ArrayList<>();
         expect.add(student1);
@@ -225,7 +225,7 @@ class ManagerStudentControllerTest {
     void filterStudents4() {
         String input0 = "student0";
         String input1 = "";
-        String input2 = "MATH";
+        String input2 = "dept1";
 
         List<Student> expect = new ArrayList<>();
         expect.add(student0);
@@ -247,7 +247,7 @@ class ManagerStudentControllerTest {
     void filterStudents5() {
         String input0 = "";
         String input1 = "Ray";
-        String input2 = "PHYS";
+        String input2 = "dept2";
 
         List<Student> expect = new ArrayList<>();
         expect.add(student2);
@@ -269,7 +269,7 @@ class ManagerStudentControllerTest {
     void filterStudents6() {
         String input0 = "student2";
         String input1 = "Ray";
-        String input2 = "PHYS";
+        String input2 = "dept2";
 
         List<Student> expect = new ArrayList<>();
         expect.add(student2);

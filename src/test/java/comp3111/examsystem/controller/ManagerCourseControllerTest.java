@@ -44,18 +44,18 @@ public class ManagerCourseControllerTest {
     public void addCourse(){
         course0.setCourseID("course0");
         course0.setCourseName("Calculus");
-        course0.setDepartment("MATH");
-        ManagerCourseController.addCourse("course0", "Calculus", "MATH");
+        course0.setDepartment("dept1");
+        ManagerCourseController.addCourse("course0", "Calculus", "dept1");
 
         course1.setCourseID("course1");
         course1.setCourseName("Calculus");
-        course1.setDepartment("PHYS");
-        ManagerCourseController.addCourse("course1", "Calculus", "PHYS");
+        course1.setDepartment("dept2");
+        ManagerCourseController.addCourse("course1", "Calculus", "dept2");
 
         course2.setCourseID("course2");
         course2.setCourseName("General Relativity");
-        course2.setDepartment("PHYS");
-        ManagerCourseController.addCourse("course2", "General Relativity", "PHYS");
+        course2.setDepartment("dept2");
+        ManagerCourseController.addCourse("course2", "General Relativity", "dept2");
 
         List<Course> expect = new ArrayList<>();
         expect.add(course0);
@@ -75,9 +75,9 @@ public class ManagerCourseControllerTest {
 
     void updateCourse(){
         Course course = CourseDatabase.getInstance().getAll().getFirst();
-        ManagerCourseController.updateCourse(course, "course0", "Python", "CSE");
+        ManagerCourseController.updateCourse(course, "course0", "Python", "dept3");
         course.setCourseName("Python");
-        course.setDepartment("CSE");
+        course.setDepartment("dept3");
 
         List<Course> expect = new ArrayList<>();
         expect.add(course);
@@ -135,7 +135,7 @@ public class ManagerCourseControllerTest {
     void filterCourses2() {
         String input0 = "";
         String input1 = "";
-        String input2 = "PHYS";
+        String input2 = "dept2";
 
         List<Course> expect = new ArrayList<>();
         expect.add(course1);
@@ -174,7 +174,7 @@ public class ManagerCourseControllerTest {
     void filterCourses4() {
         String input0 = "course0";
         String input1 = "";
-        String input2 = "MATH";
+        String input2 = "dept1";
 
         List<Course> expect = new ArrayList<>();
         expect.add(course0);
@@ -193,7 +193,7 @@ public class ManagerCourseControllerTest {
     void filterCourses5() {
         String input0 = "";
         String input1 = "General Relativity";
-        String input2 = "PHYS";
+        String input2 = "dept2";
 
         List<Course> expect = new ArrayList<>();
         expect.add(course2);
@@ -212,7 +212,7 @@ public class ManagerCourseControllerTest {
     void filterCourses6() {
         String input0 = "course2";
         String input1 = "General Relativity";
-        String input2 = "PHYS";
+        String input2 = "dept2";
 
         List<Course> expect = new ArrayList<>();
         expect.add(course2);
