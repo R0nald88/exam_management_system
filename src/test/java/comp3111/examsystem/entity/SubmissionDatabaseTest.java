@@ -11,13 +11,11 @@ import java.util.List;
 
 public class SubmissionDatabaseTest {
 
-    private SubmissionDatabase submissionDatabase;
 
     @BeforeEach
     public void setUp() {
-        submissionDatabase = SubmissionDatabase.getInstance();
         try {
-            submissionDatabase.deleteAll(); // Clear the database before each test
+            SubmissionDatabase.getInstance().deleteAll(); // Clear the database before each test
         } catch (Exception ignored){
         }
 
@@ -29,8 +27,8 @@ public class SubmissionDatabaseTest {
         submission.setStudentUsername("student1");
         submission.setExamId(ExamDatabase.getInstance().getAll().getFirst().getId());
 
-        submissionDatabase.addSubmission(submission);
-        assertTrue(submissionDatabase.exist(submission));
+        SubmissionDatabase.getInstance().addSubmission(submission);
+        assertTrue(SubmissionDatabase.getInstance().exist(submission));
     }
 
     @Test
@@ -43,10 +41,10 @@ public class SubmissionDatabaseTest {
         submission2.setStudentUsername("student1");
         submission2.setExamId(ExamDatabase.getInstance().getAll().getFirst().getId());
 
-        submissionDatabase.addSubmission(submission1);
+        SubmissionDatabase.getInstance().addSubmission(submission1);
 
         Exception exception = assertThrows(Exception.class, () -> {
-            submissionDatabase.addSubmission(submission2);
+            SubmissionDatabase.getInstance().addSubmission(submission2);
         });
 
         assertEquals("Student student1 cannot have 2 submission for exam " + ExamDatabase.getInstance().getAll().getFirst().getCourseId() + " " + ExamDatabase.getInstance().getAll().getFirst().getName() + ".", exception.getMessage());
@@ -59,12 +57,12 @@ public class SubmissionDatabaseTest {
         submission.setExamId(ExamDatabase.getInstance().getAll().getFirst().getId());
         submission.setTimeSpend(40);
 
-        submissionDatabase.addSubmission(submission);
+        SubmissionDatabase.getInstance().addSubmission(submission);
 
         submission.setTimeSpend(20);
-        submissionDatabase.updateSubmission(submission);
+        SubmissionDatabase.getInstance().updateSubmission(submission);
 
-        assertEquals(20, submissionDatabase.queryByKey(submission.getId().toString()).getTimeSpend());
+        assertEquals(20, SubmissionDatabase.getInstance().queryByKey(submission.getId().toString()).getTimeSpend());
     }
 
     @Test
@@ -73,10 +71,10 @@ public class SubmissionDatabaseTest {
         submission.setStudentUsername("student1");
         submission.setExamId(ExamDatabase.getInstance().getAll().getFirst().getId());
 
-        submissionDatabase.addSubmission(submission);
-        submissionDatabase.deleteSubmission(submission);
+        SubmissionDatabase.getInstance().addSubmission(submission);
+        SubmissionDatabase.getInstance().deleteSubmission(submission);
 
-        assertFalse(submissionDatabase.exist(submission));
+        assertFalse(SubmissionDatabase.getInstance().exist(submission));
     }
 
     @Test
@@ -86,15 +84,22 @@ public class SubmissionDatabaseTest {
         submission1.setExamId(ExamDatabase.getInstance().getAll().getFirst().getId());
 
         Submission submission2 = new Submission();
-        submission2.setStudentUsername("student2");
-        submission2.setExamId(ExamDatabase.getInstance().getAll().getFirst().getId());
+        submission2.setStudentUsername("student1");
+        submission2.setExamId(ExamDatabase.getInstance().getAll().getLast().getId()); // assuming there are 2 or more exam in ExamDatabase
 
-        submissionDatabase.addSubmission(submission1);
-        submissionDatabase.addSubmission(submission2);
+        Submission submission3 = new Submission();
+        submission3.setStudentUsername("student2");
+        submission3.setExamId(ExamDatabase.getInstance().getAll().getFirst().getId());
 
-        List<Submission> filtered = submissionDatabase.filter("student1", ExamDatabase.getInstance().getAll().getFirst().getCourseId(), ExamDatabase.getInstance().getAll().getFirst().getId().toString());
-        assertEquals(1, filtered.size());
-        assertEquals("student1", filtered.getFirst().getStudentUsername());
+        SubmissionDatabase.getInstance().addSubmission(submission1);
+        SubmissionDatabase.getInstance().addSubmission(submission2);
+        SubmissionDatabase.getInstance().addSubmission(submission3);
+
+        List<Submission> filtered1 = SubmissionDatabase.getInstance().filter("student1", null, null);
+        assertEquals(2, filtered1.size());
+
+        List<Submission> filtered2 = SubmissionDatabase.getInstance().filter("student1", ExamDatabase.getInstance().getAll().getLast().getCourseId(), ExamDatabase.getInstance().getAll().getLast().getId().toString());
+        assertEquals(1, filtered2.size());
     }
 
     @Test
@@ -107,10 +112,10 @@ public class SubmissionDatabaseTest {
         submission2.setStudentUsername("student2");
         submission2.setExamId(ExamDatabase.getInstance().getAll().getFirst().getId());
 
-        submissionDatabase.addSubmission(submission1);
-        submissionDatabase.addSubmission(submission2);
+        SubmissionDatabase.getInstance().addSubmission(submission1);
+        SubmissionDatabase.getInstance().addSubmission(submission2);
 
-        submissionDatabase.deleteAll();
-        assertEquals(0, submissionDatabase.getAll().size());
+        SubmissionDatabase.getInstance().deleteAll();
+        assertEquals(0, SubmissionDatabase.getInstance().getAll().size());
     }
 }
