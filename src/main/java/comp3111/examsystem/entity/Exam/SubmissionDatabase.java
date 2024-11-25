@@ -98,7 +98,7 @@ public class SubmissionDatabase extends Database<Submission> {
 
         // cannot have two identical submission for 1 student
         if (!filter(entity.getStudentUsername(), ExamDatabase.getInstance().queryByKey(entity.getExamId().toString()).getCourseId(), entity.getExamId().toString()).isEmpty()) {
-            throw new Exception("Student " + entity.getStudentUsername() + " cannot have 2 submission for exam " + ExamDatabase.getInstance().queryByKey(entity.getExamId().toString()).getCourseId() + " " + entity.getExamId().toString() + ".");
+            throw new Exception("Student " + entity.getStudentUsername() + " cannot have 2 submission for exam " + ExamDatabase.getInstance().queryByKey(entity.getExamId().toString()).getCourseId() + " " + ExamDatabase.getInstance().queryByKey(entity.getExamId().toString()).getName() + ".");
         }
         super.add(entity);
     }
