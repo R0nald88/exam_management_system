@@ -85,7 +85,7 @@ public class SubmissionDatabaseTest {
 
         Submission submission2 = new Submission();
         submission2.setStudentUsername("student1");
-        submission2.setExamId(ExamDatabase.getInstance().getAll().getLast().getId());
+        submission2.setExamId(ExamDatabase.getInstance().getAll().getLast().getId()); // assuming there are 2 or more exam in ExamDatabase
 
         Submission submission3 = new Submission();
         submission3.setStudentUsername("student2");
