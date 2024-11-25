@@ -29,9 +29,6 @@ public class ManagerLoginController implements Initializable {
     @FXML
     private PasswordField passwordTxt;
 
-    /**
-     * Skip login when testing.
-     */
     private static boolean testing = false;
 
     public void initialize(URL location, ResourceBundle resources) {
