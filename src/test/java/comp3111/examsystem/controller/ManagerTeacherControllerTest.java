@@ -48,29 +48,29 @@ class ManagerTeacherControllerTest {
         teacher0.setUsername("teacher0");
         teacher0.setName("Jack");
         teacher0.setAge("25");
-        teacher0.setDepartment("MATH");
+        teacher0.setDepartment("dept1");
         teacher0.setPassword("123456!Az");
         teacher0.setGender("Male");
         teacher0.setPosition("Professor");
-        ManagerTeacherController.addTeacher("teacher0", "Jack", "25", "MATH", "123456!Az", "Male", "Professor");
+        ManagerTeacherController.addTeacher("teacher0", "Jack", "25", "dept1", "123456!Az", "Male", "Professor");
 
         teacher1.setUsername("teacher1");
         teacher1.setName("Jack");
         teacher1.setAge("25");
-        teacher1.setDepartment("PHYS");
+        teacher1.setDepartment("dept2");
         teacher1.setPassword("123456!Az");
         teacher1.setGender("Male");
         teacher1.setPosition("Professor");
-        ManagerTeacherController.addTeacher("teacher1", "Jack", "25", "PHYS", "123456!Az", "Male", "Professor");
+        ManagerTeacherController.addTeacher("teacher1", "Jack", "25", "dept2", "123456!Az", "Male", "Professor");
 
         teacher2.setUsername("teacher2");
         teacher2.setName("Ray");
         teacher2.setAge("25");
-        teacher2.setDepartment("PHYS");
+        teacher2.setDepartment("dept2");
         teacher2.setPassword("123456!Az");
         teacher2.setGender("Male");
         teacher2.setPosition("Professor");
-        ManagerTeacherController.addTeacher("teacher2", "Ray", "25", "PHYS", "123456!Az", "Male", "Professor");
+        ManagerTeacherController.addTeacher("teacher2", "Ray", "25", "dept2", "123456!Az", "Male", "Professor");
 
         List<Teacher> expect = new ArrayList<>();
         expect.add(teacher0);
@@ -116,10 +116,10 @@ class ManagerTeacherControllerTest {
 
     void updateTeacher(){
         Teacher teacher = TeacherDatabase.getInstance().getAll().getFirst();
-        ManagerTeacherController.updateTeacher(teacher, "teacher0", "David", "30", "CSE", "13579!Az", "Male", "Instructor");
+        ManagerTeacherController.updateTeacher(teacher, "teacher0", "David", "30", "dept3", "13579!Az", "Male", "Instructor");
         teacher.setName("David");
         teacher.setAge("30");
-        teacher.setDepartment("CSE");
+        teacher.setDepartment("dept3");
         teacher.setPassword("13579!Az");
         teacher.setGender("Male");
         teacher.setPosition("Instructor");
@@ -192,7 +192,7 @@ class ManagerTeacherControllerTest {
     void filterTeachers2() {
         String input0 = "";
         String input1 = "";
-        String input2 = "PHYS";
+        String input2 = "dept2";
 
         List<Teacher> expect = new ArrayList<>();
         expect.add(teacher1);
@@ -239,7 +239,7 @@ class ManagerTeacherControllerTest {
     void filterTeachers4() {
         String input0 = "teacher0";
         String input1 = "";
-        String input2 = "MATH";
+        String input2 = "dept1";
 
         List<Teacher> expect = new ArrayList<>();
         expect.add(teacher0);
@@ -262,7 +262,7 @@ class ManagerTeacherControllerTest {
     void filterTeachers5() {
         String input0 = "";
         String input1 = "Ray";
-        String input2 = "PHYS";
+        String input2 = "dept2";
 
         List<Teacher> expect = new ArrayList<>();
         expect.add(teacher2);
@@ -285,7 +285,7 @@ class ManagerTeacherControllerTest {
     void filterTeachers6() {
         String input0 = "teacher2";
         String input1 = "Ray";
-        String input2 = "PHYS";
+        String input2 = "dept2";
 
         List<Teacher> expect = new ArrayList<>();
         expect.add(teacher2);
