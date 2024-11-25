@@ -1,5 +1,7 @@
 package comp3111.examsystem.entity;
 
+import comp3111.examsystem.entity.Course.Course;
+import comp3111.examsystem.entity.Course.CourseDatabase;
 import comp3111.examsystem.entity.Exam.Exam;
 import comp3111.examsystem.entity.Exam.ExamDatabase;
 import comp3111.examsystem.entity.Exam.Submission;
@@ -17,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SubmissionTest {
     private static Submission submission = new Submission();
+    private static Course course = new Course("COMP3111", "Software Engineering", "CSE");
     private static Exam exam = new Exam();
     private static Question singleQ = new Question();
     private static Question multipleQ = new Question();
@@ -26,6 +29,7 @@ public class SubmissionTest {
     @BeforeAll
     public static void setUp() {
         try {
+            CourseDatabase.getInstance().add(course);
             singleQ.setType(QuestionType.SINGLE);
             singleQ.setOptionA("A");
             singleQ.setOptionB("B");
