@@ -154,7 +154,6 @@ public class StudentMainController implements Initializable {
             Submission submission = new Submission();
             submission.setStudentUsername(student.getUsername());
             submission.setExamId(selectedExam.getId());
-            submission.setFullScore(selectedExam.getFullScore());
 
             // Check if the controller instance already exists
             StudentStartExamController existingController = StudentStartExamController.getInstance();
