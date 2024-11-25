@@ -19,7 +19,7 @@ public class ExamDatabase extends Database<Exam> {
     /**
      * Restriction of the lower time limit of exam time. Set to -1 to remove restriction.
      */
-    public static final int EXAM_TIME_LOWER_LIMIT = -1;
+    public static final int EXAM_TIME_LOWER_LIMIT = -2;
 
     /**
      * Restriction of the length limit of exam name. Set to -1 to remove restriction.
