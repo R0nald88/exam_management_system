@@ -285,7 +285,9 @@ public class TeacherExamManagementController implements Initializable {
     }
 
     private void refreshExamTable() {
-        List<Exam> examList = ExamDatabase.getInstance().filter(examNameFilter, examCourseIdFilter, examPublishedFilter);
+        List<Exam> examList = ExamDatabase.getInstance().filter(examNameFilter, examCourseIdFilter,
+                examPublishedFilter == null ? null : examPublishedFilter.equals("yes") ? "true" : "false"
+        );
         // System.out.println(examList.toString());
         examTable.getItems().setAll(FXCollections.observableList(examList));
         clearSelectedExam();

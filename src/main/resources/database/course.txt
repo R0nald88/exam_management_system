@@ -1,2 +1,3 @@
-{"courseID":"MATH1000","courseName":"Calculus","department":"MATH","id":1732190853331}
-{"courseID":"COMP3111","courseName":"Software Development","department":"CSE","id":1732306980876}
+{"courseID":"COMP2313","courseName":"COMP2313","department":"COMP","id":1732540842365}
+{"courseID":"COMP3111","courseName":"Software Engineering","department":"COMP","id":1732540863117}
+{"courseID":"COMP2711","courseName":"Discrete Maths","department":"COMP","id":1732540886750}

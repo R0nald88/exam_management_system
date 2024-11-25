@@ -1,5 +1,7 @@
 package comp3111.examsystem.entity;
 
+import comp3111.examsystem.controller.ManagerCourseController;
+import comp3111.examsystem.controller.ManagerCourseControllerTest;
 import comp3111.examsystem.entity.Course.Course;
 import comp3111.examsystem.entity.Course.CourseDatabase;
 import comp3111.examsystem.entity.Exam.Exam;
@@ -19,6 +21,10 @@ public class ExamTest {
 
     @Test
     public void testExamInput() {
+        if (CourseDatabase.getInstance().getAll().isEmpty()) {
+            new ManagerCourseControllerTest().addCourse();
+        }
+
         String inputName = "Exam";
         Course inputCourse = CourseDatabase.getInstance().getAll().get(0);
         boolean inputPublished = true;

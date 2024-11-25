@@ -112,7 +112,7 @@ public class QuestionDatabase extends Database<Question> {
      */
     public List<Question> filter(String question, String type, String score) throws Exception {
         int s = -1;
-        QuestionType t = type == null || type.isEmpty() ? null : QuestionType.toType(type);
+        QuestionType t = type == null || type.isEmpty() || type.equals("all") ? null : QuestionType.toType(type);
 
         if (score != null && !score.trim().isEmpty()) {
             try {

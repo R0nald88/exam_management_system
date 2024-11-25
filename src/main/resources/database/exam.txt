@@ -1,4 +1,6 @@
-{"name":"Exam 0","time":10,"longIdOfCourse":1732190853331,"published":true,"questionIds":[1732518870991],"id":1732518871251}
-{"name":"Exam 1","time":11,"longIdOfCourse":1732190853331,"published":false,"questionIds":[1732518870991],"id":1732518871251}
-{"name":"Exam 2","time":12,"longIdOfCourse":1732190853331,"published":true,"questionIds":[1732518870991],"id":1732518871266}
-{"name":"Exam 3","time":13,"longIdOfCourse":1732190853331,"published":false,"questionIds":[1732518870991],"id":1732518871266}
+{"name":"Exam 0","time":10,"longIdOfCourse":1732540842365,"published":true,"questionIds":[1732536586272],"id":1732536586580}
+{"name":"Exam 1","time":11,"longIdOfCourse":1732540863117,"published":false,"questionIds":[1732536586272],"id":1732536586583}
+{"name":"Exam2778","time":100,"longIdOfCourse":1732540886750,"published":true,"questionIds":[1732536586272,1732538393614],"id":1732536586587}
+{"name":"Exam2332","time":234,"longIdOfCourse":1732540842365,"published":true,"questionIds":[1732538699230,1732539137159],"id":1732544146017}
+{"name":"Exam898","time":1214453,"longIdOfCourse":1732540842365,"published":true,"questionIds":[1732538393614],"id":1732545008283}
+{"name":"545","time":454353545,"longIdOfCourse":1732540842365,"published":true,"questionIds":[1732536586272,1732536586990,1732536587016,1732536587055,1732536587077,1732538393614,1732538699230,1732539137159],"id":1732545032201}

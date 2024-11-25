@@ -1,1 +1,0 @@
-{"username":"s1","name":"Student t123","age":43,"gender":"MALE","department":"MATH","password":"123456!aZ","id":1732518871079}

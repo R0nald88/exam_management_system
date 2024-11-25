@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ManagerCourseControllerTest {
+public class ManagerCourseControllerTest {
     public Course course0 = new Course();
     public Course course1 = new Course();
     public Course course2 = new Course();
@@ -41,7 +41,7 @@ class ManagerCourseControllerTest {
             CourseDatabase.getInstance().delByKey(course.getId().toString());
     }
 
-    void addCourse(){
+    public void addCourse(){
         course0.setCourseID("course0");
         course0.setCourseName("Calculus");
         course0.setDepartment("MATH");
