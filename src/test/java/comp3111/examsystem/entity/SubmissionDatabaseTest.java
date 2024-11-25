@@ -3,7 +3,6 @@ package comp3111.examsystem.entity;
 import comp3111.examsystem.entity.Exam.ExamDatabase;
 import comp3111.examsystem.entity.Exam.SubmissionDatabase;
 import comp3111.examsystem.entity.Exam.Submission;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,7 +60,6 @@ public class SubmissionDatabaseTest {
         submission.setTimeSpend(40);
 
         submissionDatabase.addSubmission(submission);
-        Long id = submission.getId();
 
         submission.setTimeSpend(20);
         submissionDatabase.updateSubmission(submission);
