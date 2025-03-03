@@ -1,27 +1,36 @@
-# COMP3111 Project - Fall 2024 - Team 28
+# Exam Management System
 
-# Members
-
-### Cheung Tuen King
-Email: tkcheungan@connect.ust.hk\
-Github id: R0nald88\
-Assignment: Task 2
-
-### Li Ching Ho
-Email: chlibs@connect.ust.hk\
-Github id: chlibs\
-Assignment: Task 1
-
-### Wan Hanzhe
-Email: hwanad@connect.ust.hk\
-Github id: velvet214\
-Assignment: Task 3
+A system developed using JavaFX for teachers managing and marking exams
+and student doing exams. This is a software engineering course group project, 
+which involves a full walkthrough of software development cycles, 
+including designing, implementing, testing and documentation.
 
 ---
 
-# Accessing Activity 2 - Source Code
-Go to folder "activity_1_source_code" for related documents, where:
-- JavaDoc folder stores the JavaDoc html export from IntelliJ. Open the index.html to view the documentation webpage.
-- coverage.png stores the screenshot of the coverage report. As UI components are unable to test, the coverage could be less than 65%. However, we ensure that we have tested all functions related to database and data structure with which coverage is bigger than 65%.
-- unit_tests.png stores the screenshot of the report of unit testing.
-- Task_1_Sample.pdf, Task_2_Sample.pdf and Task_3_Sample.pdf stores the screenshots of execution of the application showing sample input and output and the supplementary notes of 3 different tasks.
+## UML Modeling 
+| Name                   | Diagram                                                |
+|------------------------|--------------------------------------------------------|
+| Class Diagram          | ![Class Diagram](uml_modeling/class_diagram.png)       |
+| Use-case Diagram       | ![Use-case Diagram](uml_modeling/use_case_diagram.png) |
+| Use-case Specification | Visit `uml_modeling/uml_modeling.pdf`                  |
+
+## Source Code
+- Compile `src/main/java/comp3111/examsystem/Main.java` to start the interface
+- Visit `src/main/` for source code
+
+## JUnit Testing
+- Achieved 84% coverage for function related to data structure and back-end.\
+- Thorough testing with all test passed
+- Compile java files in `src/test/java/comp3111/examsystem/` for testing
+
+## Documentation
+- For system documentation, visit `documentation/JavaDoc/index.html`
+- For end-user documentation, visit `documentation/student_documentation.pdf`/ 
+`documentation/teacher_documentation.pdf`/ `documentation/manager_documentation.pdf`
+
+## Work Distribution
+| Name                   | Diagram                                  |
+|------------------------|------------------------------------------|
+| Gantt Chart            | ![Gantt Chart](workflow/gantt.png)       |
+| Burndown Chart         | ![Burndown Chart](workflow/burndown.png) |
+Visit `workflow/workflow_documentation.pdf` for group meeting minutes, git commit log and more.
