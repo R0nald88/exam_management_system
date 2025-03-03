@@ -33,4 +33,5 @@ including designing, implementing, testing and documentation.
 |------------------------|------------------------------------------|
 | Gantt Chart            | ![Gantt Chart](workflow/gantt.png)       |
 | Burndown Chart         | ![Burndown Chart](workflow/burndown.png) |
+
 Visit `workflow/workflow_documentation.pdf` for group meeting minutes, git commit log and more.
