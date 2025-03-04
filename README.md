@@ -5,6 +5,12 @@ and student doing exams. This is a software engineering course group project,
 which involves a full walkthrough of software development cycles, 
 including designing, implementing, testing and documentation.
 
+## Technology Used
+- Platform: IntelliJ
+- Framework: JavaFX
+- Programming Language: Java
+- Mischellenous: GSON Library, JSON File Format
+
 ## UML Modeling 
 | Name                   | Diagram                                                |
 |------------------------|--------------------------------------------------------|
