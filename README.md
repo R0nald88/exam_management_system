@@ -16,13 +16,13 @@ including designing, implementing, testing and documentation.
 |------------------------|--------------------------------------------------------|------------------------|--------------------------------------------------------|
 | Class Diagram          | ![Class Diagram](uml_modeling/class_diagram.png)       | Use-case Diagram       | ![Use-case Diagram](uml_modeling/use_case_diagram.png) |
 
-For use-case sepcification, visit ![here](uml_modeling/uml_modeling.pdf)
+For use-case sepcification, visit [here](uml_modeling/uml_modeling.pdf)
 
 ## Documentation
 | Use-case | Link |
 | - | - |
-| System Documentation | Visit ![here](documentation/JavaDoc/index.html) in browser |
-| Student | Visit ![here](documentation/student_documentation.pdf) |
+| System Documentation | Visit [](documentation/JavaDoc/index.html) in browser |
+| Student | Visit [here](documentation/student_documentation.pdf) |
 
 
 ## Work Distribution
