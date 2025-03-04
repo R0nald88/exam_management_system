@@ -9,7 +9,7 @@ including designing, implementing, testing and documentation.
 - Platform: IntelliJ
 - Framework: JavaFX
 - Programming Language: Java
-- Mischellenous: GSON Library, JSON File Format
+- Mischellenous: GSON Library, JSON File Format, JUnit Testing
 
 ## UML Modeling 
 | Name                   | Diagram                                                | Name                   | Diagram                                                |
@@ -21,12 +21,13 @@ For use-case sepcification, visit [here](uml_modeling/uml_modeling.pdf)
 ## Documentation
 | Use-case | Link |
 | - | - |
-| System Documentation | Visit [](documentation/JavaDoc/index.html) in browser |
+| System Documentation | Visit [here](documentation/JavaDoc/index.html) in browser |
 | Student | Visit [here](documentation/student_documentation.pdf) |
-
+| Teacher | Visit [here](documentation/teacher_documentation.pdf) |
+| Manager | Visit [here](documentation/manager_documentation.pdf) |
 
 ## Work Distribution
-| Name                   | Diagram                                  | Name                   | Diagram                                  |
-|------------------------|------------------------------------------|------------------------|------------------------------------------|
-| Gantt Chart            | ![Gantt Chart](workflow/gantt.png)       | Burndown Chart         | ![Burndown Chart](workflow/burndown.png) |
-
+| Name                   | Diagram                                  |
+|------------------------|------------------------------------------|
+| Gantt Chart            | ![Gantt Chart](workflow/gantt.png)       |
+| Burndown Chart         | ![Burndown Chart](workflow/burndown.png) |
