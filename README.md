@@ -12,14 +12,21 @@ including designing, implementing, testing and documentation.
 - Mischellenous: GSON Library, JSON File Format
 
 ## UML Modeling 
-| Name                   | Diagram                                                |
-|------------------------|--------------------------------------------------------|
-| Class Diagram          | ![Class Diagram](uml_modeling/class_diagram.png)       |
-| Use-case Diagram       | ![Use-case Diagram](uml_modeling/use_case_diagram.png) |
-| Use-case Specification | Visit `uml_modeling/uml_modeling.pdf`                  |
+| Name                   | Diagram                                                | Name                   | Diagram                                                |
+|------------------------|--------------------------------------------------------|------------------------|--------------------------------------------------------|
+| Class Diagram          | ![Class Diagram](uml_modeling/class_diagram.png)       | Use-case Diagram       | ![Use-case Diagram](uml_modeling/use_case_diagram.png) |
+
+For use-case sepcification, visit ![here](uml_modeling/uml_modeling.pdf)
+
+## Documentation
+| Use-case | Link |
+| - | - |
+| System Documentation | Visit ![here](documentation/JavaDoc/index.html) in browser |
+| Student | Visit ![here](documentation/student_documentation.pdf) |
+
 
 ## Work Distribution
-| Name                   | Diagram                                  |
-|------------------------|------------------------------------------|
-| Gantt Chart            | ![Gantt Chart](workflow/gantt.png)       |
-| Burndown Chart         | ![Burndown Chart](workflow/burndown.png) |
+| Name                   | Diagram                                  | Name                   | Diagram                                  |
+|------------------------|------------------------------------------|------------------------|------------------------------------------|
+| Gantt Chart            | ![Gantt Chart](workflow/gantt.png)       | Burndown Chart         | ![Burndown Chart](workflow/burndown.png) |
+
